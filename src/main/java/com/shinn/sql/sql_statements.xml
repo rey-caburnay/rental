@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+    <entry key="get-working-device-status">
+      SELECT
+        AD.CompanyId,
+        AD.StoreId,
+        AD.TerminalId,
+        DI.TillId,
+        DI.DeviceName,
+        PC.OpenCloseStat,
+        PC.SodTime,
+        PC.EodTime
+      FROM
+        RESMaster.dbo.AUT_DEVICES AD
+          INNER JOIN RESTransaction.dbo.TXU_POS_CTRL PC ON
+            AD.CompanyId = PC.CompanyId AND
+            AD.StoreId = PC.StoreId AND
+            AD.TerminalId = PC.TerminalNo
+          INNER JOIN RESMaster.dbo.MST_DEVICEINFO DI ON
+            AD.CompanyId = DI.CompanyId AND
+            AD.StoreId = DI.StoreId AND
+            AD.TerminalId = DI.TerminalId AND
+            DI.Training = 0
+    </entry>
+
+  <entry key="get-users">
+    Select  FROM
+  </entry>
+</properties>
