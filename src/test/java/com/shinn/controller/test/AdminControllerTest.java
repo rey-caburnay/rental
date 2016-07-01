@@ -75,10 +75,10 @@ public class AdminControllerTest {
     public void setup() {
 //        Mockito.reset(userServiceMock);
         MockitoAnnotations.initMocks(this);
-//        mockMvc = standaloneSetup(adminController)
-//                .setSingleView(mockView)
-//                .build();
-        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(adminController)
+                .setSingleView(mockView)
+                .build();
+//        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
 
     }
  
