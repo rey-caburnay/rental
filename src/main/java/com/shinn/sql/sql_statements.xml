@@ -25,6 +25,11 @@
     </entry>
 
   <entry key="get-users">
-    Select  FROM
+    Select  id, username, name, email, mobile_no, status
+    FROM mst_user;
+  </entry>
+  <entry key="get-users-by-id">
+    Select  id, username, name, email, mobile_no, status
+    FROM mst_user where id = ?;
   </entry>
 </properties>

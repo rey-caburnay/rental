@@ -1,13 +1,18 @@
 package com.shinn.dao.users;
 
+import java.lang.annotation.Annotation;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.stereotype.Repository;
+
 import com.shinn.dao.factory.AbstractDao;
+import com.shinn.model.User;
 
-
+@Repository
 public class UserDaoImpl extends AbstractDao implements UserDao{
 
     public UserDaoImpl() throws Exception {
@@ -16,37 +21,32 @@ public class UserDaoImpl extends AbstractDao implements UserDao{
     }
 
     public List<String> getUsernames() {
-        PreparedStatement selectPermission = null;
+        
         ResultSet result = null;
+        List<String> users = new ArrayList<String>();
         try {
-                result = query('')
-            } else {
-                LOGGER.logAlert(progName, functionName, Logger.RES_EXCEP_DAO,
-                        "No User Group Permission with GroupCode of "
-                                + groupcode);
-            }
-        } catch (SQLStatementException e) {
-            LOGGER.logAlert(progName, functionName,
-                    Logger.RES_EXCEP_SQLSTATEMENT,
-                    "Failed to retrieve User Group Permission"
-                            + " with GroupCode of " + groupcode);
-        } catch (SQLException e) {
-            LOGGER.logAlert(progName, functionName, Logger.RES_EXCEP_SQL,
-                    "Failed to retrieve User Group Permission"
-                            + " with GroupCode of " + groupcode);
-        } finally {
-            boolean hasErrorOccur = closeConnectionObjects(null,
-                    selectPermission, result);
-            if (hasErrorOccur) {
-                LOGGER.logAlert(progName, functionName, Logger.RES_EXCEP_SQL,
-                        "Failed to close SQL related objects "
-                                + "on User Group Permission"
-                                + " with GroupCode of " + groupcode);
-            }
-
+               result = query("get-users");
+               while(result.next()) {
+                   users.add(result.getString("username"));
+               }
+        } catch (Exception e) {
+            e.printStackTrace();
+        
         }
-        return permission;
-        return null;
+        
+        return users;
+    }
+    
+    public User getUser(Integer id) {
+       try {
+           ResultSet result = query("get-users-by-id",id);
+           User user = (User) transform(result, User.class);
+           System.out.println(user);
+           return user;
+       }catch (Exception e) {
+           return null;
+       }
+//       closeConnectionObjects(connection, preparedStatement)
     }
 
 }

@@ -1,25 +1,32 @@
 package com.shinn.dao.factory;
 
+import java.beans.IntrospectionException;
+import java.beans.PropertyDescriptor;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.shinn.sql.SQLStatement;
 
 
 public abstract class AbstractDao {
-    
- private static volatile DBManager dbmanager;
  
+ 
+ @Autowired
  private Connection connection;
     
     public AbstractDao() throws Exception {
-        if (dbmanager == null) {
-            dbmanager = new JndiDBManager();
-        }
-        this.connection = dbmanager.getConnection();
-       
+//        if (dbmanager == null) {
+//            dbmanager = new JndiDBManager();
+//        }
+//        this.connection = dbmanager.getConnection();
+//       
     }
     /**
      * Calling the Rollback implementation for the connection.
@@ -193,15 +200,39 @@ public abstract class AbstractDao {
                     .getProperty(propertyName));
             this.setValues(pStmnt, parameters);
             result = pStmnt.executeQuery();
-        
         } catch (Exception e) {
             e.printStackTrace();
             result = null;
-        } finally {
-            closeConnectionObjects(null, pStmnt, result);
-        }
-  
+        } 
         return result;
+    }
+    
+    public <T> Object transform(ResultSet result, Class<T> model) {
+
+        /* Iterate the column-names */
+        try {
+            if (result.next()) {
+                T instance = model.newInstance();
+                for (Field f : model.getDeclaredFields()) {
+                    Object value = null;
+                    try{
+                        value = result.getObject(f.getName());
+                    }catch(Exception e) {
+                      System.out.println(e.getMessage());
+                    }
+                    if(value != null) {
+                        PropertyDescriptor propertyDescriptor = new PropertyDescriptor(f.getName(), model);
+                        Method method = propertyDescriptor.getWriteMethod();
+                        method.invoke(instance, value);
+                    }
+                }
+                return instance;
+            }
+            return null;
+        }catch(Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
     
 }

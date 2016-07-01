@@ -8,6 +8,8 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 
 
 /**
@@ -16,14 +18,16 @@ import javax.sql.DataSource;
  *
  * @see     DBManager
  */
-public class JndiDBManager implements DBManager {
+public class JndiDBManager  {
     /**
      * The initial Context used by the class.
      */
+
     protected InitialContext initContext;
     /**
      * The only instance of the class.
      */
+
     protected static volatile DataSource dataSource;
     /**
      * The Autocommit flag.

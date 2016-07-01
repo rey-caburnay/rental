@@ -2,7 +2,7 @@ package com.shinn.model;
 
 public class User {
 
-	private long id;
+	private Integer id;
 	
 	private String name;
 	
@@ -11,21 +11,21 @@ public class User {
 	private double salary;
 
 	public User(){
-		id=0;
+//		id=0;
 	}
 	
-	public User(long id, String name, int age, double salary){
+	public User(Integer id, String name, int age, double salary){
 		this.id = id;
 		this.name = name;
 		this.age = age;
 		this.salary = salary;
 	}
 	
-	public long getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 

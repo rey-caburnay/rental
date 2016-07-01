@@ -47,10 +47,10 @@ public class UserServiceImpl extends AbstractDao implements UserService{
 		return null;
 	}
 	
-	public void saveUser(User user) {
-		user.setId(counter.incrementAndGet());
-		users.add(user);
-	}
+//	public void saveUser(User user) {
+//		user.setId(counter.incrementAndGet());
+//		users.add(user);
+//	}
 
 	public void updateUser(User user) {
 		int index = users.indexOf(user);
@@ -71,17 +71,22 @@ public class UserServiceImpl extends AbstractDao implements UserService{
 		return findByName(user.getName())!=null;
 	}
 
-	private static List<User> populateDummyUsers(){
-		List<User> users = new ArrayList<User>();
-		users.add(new User(counter.incrementAndGet(),"Sam",30, 70000));
-		users.add(new User(counter.incrementAndGet(),"Tom",40, 50000));
-		users.add(new User(counter.incrementAndGet(),"Jerome",45, 30000));
-		users.add(new User(counter.incrementAndGet(),"Silvia",50, 40000));
-		return users;
-	}
+//	private static List<User> populateDummyUsers(){
+//		List<User> users = new ArrayList<User>();
+//		users.add(new User(counter.incrementAndGet(),"Sam",30, 70000));
+//		users.add(new User(counter.incrementAndGet(),"Tom",40, 50000));
+//		users.add(new User(counter.incrementAndGet(),"Jerome",45, 30000));
+//		users.add(new User(counter.incrementAndGet(),"Silvia",50, 40000));
+//		return users;
+//	}
 
 	public void deleteAllUsers() {
 		users.clear();
 	}
+
+    public void saveUser(User user) {
+        // TODO Auto-generated method stub
+        
+    }
 
 }
