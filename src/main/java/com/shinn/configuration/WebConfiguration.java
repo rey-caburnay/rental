@@ -19,7 +19,8 @@ import org.springframework.web.servlet.view.JstlView;
 
 @Configuration
 @EnableWebMvc
-@ComponentScan(basePackages = "com.shinn")
+@ComponentScan(basePackages ={ "com.shinn.service",
+        "com.shinn.dao"})
 public class WebConfiguration extends WebMvcConfigurerAdapter {
     
     @Override

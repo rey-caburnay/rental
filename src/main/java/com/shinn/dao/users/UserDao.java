@@ -9,7 +9,7 @@ import com.shinn.model.User;
 
 public interface UserDao {
     
-    public List<String> getUsernames();
+    public List<User> getUsernames();
     public User getUser(Integer id);
 
 }

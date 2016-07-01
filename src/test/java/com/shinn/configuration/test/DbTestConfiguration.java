@@ -23,7 +23,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
  */
 
 @Configuration
-@ComponentScan({ "com.shinn.dao" })
+@ComponentScan({ "com.shinn" })
 @PropertySource(value = { "classpath:application.properties" })
 public class DbTestConfiguration {
 

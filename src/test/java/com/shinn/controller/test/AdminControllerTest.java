@@ -1,4 +1,4 @@
-package com.shinn.controller;
+package com.shinn.controller.test;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
@@ -30,26 +30,42 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.servlet.View;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+import com.shinn.configuration.DatabaseConfiguration;
 import com.shinn.configuration.WebConfiguration;
 import com.shinn.configuration.test.TestContext;
+import com.shinn.controller.AdminController;
 import com.shinn.model.User;
 import com.shinn.service.UserService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes={TestContext.class, WebConfiguration.class})
+@ContextConfiguration(classes={DatabaseConfiguration.class,TestContext.class, WebConfiguration.class})
 @WebAppConfiguration
 public class AdminControllerTest {
 
     private MockMvc mockMvc;
+    @Mock
+    MessageSource message;
+
+    @InjectMocks
+    AdminController adminController;
+
+    @Mock
+    View mockView;
+
     
-    @Autowired
-    UserService userServiceMock;
+//    @Autowired
+//    UserService userServiceMock;
     
     @Autowired
     org.springframework.web.context.WebApplicationContext webApplicationContext;
@@ -57,18 +73,15 @@ public class AdminControllerTest {
 
     @Before
     public void setup() {
-        Mockito.reset(userServiceMock);
-      
+//        Mockito.reset(userServiceMock);
+        MockitoAnnotations.initMocks(this);
+//        mockMvc = standaloneSetup(adminController)
+//                .setSingleView(mockView)
+//                .build();
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
 
     }
-    @Mock
-    MessageSource message;
-
-//    @InjectMocks
-//    AdminController adminController;
-
-
+ 
 
     @Test
     public void listEmployees() {
@@ -84,8 +97,9 @@ public class AdminControllerTest {
     public void testHome() throws Exception {
 
         mockMvc.perform(get("/user/"))
-            .andExpect(status().isOk())
-            .andExpect(model().attribute("id", 1));
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(status().isOk());
+           
 //            .andExpect(forwardedUrl("WEB-INF/pages/index.jsp"));
 
     }

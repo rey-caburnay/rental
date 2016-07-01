@@ -5,17 +5,21 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.shinn.dao.factory.AbstractDao;
+import com.shinn.dao.users.UserDao;
 import com.shinn.model.User;
 
 
 @Service("userService")
-@Transactional
 public class UserServiceImpl extends AbstractDao implements UserService{
 	
+    @Autowired
+    UserDao userDao;
+    
 	public UserServiceImpl() throws Exception {
         super();
     }
@@ -26,7 +30,7 @@ public class UserServiceImpl extends AbstractDao implements UserService{
 	
 	public List<User> findAllUsers() {
 	    
-		return users;
+		return userDao.getUsernames();
 	}
 	
 	public User findById(long id) {

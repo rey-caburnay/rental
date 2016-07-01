@@ -26,8 +26,8 @@ public class TestContext {
         return messageSource;
     }
 
-    @Bean
-    public UserService todoService() {
-        return Mockito.mock(UserService.class);
-    }
+//    @Bean
+//    public UserService userService() {
+//        return Mockito.mock(UserService.class);
+//    }
 }

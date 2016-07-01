@@ -19,7 +19,6 @@ import com.shinn.service.SampleService;
 import com.shinn.service.SampleServiceImpl;
 
 @Configuration
-@ComponentScan({ "com.shinn.dao" })
 @PropertySource(value = { "classpath:application.properties" })
 public class DatabaseConfiguration {
     
