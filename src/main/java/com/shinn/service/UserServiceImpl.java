@@ -7,7 +7,6 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.shinn.dao.factory.AbstractDao;
 import com.shinn.dao.users.UserDao;
@@ -29,11 +28,11 @@ public class UserServiceImpl extends AbstractDao implements UserService{
 	private static List<User> users;
 	
 	public List<User> findAllUsers() {
-	    
+	    System.out.println("userDao:" + userDao.toString());
 		return userDao.getUsernames();
 	}
 	
-	public User findById(long id) {
+	public User findById(Integer id) {
 		for(User user : users){
 			if(user.getId() == id){
 				return user;
@@ -44,7 +43,7 @@ public class UserServiceImpl extends AbstractDao implements UserService{
 	
 	public User findByName(String name) {
 		for(User user : users){
-			if(user.getName().equalsIgnoreCase(name)){
+			if(user.getUsername().equalsIgnoreCase(name)){
 				return user;
 			}
 		}
@@ -72,7 +71,7 @@ public class UserServiceImpl extends AbstractDao implements UserService{
 	}
 
 	public boolean isUserExist(User user) {
-		return findByName(user.getName())!=null;
+		return findByName(user.getUsername())!=null;
 	}
 
 //	private static List<User> populateDummyUsers(){
@@ -91,6 +90,11 @@ public class UserServiceImpl extends AbstractDao implements UserService{
     public void saveUser(User user) {
         // TODO Auto-generated method stub
         
+    }
+
+    public User findById(long id) {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }

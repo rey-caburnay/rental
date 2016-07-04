@@ -11,26 +11,37 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
-import org.springframework.jdbc.datasource.lookup.JndiDataSourceLookup;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.view.InternalResourceViewResolver;
+import org.springframework.web.servlet.view.JstlView;
+import org.springframework.jdbc.datasource.*;
 
-import com.shinn.dao.factory.JndiDBManager;
-import com.shinn.service.SampleService;
-import com.shinn.service.SampleServiceImpl;
-
+@EnableWebMvc
 @Configuration
+@ComponentScan({ "com.shinn" })
 @PropertySource(value = { "classpath:application.properties" })
-public class DatabaseConfiguration {
+public class SpringWebConfig extends WebMvcConfigurerAdapter {
     
     @Autowired
     private Environment environment;
-    
-    /**
-     * using property files
-     * @return
-     */
-    
-    @Bean(name="dataSource")
+
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/resources/**").addResourceLocations("/resources/");
+    }
+
+    @Bean
+    public InternalResourceViewResolver viewResolver() {
+        InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
+        viewResolver.setViewClass(JstlView.class);
+        viewResolver.setPrefix("/WEB-INF/views/jsp/");
+        viewResolver.setSuffix(".jsp");
+        return viewResolver;
+    }
+
+    @Bean(name = "dataSource")
     public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName(environment.getRequiredProperty("jdbc.driverClassName"));
@@ -39,29 +50,11 @@ public class DatabaseConfiguration {
         dataSource.setPassword(environment.getRequiredProperty("jdbc.password"));
         return dataSource;
     }
-   
-    
-    /**
-     * using jndi lookup
-     * @return
-     */
-//    @Bean(name = "jdbc/MySQL57")
-//    public DataSource dataSourceLookup() {
-//        final JndiDataSourceLookup dsLookup = new JndiDataSourceLookup();
-//        dsLookup.setResourceRef(true);
-//        DataSource dataSource = dsLookup.getDataSource("java:comp/env/jdbc/MySQL57");
-//        return dataSource;
-//    }
-    
-    @Bean(name ="connection")
+//
+    @Bean(name = "connection")
     public Connection connection() throws SQLException {
         Connection connection = dataSource().getConnection();
         return connection;
     }
-    
-    @Bean
-    public SampleService getSampleService() {
-        return new SampleServiceImpl();
-    }
-   
+
 }

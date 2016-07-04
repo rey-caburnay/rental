@@ -28,7 +28,7 @@ public class UserDaoImpl extends AbstractDao implements UserDao{
                result = query("get-users");
                while(result.next()) {
                    User user = new User();
-                   user.setName(result.getString("username"));
+                   user.setUsername(result.getString("username"));
                    users.add(user);
                }
         } catch (Exception e) {

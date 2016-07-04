@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ResourceBundleMessageSource;
 
 import com.shinn.service.UserService;
+import com.shinn.service.UserServiceImpl;
 
 /**
  * @author Petri Kainulainen
@@ -24,6 +25,11 @@ public class TestContext {
         messageSource.setUseCodeAsDefaultMessage(true);
 
         return messageSource;
+    }
+    
+    @Bean
+    public UserService userService() throws Exception {
+        return new UserServiceImpl();
     }
 
 //    @Bean
