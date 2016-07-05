@@ -25,25 +25,24 @@ public class UserDaoImpl extends AbstractDao implements UserDao{
         ResultSet result = null;
         List<User> users = new ArrayList<User>();
         try {
-               result = query("get-users");
-               while(result.next()) {
-                   User user = new User();
-                   user.setUsername(result.getString("username"));
-                   users.add(user);
-               }
+              result = query("get-users");
+              users = getListResult(result, User.class);
         } catch (Exception e) {
             e.printStackTrace();
         
         }
-        
+        System.out.println(users.toString());
         return users;
     }
     
     public User getUser(Integer id) {
+        User user = null;
        try {
            ResultSet result = query("get-users-by-id",id);
-           User user = (User) transform(result, User.class);
-           System.out.println(user);
+           if(result.next()) {
+               user = (User) transform(result, User.class);
+           }
+
            return user;
        }catch (Exception e) {
            return null;

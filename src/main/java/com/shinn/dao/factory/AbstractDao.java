@@ -9,6 +9,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -206,16 +208,40 @@ public abstract class AbstractDao {
         } 
         return result;
     }
-    
+    /**
+     * 
+     * @param result
+     * @param model
+     * @return
+     */
+    public <T> List<T> getListResult(ResultSet result, Class<T> model) {
+        List<T> list = new ArrayList<T>();
+        try {
+            while(result.next()) {
+                list.add((T)transform(result, model));
+            }
+        }catch(Exception e) {
+            list = null;
+        }
+        
+        return list;
+    }
+    /**
+     * 
+     * @param result
+     * @param model
+     * @return
+     */
     public <T> Object transform(ResultSet result, Class<T> model) {
 
         /* Iterate the column-names */
         try {
-            if (result.next()) {
+//            if (result.next()) {
                 T instance = model.newInstance();
                 for (Field f : model.getDeclaredFields()) {
                     Object value = null;
                     try{
+                        System.out.println(f.getName());
                         value = result.getObject(f.getName());
                     }catch(Exception e) {
                       System.out.println(e.getMessage());
@@ -227,8 +253,8 @@ public abstract class AbstractDao {
                     }
                 }
                 return instance;
-            }
-            return null;
+//            }
+//            return null;
         }catch(Exception e) {
             e.printStackTrace();
             return null;
