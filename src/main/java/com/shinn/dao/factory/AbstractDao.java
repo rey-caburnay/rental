@@ -11,13 +11,16 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.shinn.sql.SQLStatement;
 
 
+
+
 public abstract class AbstractDao {
+    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(AbstractDao.class);
  
  
  @Autowired
@@ -241,10 +244,9 @@ public abstract class AbstractDao {
                 for (Field f : model.getDeclaredFields()) {
                     Object value = null;
                     try{
-                        System.out.println(f.getName());
                         value = result.getObject(f.getName());
                     }catch(Exception e) {
-                      System.out.println(e.getMessage());
+
                     }
                     if(value != null) {
                         PropertyDescriptor propertyDescriptor = new PropertyDescriptor(f.getName(), model);
@@ -256,7 +258,7 @@ public abstract class AbstractDao {
 //            }
 //            return null;
         }catch(Exception e) {
-            e.printStackTrace();
+            logger.info(e.getMessage());
             return null;
         }
     }
