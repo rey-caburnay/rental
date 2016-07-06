@@ -10,4 +10,36 @@
     Select  id, username, name, email, mobile_no, status
     FROM mst_user where id = ?;
   </entry>
+    <entry key="save-apartment">
+    	INSERT INTO `realmaster`.`mst_apartment`
+		 (`name`,
+		  `personIncharge`,
+		  `aptType`,
+		  `mobileNo`,
+		  `telNo`,
+		  `address1`,
+		  `address2`,
+		  `status`)
+		VALUES
+		(?,?,?,?,?,?,?,?);
+  </entry>
+  <entry key="save-transaction">
+  INSERT INTO `realmaster`.`tx_rental`
+	(`aptId`,
+	`roomId`,
+	`dueDate`,
+	`txDate`,
+	`startDate`,
+	`endDate`,
+	`deposit`,
+	`renterId`,
+	`balance`,
+	`txType`,
+	`provider`,
+	`amount`,
+	`status`,
+	`userId`)
+  VALUES
+	(?,?,?,?,?,?,?,?,?,?,?,?,?,?);
+  </entry>
 </properties>

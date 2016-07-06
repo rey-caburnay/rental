@@ -8,13 +8,13 @@ import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.shinn.dao.factory.AbstractDao;
-import com.shinn.dao.users.UserDao;
+import com.shinn.dao.factory.AbstractDaoImpl;
+import com.shinn.dao.repos.UserDao;
 import com.shinn.model.User;
 
 
 @Service("userService")
-public class UserServiceImpl extends AbstractDao implements UserService{
+public class UserServiceImpl extends AbstractDaoImpl implements UserService{
 	
     @Autowired
     UserDao userDao;
@@ -29,7 +29,11 @@ public class UserServiceImpl extends AbstractDao implements UserService{
 	
 	public List<User> findAllUsers() {
 	    System.out.println("userDao:" + userDao.toString());
-		return userDao.getUsernames();
+		try {
+            return userDao.findAll();
+        } catch (Exception e) {
+           return null;
+        }
 	}
 	
 	public User findById(Integer id) {

@@ -1,4 +1,4 @@
-package com.shinn.dao.users;
+package com.shinn.dao.repos;
 
 import java.lang.annotation.Annotation;
 import java.sql.PreparedStatement;
@@ -9,14 +9,15 @@ import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
-import com.shinn.dao.factory.AbstractDao;
+import com.shinn.dao.factory.AbstractDaoImpl;
 import com.shinn.model.User;
 
 @Repository
-public class UserDaoImpl extends AbstractDao implements UserDao{
+public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao{
 
     public UserDaoImpl() throws Exception {
         super();
+        setClazz(User.class);
 
     }
 
@@ -26,7 +27,7 @@ public class UserDaoImpl extends AbstractDao implements UserDao{
         List<User> users = new ArrayList<User>();
         try {
               result = query("get-users");
-              users = getListResult(result, User.class);
+              users = getListResult(result);
         } catch (Exception e) {
             e.printStackTrace();
         
@@ -36,18 +37,22 @@ public class UserDaoImpl extends AbstractDao implements UserDao{
     }
     
     public User getUser(Integer id) {
-        User user = null;
-       try {
-           ResultSet result = query("get-users-by-id",id);
-           if(result.next()) {
-               user = (User) transform(result, User.class);
-           }
-
-           return user;
-       }catch (Exception e) {
-           return null;
-       }
-//       closeConnectionObjects(connection, preparedStatement)
+        return getObject("get-users-by-id",id);
     }
+
+    public User getById(Integer id) throws Exception {
+        return getObject("get-users-by-id",id);
+    }
+
+    public List<User> findAll() throws Exception {
+        return getListResult("get-users");
+    }
+
+    public boolean update(String sqlStmnt, Object... parameters) throws Exception {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+   
 
 }

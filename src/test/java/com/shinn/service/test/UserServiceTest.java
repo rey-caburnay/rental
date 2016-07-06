@@ -33,6 +33,7 @@ public class UserServiceTest {
     @Test
     public void getUser() {
         Assert.assertTrue(userService.findAllUsers().size()>0);
+
     }
 
 }

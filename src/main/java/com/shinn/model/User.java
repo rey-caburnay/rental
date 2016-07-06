@@ -1,10 +1,12 @@
 package com.shinn.model;
 
+import java.io.Serializable;
+
 import com.fasterxml.jackson.annotation.JsonView;
 import com.shinn.web.view.Views;
 
 
-public class User {
+public class User implements Serializable {
 
     Integer id;
 	@JsonView(Views.Public.class)

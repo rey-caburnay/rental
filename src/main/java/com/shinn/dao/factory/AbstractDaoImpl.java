@@ -2,6 +2,7 @@ package com.shinn.dao.factory;
 
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
+import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -16,34 +17,38 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.shinn.sql.SQLStatement;
 
+public abstract class AbstractDaoImpl<T extends Serializable> {
+    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(AbstractDaoImpl.class);
 
+    @Autowired
+    private Connection connection;
 
-
-public abstract class AbstractDao {
-    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(AbstractDao.class);
- 
- 
- @Autowired
- private Connection connection;
+    Class<T> clzz;
+    PreparedStatement pStmnt = null;
     
-    public AbstractDao() throws Exception {
-//        if (dbmanager == null) {
-//            dbmanager = new JndiDBManager();
-//        }
-//        this.connection = dbmanager.getConnection();
-//       
+    SQLStatement sqlStatement = SQLStatement.getInstance();
+
+    public AbstractDaoImpl() throws Exception {
+
     }
+
+    public void setClazz(Class<T> clzz) {
+        this.clzz = clzz;
+    }
+
     /**
      * Calling the Rollback implementation for the connection.
      *
-     * @param conn - a connection object tot rollback
-     * @param method - a string
-     * @param ex - an exception object
-     * @throws DaoException - thrown when an exception occurs
+     * @param conn
+     *            - a connection object tot rollback
+     * @param method
+     *            - a string
+     * @param ex
+     *            - an exception object
+     * @throws DaoException
+     *             - thrown when an exception occurs
      */
-    public final void rollBack(
-            final Connection conn, final String method, final Exception ex)
-            throws Exception {
+    public final void rollBack(final Connection conn, final String method, final Exception ex) throws Exception {
         if (null == conn) {
             return;
         }
@@ -51,8 +56,7 @@ public abstract class AbstractDao {
         try {
             conn.rollback();
         } catch (SQLException e) {
-            throw new Exception("SQLException:"
-                    + " Error on calling Rollback", e);
+            throw new Exception("SQLException:" + " Error on calling Rollback", e);
         }
     }
 
@@ -64,10 +68,11 @@ public abstract class AbstractDao {
      * @param preparedStatement
      *            The Prepared Statement to be closed
      * @return true if successful, false if not
-     * @throws DaoException - thrown when an exception occurs
+     * @throws DaoException
+     *             - thrown when an exception occurs
      */
-    public final boolean closeConnectionObjects(final Connection connection,
-            final PreparedStatement preparedStatement) throws Exception {
+    public final boolean closeConnectionObjects(final Connection connection, final PreparedStatement preparedStatement)
+            throws Exception {
         return closeConnectionObjects(connection, preparedStatement, null);
     }
 
@@ -155,18 +160,16 @@ public abstract class AbstractDao {
      *            The ResultSet to be closed
      * @return true if error closing the objects.
      */
-    public final boolean closeConnectionObjects(final Connection connection,
-            final PreparedStatement preparedStatement,
+    public final boolean closeConnectionObjects(final Connection connection, final PreparedStatement preparedStatement,
             final ResultSet resultSet) throws Exception {
         boolean hasErrorOccur = false;
 
         hasErrorOccur = (hasErrorOccur) || closeObject(resultSet);
         hasErrorOccur = (hasErrorOccur) || closeObject(preparedStatement);
         hasErrorOccur = (hasErrorOccur) || closeObject(connection);
-        
+
         if (hasErrorOccur) {
-            throw new Exception("SQLException: "
-                    + "Error closing database resources.");
+            throw new Exception("SQLException: " + "Error closing database resources.");
         }
 
         return hasErrorOccur;
@@ -182,13 +185,13 @@ public abstract class AbstractDao {
      * @throws SQLException
      *             If fails when setting the PreparedStatement values.
      */
-    public static void setValues(final PreparedStatement preparedStatement,
-            final Object... values) throws SQLException {
+    public static void setValues(final PreparedStatement preparedStatement, final Object... values)
+            throws SQLException {
         for (int i = 0; i < values.length; i++) {
             preparedStatement.setObject(i + 1, values[i]);
         }
     }
-    
+
     /**
      * 
      * @param propertyName
@@ -197,70 +200,132 @@ public abstract class AbstractDao {
      * @throws Exception
      */
     public ResultSet query(String propertyName, Object... parameters) throws Exception {
-        PreparedStatement pStmnt = null;
         ResultSet result = null;
         try {
-            SQLStatement sqlStatement = SQLStatement.getInstance();
-            pStmnt = connection.prepareStatement(sqlStatement
-                    .getProperty(propertyName));
+            pStmnt = connection.prepareStatement(sqlStatement.getProperty(propertyName));
             this.setValues(pStmnt, parameters);
             result = pStmnt.executeQuery();
         } catch (Exception e) {
             e.printStackTrace();
             result = null;
-        } 
+        }
         return result;
     }
+
     /**
      * 
      * @param result
      * @param model
      * @return
      */
-    public <T> List<T> getListResult(ResultSet result, Class<T> model) {
+    public <T> List<T> getListResult(ResultSet result) {
         List<T> list = new ArrayList<T>();
         try {
-            while(result.next()) {
-                list.add((T)transform(result, model));
+            while (result.next()) {
+                list.add((T) transform(result));
             }
-        }catch(Exception e) {
+        } catch (Exception e) {
             list = null;
         }
-        
+
         return list;
     }
+    
+    /**
+     * 
+     * @param result
+     * @param model
+     * @return
+     * @throws Exception 
+     */
+    public <T> List<T> getListResult(String sqlStment, Object... parameters) {
+        List<T> list = new ArrayList<T>();
+        try {
+            ResultSet result = query(sqlStment, parameters);
+            while (result.next()) {
+                list.add((T) transform(result));
+            }
+            closeConnectionObjects(connection, pStmnt);
+        } catch (Exception e) {
+            list = null;
+             
+        } 
+
+        return list;
+    }
+    
+    /**
+     * get result set map by an object
+     * @param sqlStmnt
+     * @param parameters
+     * @return
+     */
+    public <T> T getObject(String sqlStmnt, Object... parameters) {
+        ResultSet result;
+        T o = null;
+        try {
+            result = query(sqlStmnt,parameters);
+            o = (T) transform(result);
+            closeConnectionObjects(connection, pStmnt);
+        } catch (Exception e) {
+            logger.info(e.getMessage());
+//            closeConnectionObjects(connection, sqlStmnt)
+            return null;
+        }
+       return o;
+    }
+
     /**
      * 
      * @param result
      * @param model
      * @return
      */
-    public <T> Object transform(ResultSet result, Class<T> model) {
+    public <T> Object transform(ResultSet result) {
 
         /* Iterate the column-names */
         try {
-//            if (result.next()) {
-                T instance = model.newInstance();
-                for (Field f : model.getDeclaredFields()) {
-                    Object value = null;
-                    try{
-                        value = result.getObject(f.getName());
-                    }catch(Exception e) {
+            T instance = (T) clzz.newInstance();
+            for (Field f : clzz.getDeclaredFields()) {
+                Object value = null;
+                try {
+                    value = result.getObject(f.getName());
+                } catch (Exception e) {
 
-                    }
-                    if(value != null) {
-                        PropertyDescriptor propertyDescriptor = new PropertyDescriptor(f.getName(), model);
-                        Method method = propertyDescriptor.getWriteMethod();
-                        method.invoke(instance, value);
-                    }
                 }
-                return instance;
-//            }
-//            return null;
-        }catch(Exception e) {
+                if (value != null) {
+                    PropertyDescriptor propertyDescriptor = new PropertyDescriptor(f.getName(), clzz);
+                    Method method = propertyDescriptor.getWriteMethod();
+                    method.invoke(instance, value);
+                }
+            }
+            return instance;
+
+        } catch (Exception e) {
             logger.info(e.getMessage());
             return null;
         }
     }
     
+    /**
+     * execute insert or update statment
+     * @param sqlStmnt sql insert or update statement
+     * @param parameters
+     * @return
+     * @throws Exception 
+     */
+    public void executeSaveUpate(String sqlStmnt, Object... parameters) throws Exception {
+        try {
+           
+            pStmnt = connection.prepareStatement(sqlStatement.getProperty(sqlStmnt));
+            this.setValues(pStmnt, parameters);
+            pStmnt.executeUpdate();
+        }catch (Exception e) {
+            logger.debug(e.getMessage());
+            throw new Exception ("Failed to save " + parameters.toString());
+        }
+
+    }
+   
+
 }
