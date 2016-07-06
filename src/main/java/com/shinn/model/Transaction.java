@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class Transaction implements Serializable{
+    public static final String TABLE_NAME = "tx_rental";
 	
 	private Integer id;
 	private Integer aptId;

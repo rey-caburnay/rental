@@ -24,5 +24,13 @@ public interface GenericDao<T> {
 	 */
 	public void saveUpdate(T model) throws Exception;
 	
+	/**
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	public Integer getCurrentKey(String table) throws Exception;
+	
+	
 
 }

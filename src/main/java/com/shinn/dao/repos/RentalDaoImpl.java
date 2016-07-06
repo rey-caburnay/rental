@@ -2,9 +2,12 @@ package com.shinn.dao.repos;
 
 import java.util.List;
 
+import org.springframework.stereotype.Repository;
+
 import com.shinn.dao.factory.AbstractDaoImpl;
 import com.shinn.model.Transaction;
 
+@Repository
 public class RentalDaoImpl extends AbstractDaoImpl<Transaction> implements RentalDao{
 
     public RentalDaoImpl() throws Exception {
@@ -20,6 +23,24 @@ public class RentalDaoImpl extends AbstractDaoImpl<Transaction> implements Renta
     public List<Transaction> findAll() throws Exception {
         // TODO Auto-generated method stub
         return null;
+    }
+
+    public void saveUpdate(Transaction model) throws Exception {
+        executeSaveUpate("save-transaction",
+                model.getAptId(),
+                model.getRoomId(),
+                model.getDueDate(),
+                model.getTxDate(),
+                model.getStartDate(),
+                model.getEndDate(),
+                model.getDeposit(),
+                model.getRenterId(),
+                model.getBalance(),
+                model.getTxType(),
+                model.getProvider(),
+                model.getAmount(),
+                model.getStatus(),
+                model.getUserId());
     }
 
 }

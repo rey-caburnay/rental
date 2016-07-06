@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
-  
+  <entry key="get-current-key">
+  SELECT `AUTO_INCREMENT`
+	FROM  INFORMATION_SCHEMA.TABLES
+	WHERE TABLE_SCHEMA = 'realmaster'
+	AND   TABLE_NAME   = ?;
+  </entry>
   <entry key="get-users">
     Select  id, username, name, email, mobile_no, status
     FROM mst_user;

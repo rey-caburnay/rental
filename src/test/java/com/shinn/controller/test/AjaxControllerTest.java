@@ -29,7 +29,7 @@ import com.shinn.model.User;
 @WebAppConfiguration
 public class AjaxControllerTest {
     @Resource
-    private WebApplicationContext webApplicationContext;
+    public WebApplicationContext webApplicationContext;
  
     private MockMvc mockMvc;
     
@@ -51,6 +51,36 @@ public class AjaxControllerTest {
 
         
     }
+
+    /**
+     * @return the webApplicationContext
+     */
+    public WebApplicationContext getWebApplicationContext() {
+        return webApplicationContext;
+    }
+
+    /**
+     * @param webApplicationContext the webApplicationContext to set
+     */
+    public void setWebApplicationContext(WebApplicationContext webApplicationContext) {
+        this.webApplicationContext = webApplicationContext;
+    }
+
+    /**
+     * @return the mockMvc
+     */
+    public MockMvc getMockMvc() {
+        return mockMvc;
+    }
+
+    /**
+     * @param mockMvc the mockMvc to set
+     */
+    public void setMockMvc(MockMvc mockMvc) {
+        this.mockMvc = mockMvc;
+    }
+    
+    
     
 
 }

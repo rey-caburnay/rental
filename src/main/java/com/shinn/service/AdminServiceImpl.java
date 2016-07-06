@@ -22,40 +22,30 @@ public class AdminServiceImpl implements AdminService {
 
     public Response<Apartment> createApartment(Apartment apt) throws Exception {
 
-        apartmentDao.saveUpdate(apt);("save-apartment",
-                apt.getName(),
-                apt.getPersonInCharge(),
-                apt.getAptType(),
-                apt.getMobileNo(),
-                apt.getTelNo(),
-                apt.getAddress1(),
-                apt.getAddress2(),
-                apt.getStatus());
-        
-        
+        return null;
     }
 
-    public Apartment getApartment(Integer id) throws Exception {
+    public Response<Apartment> getApartment(Integer id) throws Exception {
         // TODO Auto-generated method stub
         return null;
     }
 
-    public void createRoom(Room room) throws Exception {
-        // TODO Auto-generated method stub
-        
-    }
-
-    public Room getRoom(Integer id) throws Exception {
+    public Response<Room> createRoom(Room room) throws Exception {
         // TODO Auto-generated method stub
         return null;
     }
 
-    public void createExpenses(Expense expense) throws Exception {
+    public Response<Room> getRoom(Integer id) throws Exception {
         // TODO Auto-generated method stub
-        
+        return null;
     }
 
-    public Expense getExpense(Integer id) throws Exception {
+    public Response<Expense> createExpenses(Expense expense) throws Exception {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    public Response<Expense> getExpense(Integer id) throws Exception {
         // TODO Auto-generated method stub
         return null;
     }

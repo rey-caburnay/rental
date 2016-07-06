@@ -5,6 +5,6 @@ import com.shinn.model.Transaction;
 
 public interface TransactionService {
     
-    public Response<Transaction> createTx(Transaction tx) throws Exception;
+    public Response<Transaction> createTx(Transaction tx);
 
 }

@@ -316,16 +316,32 @@ public abstract class AbstractDaoImpl<T extends Serializable> {
      */
     public void executeSaveUpate(String sqlStmnt, Object... parameters) throws Exception {
         try {
-           
             pStmnt = connection.prepareStatement(sqlStatement.getProperty(sqlStmnt));
             this.setValues(pStmnt, parameters);
             pStmnt.executeUpdate();
         }catch (Exception e) {
             logger.debug(e.getMessage());
-            throw new Exception ("Failed to save " + parameters.toString());
+            throw new Exception ("Failed to saved: " + e.getMessage());
         }
 
     }
    
+    /**
+     * get the current auto increment key
+     * from the table
+     * @return
+     */
+    public Integer getCurrentKey(String table) {
+        Integer key = 1;
+        try {
+            ResultSet result = query("get-current-key", table);
+            if(result.next()) {
+                key = result.getInt(1);
+            }
+        }catch(Exception e) {
+            logger.error(e.getMessage());
+        }
+        return key;
+    }
 
 }
