@@ -12,17 +12,17 @@ public class WelcomeController {
 	public String printWelcome(ModelMap model) {
 		return "index";
 	}
-	@RequestMapping(value = "/about", method = RequestMethod.GET)
-    public String about(ModelMap model) {
-        return "content/about";
-    }
-	@RequestMapping(value = "/faq", method = RequestMethod.GET)
-    public String faq(ModelMap model) {
-        return "content/faq";
-    }
-	@RequestMapping(value = "/blog", method = RequestMethod.GET)
-    public String blog(ModelMap model) {
-        return "content/blog";
-    }
+//	@RequestMapping(value = "/about", method = RequestMethod.GET)
+//    public String about(ModelMap model) {
+//        return "content/about";
+//    }
+//	@RequestMapping(value = "/faq", method = RequestMethod.GET)
+//    public String faq(ModelMap model) {
+//        return "content/faq";
+//    }
+//	@RequestMapping(value = "/blog", method = RequestMethod.GET)
+//    public String blog(ModelMap model) {
+//        return "content/blog";
+//    }
 
 }
