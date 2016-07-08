@@ -36,7 +36,7 @@ public class SpringWebConfig extends WebMvcConfigurerAdapter {
     public InternalResourceViewResolver viewResolver() {
         InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
         viewResolver.setViewClass(JstlView.class);
-        viewResolver.setPrefix("/WEB-INF/views/jsp/");
+        viewResolver.setPrefix("/WEB-INF/views/");
         viewResolver.setSuffix(".jsp");
         return viewResolver;
     }
@@ -50,7 +50,7 @@ public class SpringWebConfig extends WebMvcConfigurerAdapter {
         dataSource.setPassword(environment.getRequiredProperty("jdbc.password"));
         return dataSource;
     }
-//
+
     @Bean(name = "connection")
     public Connection connection() throws SQLException {
         Connection connection = dataSource().getConnection();

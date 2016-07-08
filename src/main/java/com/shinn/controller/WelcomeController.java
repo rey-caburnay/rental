@@ -10,7 +10,19 @@ public class WelcomeController {
 
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String printWelcome(ModelMap model) {
-		return "welcome";
+		return "index";
 	}
+	@RequestMapping(value = "/about", method = RequestMethod.GET)
+    public String about(ModelMap model) {
+        return "content/about";
+    }
+	@RequestMapping(value = "/faq", method = RequestMethod.GET)
+    public String faq(ModelMap model) {
+        return "content/faq";
+    }
+	@RequestMapping(value = "/blog", method = RequestMethod.GET)
+    public String blog(ModelMap model) {
+        return "content/blog";
+    }
 
 }
