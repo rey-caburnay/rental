@@ -24,17 +24,26 @@ body, .form-control{
 .tablecontainer{
 	padding-left: 20px;
 }
-
-.generic-container {
-  width:80%;
+.container {
   margin-left: 20px;
   margin-top: 20px;
   margin-bottom: 20px;
   padding: 20px;
-  background-color: #EAE7E7;
+  /* background-color: #EAE7E7; */
   border: 1px solid #ddd;
   border-radius: 4px;
   box-shadow: 0 0 30px black;
+}
+
+.generic-container {
+
+  margin-top: -17px;
+  margin-bottom: -8px;
+  padding: 5px;
+  background-color: #EAE7E7;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-shadow: 0 0 2px black;
 }
 
 .custom-width {

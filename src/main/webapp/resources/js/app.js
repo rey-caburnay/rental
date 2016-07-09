@@ -10,7 +10,7 @@ var App = angular.module('rental',['ngRoute']);
 App.config(['$routeProvider', function ($routeProvider) {
   $routeProvider
     // Home
-    .when("/", {templateUrl: "home", controller: "UserController"})
+    .when("/", {templateUrl: "resources/ui/content/transaction.html", controller: "TransactionController",controllerAs:"tx"})
     // Pages
     .when("/about", {templateUrl: "resources/ui/content/about.html", controller: "UserController"})
     //.when("#/faq", {templateUrl: "/faq", controller: "UserController"})
