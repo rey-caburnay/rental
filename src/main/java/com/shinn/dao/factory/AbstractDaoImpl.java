@@ -12,8 +12,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.sql.DataSource;
+
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import com.shinn.sql.SQLStatement;
 
@@ -22,6 +26,12 @@ public abstract class AbstractDaoImpl<T extends Serializable> {
 
     @Autowired
     private Connection connection;
+    
+    @Autowired
+    private DataSource dataSource;
+    
+    private JdbcTemplate jdbcTemplate;
+
 
     Class<T> clzz;
     PreparedStatement pStmnt = null;
@@ -35,6 +45,12 @@ public abstract class AbstractDaoImpl<T extends Serializable> {
     public void setClazz(Class<T> clzz) {
         this.clzz = clzz;
     }
+    
+//    @Autowired
+//    public void setDataSource(DataSource dataSource) {
+//        this.jdbcTemplate = new JdbcTemplate(dataSource);
+//    }
+
 
     /**
      * Calling the Rollback implementation for the connection.
@@ -202,6 +218,11 @@ public abstract class AbstractDaoImpl<T extends Serializable> {
     public ResultSet query(String propertyName, Object... parameters) throws Exception {
         ResultSet result = null;
         try {
+            if(connection.isClosed()) {
+                connection = null;
+                connection = dataSource.getConnection();
+            }
+                
             pStmnt = connection.prepareStatement(sqlStatement.getProperty(propertyName));
             this.setValues(pStmnt, parameters);
             result = pStmnt.executeQuery();
@@ -212,25 +233,7 @@ public abstract class AbstractDaoImpl<T extends Serializable> {
         return result;
     }
 
-    /**
-     * 
-     * @param result
-     * @param model
-     * @return
-     */
-    public <T> List<T> getListResult(ResultSet result) {
-        List<T> list = new ArrayList<T>();
-        try {
-            while (result.next()) {
-                list.add((T) transform(result));
-            }
-        } catch (Exception e) {
-            list = null;
-        }
-
-        return list;
-    }
-    
+ 
     /**
      * 
      * @param result
@@ -250,7 +253,7 @@ public abstract class AbstractDaoImpl<T extends Serializable> {
             list = null;
              
         } 
-
+       
         return list;
     }
     
@@ -266,7 +269,7 @@ public abstract class AbstractDaoImpl<T extends Serializable> {
         try {
             result = query(sqlStmnt,parameters);
             o = (T) transform(result);
-            closeConnectionObjects(connection, pStmnt);
+//            closeConnectionObjects(connection, pStmnt);
         } catch (Exception e) {
             logger.info(e.getMessage());
 //            closeConnectionObjects(connection, sqlStmnt)
@@ -284,14 +287,16 @@ public abstract class AbstractDaoImpl<T extends Serializable> {
     public <T> Object transform(ResultSet result) {
 
         /* Iterate the column-names */
+        String columnName = "";
         try {
             T instance = (T) clzz.newInstance();
             for (Field f : clzz.getDeclaredFields()) {
                 Object value = null;
                 try {
-                    value = result.getObject(f.getName());
+                    columnName = f.getName();
+                    value = result.getObject(columnName);
                 } catch (Exception e) {
-
+                    logger.debug("column name:"+ columnName);
                 }
                 if (value != null) {
                     PropertyDescriptor propertyDescriptor = new PropertyDescriptor(f.getName(), clzz);
@@ -302,7 +307,7 @@ public abstract class AbstractDaoImpl<T extends Serializable> {
             return instance;
 
         } catch (Exception e) {
-            logger.info(e.getMessage());
+            logger.info(e.getMessage() +" " + columnName);
             return null;
         }
     }

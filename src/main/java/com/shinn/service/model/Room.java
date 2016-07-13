@@ -6,9 +6,11 @@ public class Room implements Serializable{
 	
 	private Integer id;
 	
-	private String aptId;
+	private Integer aptId;
 	
-	private String name;
+	private Integer floor;
+	
+	private Integer occupied;
 	
 	private String roomNo;
 	
@@ -39,32 +41,32 @@ public class Room implements Serializable{
 	/**
 	 * @return the aptId
 	 */
-	public String getAptId() {
+	public Integer getAptId() {
 		return aptId;
 	}
 
 	/**
 	 * @param aptId the aptId to set
 	 */
-	public void setAptId(String aptId) {
+	public void setAptId(Integer aptId) {
 		this.aptId = aptId;
 	}
 
 	/**
-	 * @return the name
-	 */
-	public String getName() {
-		return name;
-	}
+     * @return the floor
+     */
+    public Integer getFloor() {
+        return floor;
+    }
 
-	/**
-	 * @param name the name to set
-	 */
-	public void setName(String name) {
-		this.name = name;
-	}
+    /**
+     * @param floor the floor to set
+     */
+    public void setFloor(Integer floor) {
+        this.floor = floor;
+    }
 
-	/**
+    /**
 	 * @return the roomNo
 	 */
 	public String getRoomNo() {
@@ -148,14 +150,31 @@ public class Room implements Serializable{
 		this.status = status;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString() {
-		return "Room [id=" + id + ", aptId=" + aptId + ", name=" + name + ", roomNo=" + roomNo + ", roomType="
-				+ roomType + ", size=" + size + ", telNo=" + telNo + ", rate=" + rate + ", status=" + status + "]";
-	}
+    /**
+     * @return the occupied
+     */
+    public Integer getOccupied() {
+        return occupied;
+    }
+
+    /**
+     * @param occupied the occupied to set
+     */
+    public void setOccupied(Integer occupied) {
+        this.occupied = occupied;
+    }
+
+    /* (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return "Room [id=" + id + ", aptId=" + aptId + ", floor=" + floor + ", occupied=" + occupied + ", roomNo="
+                + roomNo + ", roomType=" + roomType + ", size=" + size + ", telNo=" + telNo + ", rate=" + rate
+                + ", status=" + status + "]";
+    }
+
+
 	
 	
 

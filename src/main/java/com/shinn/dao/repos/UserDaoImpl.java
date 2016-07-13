@@ -27,7 +27,7 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao{
         List<User> users = new ArrayList<User>();
         try {
               result = query("get-users");
-              users = getListResult(result);
+              users = null;
         } catch (Exception e) {
             e.printStackTrace();
         

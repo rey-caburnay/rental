@@ -33,15 +33,25 @@ CREATE TABLE `mst_apartment` (
 CREATE TABLE `mst_room` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `aptId` int(11) NOT NULL,
-  `name` varchar(50) DEFAULT NULL,
+  `floor` int(5) DEFAULT NULL,
   `roomNo` varchar(255) DEFAULT NULL,
   `roomType` varchar(20) DEFAULT NULL,
-  `size` int(5) DEFAULT NULL,
+  `size` int(5) DEFAULT 0,
+  `occupied` int(5) DEFAULT 0,
   `telNo` varchar(45) DEFAULT NULL,
   `rate` double(9,4) DEFAULT 0,
   `status`varchar(20) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `Id_UNIQUE` (`id`,`aptId`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+/**** room_type***/
+CREATE TABLE `mst_room_type` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` int(11) NOT NULL,
+  `description` int(5) DEFAULT NULL,
+  `status`varchar(20) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `Id_UNIQUE` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 /**** expenses ***/

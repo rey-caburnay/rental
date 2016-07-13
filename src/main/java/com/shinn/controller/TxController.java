@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.shinn.dao.factory.AbstractDaoImpl;
 import com.shinn.dao.factory.ResultStatus;
 import com.shinn.service.TransactionService;
-import com.shinn.ui.model.Registration;
+import com.shinn.ui.model.RegistrationForm;
 import com.shinn.ui.model.Response;
 
 @RestController
@@ -30,12 +30,12 @@ public class TxController {
     
     @RequestMapping(value = "/savetx", method = RequestMethod.POST, 
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Response<Registration>> createTx(@RequestBody Registration tx) {
+    public ResponseEntity<Response<RegistrationForm>> createTx(@RequestBody RegistrationForm tx) {
         logger.debug(tx.toString());
-        Response<Registration> resp = transactionService.createTx(tx);
+        Response<RegistrationForm> resp = transactionService.createTx(tx);
         logger.debug(resp.toString());
         if(resp.getResponseStatus().equals(ResultStatus.RESULT_OK)){
-            return new ResponseEntity<Response<Registration>>(resp, HttpStatus.OK);
+            return new ResponseEntity<Response<RegistrationForm>>(resp, HttpStatus.OK);
         } 
         return new ResponseEntity(HttpStatus.BAD_REQUEST);
     }

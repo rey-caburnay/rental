@@ -7,7 +7,7 @@ import java.io.Serializable;
  * @author rc185213
  *
  */
-public class Registration implements Serializable {
+public class RegistrationForm implements Serializable {
     
     String aptId = null;
     String roomId =  null;

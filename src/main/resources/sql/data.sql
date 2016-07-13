@@ -6,3 +6,13 @@ VALUES(1,'Rey','Rey','Rey@email.com','09954645794','2399970','cebu city','Lapula
 INSERT INTO `realmaster`.`mst_apartment`
 (`name`,`personIncharge`,`aptType`,`mobileNo`,`telNo`,`address1`,`address2`,`status`)
 VALUES('buhisan','paul','apartment','234234234','234234','labangon',null,'Active');
+INSERT INTO `realmaster`.`mst_apartment` (`id`, `name`, `personIncharge`, `aptType`, `status`) VALUES ('2', 'Lapulapu', 'Paul', 'apartment', 'Active');
+INSERT INTO `realmaster`.`mst_apartment` (`id`, `name`, `personIncharge`, `aptType`, `status`) VALUES ('3', 'Shrie', 'Paule', 'store', 'Active');
+
+
+/*************** rooms *******************/
+INSERT INTO `realmaster`.`mst_room` (`id`, `aptId`, `floor`, `roomNo`, `roomType`, `size`, `status`) VALUES ('1', '1', '1', '1', 'standard', '1', 'active');
+INSERT INTO `realmaster`.`mst_room` (`id`, `aptId`, `floor`, `roomNo`, `roomType`, `size`, `status`) VALUES ('2', '1', '1', '2', 'standard', '1', 'active');
+INSERT INTO `realmaster`.`mst_room` (`id`, `aptId`, `floor`, `roomNo`, `roomType`, `size`, `status`) VALUES ('3', '1', '2', '1', 'double', '2', 'active');
+INSERT INTO `realmaster`.`mst_room` (`id`, `aptId`, `floor`, `roomNo`, `roomType`, `size`, `status`) VALUES ('4', '1', '2', '2', 'double', '1', 'active');
+INSERT INTO `realmaster`.`mst_room` (`id`, `aptId`, `floor`, `roomNo`, `roomType`, `size`, `status`) VALUES ('5', '2', '1', '1', 'house', '1', 'active');

@@ -13,7 +13,7 @@ import com.shinn.dao.repos.RentalDao;
 import com.shinn.dao.repos.RenterDao;
 import com.shinn.service.model.Renter;
 import com.shinn.service.model.Transaction;
-import com.shinn.ui.model.Registration;
+import com.shinn.ui.model.RegistrationForm;
 import com.shinn.ui.model.Response;
 import com.shinn.util.RentStatus;
 import com.shinn.util.StringUtil;
@@ -30,8 +30,8 @@ public class TransactionServiceImpl implements TransactionService {
     /**
      * 
      */
-    public Response<Registration> createTx(Registration reg)  {
-        Response<Registration> resp = new Response<Registration>();
+    public Response<RegistrationForm> createTx(RegistrationForm reg)  {
+        Response<RegistrationForm> resp = new Response<RegistrationForm>();
         Transaction tx  = new Transaction();
         try {
             Renter renter = renterDao.getRenterByName(reg.getRenterLastName(), 
