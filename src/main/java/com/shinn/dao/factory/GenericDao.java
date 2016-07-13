@@ -31,6 +31,10 @@ public interface GenericDao<T> {
 	 */
 	public Integer getCurrentKey(String table) throws Exception;
 	
+	public void commit();
+	
+	public void rollback();
+	
 	
 
 }

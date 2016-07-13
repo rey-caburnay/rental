@@ -1,9 +1,9 @@
 package com.shinn.service;
 
-import com.shinn.model.Apartment;
-import com.shinn.model.Expense;
-import com.shinn.model.Response;
-import com.shinn.model.Room;
+import com.shinn.service.model.Apartment;
+import com.shinn.service.model.Expense;
+import com.shinn.ui.model.Response;
+import com.shinn.service.model.Room;
 
 public interface AdminService {
     

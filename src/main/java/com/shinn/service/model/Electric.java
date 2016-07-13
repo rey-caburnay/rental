@@ -1,4 +1,4 @@
-package com.shinn.model;
+package com.shinn.service.model;
 
 public class Electric {
 

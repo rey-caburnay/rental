@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Repository;
 
 import com.shinn.dao.factory.AbstractDaoImpl;
-import com.shinn.model.Apartment;
+import com.shinn.service.model.Apartment;
 @Repository
 public class ApartmentDaoImpl extends AbstractDaoImpl<Apartment> implements ApartmentDao {
 

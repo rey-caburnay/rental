@@ -1,10 +1,10 @@
 package com.shinn.service;
 
-import com.shinn.model.Response;
-import com.shinn.model.Transaction;
+import com.shinn.ui.model.Registration;
+import com.shinn.ui.model.Response;
 
 public interface TransactionService {
     
-    public Response<Transaction> createTx(Transaction tx);
+    public Response<Registration> createTx(Registration tx);
 
 }

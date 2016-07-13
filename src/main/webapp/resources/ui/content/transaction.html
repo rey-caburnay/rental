@@ -1,69 +1,201 @@
-	<div class="generic-container">
-<!-- 		<div class="panel panel-default"> -->
-			<div class="panel-heading">
-				<span class="lead">Rent Form</span>
+<div class="generic-container">
+  <!-- 		<div class="panel panel-default"> -->
+  <div class="panel-heading">
+    <span class="lead">Rent Form</span>
+  </div>
+  <div class="row clearfix">
+    <div
+      class="col-xs-11 col-sm-12 col-md-8 col-lg-9  column col-sm-offset-0 col-md-offset-0 col-lg-offset-1">
+
+      <form class="form-horizontal">
+	          <fieldset>
+          <!-- Form Name -->
+          <legend>Renter's Info</legend>
+
+          <!-- Text input-->
+          <div class="form-group">
+            <label class="col-md-3 control-label" for="receivedFrom">Received From</label>
+            <div class="col-md-3">
+              <input id="textinput" name="receivedFrom" type="text"
+                placeholder="Lastname" class="form-control input-md"
+                 data-ng-model="tx.renter.lastname">
+            </div>
+			<div class="col-md-3">
+              <input id="textinput" name="receivedFrom" type="text"
+                placeholder="FirstName" class="form-control input-md"
+                data-ng-model="tx.renter.firstname">
+            </div>
+			<div class="col-md-3">
+              <input id="textinput" name="receivedFrom" type="text"
+                placeholder="MI" class="form-control input-md"
+                data-ng-model="tx.renter.mi">
+            </div>
+            
+          </div>
+		  <div class="form-group">
+            <label class="col-md-3 control-label" for="address">Address</label>
+            <div class="col-md-9">
+              <input id="textinput" name="address" type="text"
+                placeholder="address" class="form-control input-md"
+                data-ng-model="tx.renter.address">
+            </div>
+          </div>
+  		  <div class="form-group">
+            <label class="col-md-3 control-label" for="mobileno">mobile</label>
+            <div class="col-md-3">
+              <input id="textinput" name="mobileno" type="text"
+                placeholder="099xxxxxxxx" class="form-control input-md"
+                data-ng-model="tx.renter.mobileno">
+            </div>
+			<label class="col-md-3 control-label" for="telno">telno</label>
+            <div class="col-md-3">
+              <input id="textinput" name="telno" type="text"
+                placeholder="232xxxx" class="form-control input-md"
+                data-ng-model="tx.renter.telno">
+            </div>
+          </div>
+			<div class="form-group">
+            <label class="col-md-3 control-label" for="idpresented">ID presented</label>
+            <div class="col-md-9">
+              <input id="textinput" name="idpresented" type="text"
+                placeholder="id name : id #" class="form-control input-md"
+                data-ng-model="tx.renter.idpresented">
+            </div>
+          </div>
+       
+        </fieldset>
+	    <fieldset>
+		 <legend></legend>
+		   <!-- Select Basic -->
+          <div class="form-group">
+            <label class="col-md-3 control-label" for="rentType">Rent Type</label>
+            <div class="col-md-9">
+             <select id="selectbasic" name="rentType" data-ng-model="tx.trans.type" data-ng-options="type.label for type in tx.rentType"
+               class="form-control">
+             <option value="">-- choose rent type --</option>
+              </select>
+              
+            </div>
+          </div>
+		            <!-- Multiple Radios (inline) -->
+            <div class="form-group">
+            <label class="col-md-3 control-label" for="radios">Payment Type</label>
+            <div class="col-md-9">
+              <label class="radio-inline" for="radios-0"> <input
+                type="radio" name="radios" id="radios-0" value="cash"
+                checked="checked"
+                data-ng-model="tx.paymentType" > Cash
+              </label> 
+              <label class="radio-inline" for="radios-1"> <input
+                type="radio" name="radios" id="radios-1" value="check"
+                data-ng-model="tx.paymentType">
+                Check
+              </label>
+              <label class="radio-inline" for="radios-1"> <input
+                type="radio" name="radios" id="radios-1" value="online"
+                data-ng-model="tx.paymentType">
+                Online
+              </label>
+            </div>
+          </div>
+		  <div class="form-group">
+		  <label class="col-md-3 control-label" for="selectbasic">Amount</label>
+            <div class="col-md-6">
+              <input id="textinput" name="textinput" type="text"
+                placeholder="placeholder" class="form-control input-md"
+                data-ng-model="tx.trans.amount">
+            </div>
 			</div>
-			
-			<div class="formcontainer">
-				<form ng-submit="ctrl.submit()" name="myForm"
-					class="form-horizontal">
-					<input type="hidden" ng-model="ctrl.user.id" />
-					<div class="row">
-						<div class="form-group col-md-12">
-							<label class="col-md-2 control-lable" for="file">Name</label>
-							<div class="col-md-7">
-								<input type="text" ng-model="ctrl.user.username" name="uname"
-									class="username form-control input-sm"
-									placeholder="Enter your name" required ng-minlength="3" />
-								<div class="has-error" ng-show="myForm.$dirty">
-									<span ng-show="myForm.uname.$error.required">This is a
-										required field</span> <span ng-show="myForm.uname.$error.minlength">Minimum
-										length required is 3</span> <span ng-show="myForm.uname.$invalid">This
-										field is invalid </span>
-								</div>
-							</div>
-						</div>
-					</div>
-
-
-					<div class="row">
-						<div class="form-group col-md-12">
-							<label class="col-md-2 control-lable" for="file">Address</label>
-							<div class="col-md-7">
-								<input type="text" ng-model="ctrl.user.address"
-									class="form-control input-sm"
-									placeholder="Enter your Address. [This field is validation free]" />
-							</div>
-						</div>
-					</div>
-
-					<div class="row">
-						<div class="form-group col-md-12">
-							<label class="col-md-2 control-lable" for="file">Email</label>
-							<div class="col-md-7">
-								<input type="email" ng-model="ctrl.user.email" name="email"
-									class="email form-control input-sm"
-									placeholder="Enter your Email" required />
-								<div class="has-error" ng-show="myForm.$dirty">
-									<span ng-show="myForm.email.$error.required">This is a
-										required field</span> <span ng-show="myForm.email.$invalid">This
-										field is invalid </span>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="row">
-						<div class="form-actions floatRight">
-							<input type="submit" value="{{!ctrl.user.id ? 'Add' : 'Update'}}"
-								class="btn btn-primary btn-sm" ng-disabled="myForm.$invalid">
-							<button type="button" ng-click="ctrl.reset()"
-								class="btn btn-warning btn-sm" ng-disabled="myForm.$pristine">Reset
-								Form</button>
-						</div>
-					</div>
-				</form>
+			 <div class="form-group">
+            <label class="col-md-3 control-label" for="amtInWords">Amount In Words</label>
+            <div class="col-md-9">
+              <input id="textinput" name="amtInWords" type="text"
+                placeholder="placeholder" class="form-control input-md"
+                 data-ng-model="tx.trans.amtInWords">
+            </div>
+          </div>
+		     <div class="form-group">
+            <label class="col-md-3 control-label" for="rentFor">Rent For</label>
+           <div class="col-md-9">
+           <select id="selectbasic" name="rentFor" ng-model="tx.apartment" ng-options="apt.name for apt in tx.apartments"
+               class="form-control">
+             <option value="">-- choose apartment --</option>
+              </select>
+            </div>
+            <label class="col-md-3 control-label" for="rentFrom">Rent Period</label>
+            <div class="col-md-2">
+              <input id="textinput" name="rentFrom" type="text"
+                placeholder="placeholder" class="form-control input-md"
+                data-ng-model="tx.trans.startDate">
+            </div>
+              <div class="col-md-2">
+              <input id="textinput" name="rentTo" type="text"
+                placeholder="placeholder" class="form-control input-md">
+            </div>
+             <label class="col-md-2 control-label" for="rentFrom">Collection Date</label>
+             <div class="col-md-3">
+              <input id="textinput" name="rentTo" type="text"
+                placeholder="placeholder" class="form-control input-md"
+                   data-ng-model="tx.trans.endDate">
+            </div>
+          </div>
+		  </fieldset>
+		  <fieldset>
+		  <legend></legend>
+		  <div class="form-group">
+           <label class="col-md-3 control-label" for="selectbasic">Electric Current Reading</label>
+            <div class="col-md-3">
+              <input id="textinput" name="textinput" type="text"
+                placeholder="placeholder" class="form-control input-md"
+                 data-ng-model="tx.util.elecCurntRead">
+            </div>
+			<label class="col-md-3 control-label" for="selectbasic">Water Current Reading</label>
+            <div class="col-md-3">
+              <input id="textinput" name="textinput" type="text"
+                placeholder="placeholder" class="form-control input-md"
+                 data-ng-model="tx.util.watrCurntRead">
+            </div>
+          </div>
+		   <div class="form-group">
+           <label class="col-md-3 control-label" for="selectbasic">Received By</label>
+            <div class="col-md-6">
+              <input id="textinput" name="textinput" type="text"
+                placeholder="placeholder" class="form-control input-md"
+                  data-ng-model="tx.receivedBy">
+            </div>
+          </div>
+          <!-- Textarea -->
+          <div class="form-group">
+            <label class="col-md-3 control-label" for="textarea">Note</label>
+            <div class="col-md-9">
+              <textarea class="form-control" id="textarea"
+                name="textarea"
+                 data-ng-model="tx.note">default text</textarea>
+            </div>
+          </div>
+	
+           
+          <!-- Button (Double) -->
+          <div class="form-group">
+            <label class="col-md-3 control-label" for="button1id"></label>
+            <div class="col-md-3">
+              <button id="button1id" name="button1id"
+                class="btn btn-success btn-lg" data-ng-click="tx.submit()">Save</button>
 			</div>
-		</div>
+			 <label class="col-md-3 control-label" for="button2id"></label>
+			<div class="col-md-3">
+              <button id="button2id" name="button2id"
+                class="btn btn-danger btn-lg"
+                data-ng-click="save()">Cancel</button>
+            </div>
+          </div>
+			</fieldset>
 
-<!-- 	</div> -->
+      </form>
+    </div>
+
+  </div>
+
+
+</div>
 <!-- /.container -->

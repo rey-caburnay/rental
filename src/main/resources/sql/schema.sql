@@ -71,9 +71,26 @@ CREATE TABLE `mst_electric` (
   UNIQUE KEY `Id_UNIQUE` (`id`,`aptId`,`roomId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
+/**** renter ****/
+CREATE TABLE `mst_renter` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `firstname` varchar(50) DEFAULT NULL,
+  `lastname` varchar(45) DEFAULT NULL,
+  `initial` varchar(5) DEFAULT NULL,
+  `email` varchar(45) DEFAULT NULL,
+  `mobileno` varchar(45) DEFAULT NULL,
+  `telno` varchar(45) DEFAULT NULL,
+  `address1` varchar(100) DEFAULT NULL,
+  `address2` varchar(100) DEFAULT NULL,
+  `idPresentend` varchar(100) DEFAULT NULL,
+  `emergencyContact` varchar(100) DEFAULT NULL,
+  `status` varchar(20) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `Id_UNIQUE` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
 
 /******************** transaction schema *********************/
-/**** tx_rental ***/
 CREATE TABLE `tx_rental` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `aptId` int(11) NOT NULL,
@@ -92,3 +109,4 @@ CREATE TABLE `tx_rental` (
   `userId` int(11) not null,
   PRIMARY KEY (`id`),
   UNIQUE KEY `Id_UNIQUE` (`id`,`aptId`,`roomId`)
+  )ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;

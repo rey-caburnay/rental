@@ -1,4 +1,4 @@
-package com.shinn.model;
+package com.shinn.service.model;
 
 import java.io.Serializable;
 import java.util.Date;

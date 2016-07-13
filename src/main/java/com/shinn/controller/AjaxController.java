@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import com.shinn.model.AjaxResponseBody;
-import com.shinn.model.SearchCriteria;
-import com.shinn.model.User;
+import com.shinn.service.model.AjaxResponseBody;
+import com.shinn.service.model.SearchCriteria;
+import com.shinn.service.model.User;
 import com.shinn.service.UserService;
 import com.shinn.web.view.Views;
 

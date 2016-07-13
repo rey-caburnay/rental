@@ -1,4 +1,4 @@
-package com.shinn.model;
+package com.shinn.ui.model;
 
 import java.io.Serializable;
 import java.util.List;

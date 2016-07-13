@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import com.shinn.dao.factory.AbstractDaoImpl;
-import com.shinn.model.Room;
+import com.shinn.service.model.Room;
 
 @Repository
 public class RoomDaoImpl extends AbstractDaoImpl<Room> implements RoomDao{

@@ -1,7 +1,7 @@
 package com.shinn.service;
 import java.util.List;
 
-import com.shinn.model.User;
+import com.shinn.service.model.User;
 
 
 public interface UserService {

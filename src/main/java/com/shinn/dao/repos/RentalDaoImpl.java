@@ -5,7 +5,8 @@ import java.util.List;
 import org.springframework.stereotype.Repository;
 
 import com.shinn.dao.factory.AbstractDaoImpl;
-import com.shinn.model.Transaction;
+import com.shinn.service.model.Transaction;
+
 
 @Repository
 public class RentalDaoImpl extends AbstractDaoImpl<Transaction> implements RentalDao{

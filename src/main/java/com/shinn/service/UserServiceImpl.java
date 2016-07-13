@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.shinn.dao.factory.AbstractDaoImpl;
 import com.shinn.dao.repos.UserDao;
-import com.shinn.model.User;
+import com.shinn.service.model.User;
 
 
 @Service("userService")

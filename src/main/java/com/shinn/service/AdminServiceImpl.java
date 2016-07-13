@@ -4,10 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.shinn.dao.repos.ApartmentDao;
-import com.shinn.model.Apartment;
-import com.shinn.model.Expense;
-import com.shinn.model.Response;
-import com.shinn.model.Room;
+import com.shinn.service.model.Apartment;
+import com.shinn.service.model.Expense;
+import com.shinn.ui.model.Response;
+import com.shinn.service.model.Room;
 
 /**
  * administrative service for the system

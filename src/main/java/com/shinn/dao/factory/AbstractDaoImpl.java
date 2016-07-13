@@ -343,5 +343,30 @@ public abstract class AbstractDaoImpl<T extends Serializable> {
         }
         return key;
     }
+    /**
+     * 
+     */
+    public final void commit() {
+        try {
+            this.connection.commit();
+        }catch(Exception e) {
+            logger.error("error commit:" + e.getMessage());
+        }
+    }
+    
+    /**
+     * roll back the transaction
+     */
+    public final void rollback() {
+        if (null == this.connection) {
+            return;
+        }
+
+        try {
+            this.connection.rollback();
+        } catch (SQLException e) {
+            logger.error("SQLException:" + " Error on calling Rollback", e);
+        }
+    }
 
 }
