@@ -17,14 +17,32 @@
 
     <!-- Our Website Content Goes Here -->
      <div class="container">
-    <div ng-include="'<c:url value='resources/ui/header.html'/>'"></div>
-   
-    	<div ng-view></div>
-     </div>
+	    <div ng-include="'<c:url value='resources/ui/header.html'/>'"></div>
+	  	<div ng-view class="slide-animation"></div>
+	 <script type="text/ng-template" id="myModalContent.html">
+        <div class="modal-header">
+            <h3 class="modal-title">I'm a modal!</h3>
+        </div>
+        <div class="modal-body">
+            <ul>
+                <li ng-repeat="item in items">
+                    <a href="#" ng-click="$event.preventDefault(); selected.item = item">{{ item }}</a>
+                </li>
+            </ul>
+            Selected: <b>{{ selected.item }}</b>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" type="button" ng-click="ok()">OK</button>
+            <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+        </div>
+    </script>
+		
+	</div>
 
     <!-- Vendor: Javascripts -->
      <script src="<c:url value='/resources/js/external/jquery.js'/>"></script>
     <script src="<c:url value='/resources/js/external/bootstrap.min.js'/>"></script>
+  
    
 <!--      <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script> -->
    
@@ -33,6 +51,7 @@
     <!-- Our Website Javascripts -->
     <script src="<c:url value='/resources/js/external/angular.min.js' />"></script>
     <script src="<c:url value='/resources/js/external/angular-route.js' />"></script>
+    <script src="<c:url value='/resources/js/external/ui-bootstrap-1.3.3.min.js'/>"></script>
     <script src="<c:url value='/resources/js/app.js' />"></script>
     <!-- filters -->
     <script src="<c:url value='/resources/js/filter/filter.js' />"></script>
@@ -40,6 +59,7 @@
     <script src="<c:url value='/resources/js/service/authService.js' />"></script>
     <script src="<c:url value='/resources/js/service/transaction.js' />"></script>
      <script src="<c:url value='/resources/js/service/admin.js' />"></script>
+     <script src="<c:url value='/resources/js/service/modalService.js' />"></script>
     <!--  service model -->
     <script src="<c:url value='/resources/js/service/model/transaction.js' />"></script>
     <!-- controllers -->

@@ -21,7 +21,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 
 import com.shinn.configuration.SpringWebConfig;
-import com.shinn.model.User;
+
 
 
 @RunWith(SpringJUnit4ClassRunner.class)

@@ -26,7 +26,7 @@ public class RegistrationForm implements Serializable {
     String deposit = null;
     String balance = null;
     String amount = null;
-    String txType = null;
+//    String txType = null;
     String provider = null;
     String status = null;
     String userId = null;
@@ -92,12 +92,12 @@ public class RegistrationForm implements Serializable {
     public void setAmount(String amount) {
         this.amount = amount;
     }
-    public String getTxType() {
-        return txType;
-    }
-    public void setTxType(String txType) {
-        this.txType = txType;
-    }
+//    public String getTxType() {
+//        return txType;
+//    }
+//    public void setTxType(String txType) {
+//        this.txType = txType;
+//    }
     public String getProvider() {
         return provider;
     }
@@ -158,16 +158,16 @@ public class RegistrationForm implements Serializable {
     public void setFirstname(String firstname) {
         this.firstname = firstname;
     }
-    @Override
-    public String toString() {
-        return "RegistrationForm [aptId=" + aptId + ", roomId=" + roomId + ", renterId=" + renterId + ", lastname="
-                + lastname + ", firstname=" + firstname + ", renterMI=" + renterMI + ", mobileno=" + mobileno
-                + ", telno=" + telno + ", idPresented=" + idPresented + ", address=" + address + ", dueDate=" + dueDate
-                + ", txDate=" + txDate + ", startDate=" + startDate + ", endDate=" + endDate + ", deposit=" + deposit
-                + ", balance=" + balance + ", amount=" + amount + ", txType=" + txType + ", provider=" + provider
-                + ", status=" + status + ", userId=" + userId + "]";
-    }
-    
+	@Override
+	public String toString() {
+		return "RegistrationForm [aptId=" + aptId + ", roomId=" + roomId + ", renterId=" + renterId + ", lastname="
+				+ lastname + ", firstname=" + firstname + ", renterMI=" + renterMI + ", mobileno=" + mobileno
+				+ ", telno=" + telno + ", idPresented=" + idPresented + ", address=" + address + ", dueDate=" + dueDate
+				+ ", txDate=" + txDate + ", startDate=" + startDate + ", endDate=" + endDate + ", deposit=" + deposit
+				+ ", balance=" + balance + ", amount=" + amount + ", provider=" + provider + ", status=" + status
+				+ ", userId=" + userId + "]";
+	}
+  
   
     
     

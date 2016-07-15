@@ -37,7 +37,7 @@ public class TransactionServiceImpl implements TransactionService {
             Renter renter = renterDao.getRenterByName(reg.getLastname(), 
                     reg.getFirstname(), reg.getRenterMI());
             /** create new record if null **/
-            if (renter == null) {
+            if (renter == null || renter.getId() == null) {
                 renter = new Renter();
                 renter.setId(renterDao.getCurrentKey(Renter.TABLE_NAME));
                 renter.setFirstName(reg.getFirstname());
@@ -49,8 +49,9 @@ public class TransactionServiceImpl implements TransactionService {
                 renter.setAddress(reg.getAddress());
                 renter.setStatus(RentStatus.ACTIVE);
                 renterDao.saveUpdate(renter);
-                reg.setRenterId(renter.getId()+"");
+             
             }
+            reg.setRenterId(renter.getId()+"");
             tx.setId(rentalDao.getCurrentKey(Transaction.TABLE_NAME));
             tx.setAptId(StringUtil.toInteger(reg.getAptId()));
             tx.setRoomId(StringUtil.toInteger(reg.getRoomId()));
@@ -61,11 +62,11 @@ public class TransactionServiceImpl implements TransactionService {
             tx.setDeposit(StringUtil.toDouble(reg.getDeposit()));
             tx.setRenterId(StringUtil.toInteger(reg.getRenterId()));
             tx.setBalance(StringUtil.toDouble(reg.getBalance()));
-            tx.setTxType(reg.getTxType());
+//            tx.setTxType(reg.getTxType());
             tx.setProvider(reg.getProvider());
             tx.setAmount(StringUtil.toDouble(reg.getAmount()));
             tx.setStatus(RentStatus.ACTIVE);
-            tx.setUserId(null);
+            tx.setUserId(1); //TODO required
             rentalDao.saveUpdate(tx);
             resp.setResponseStatus(ResultStatus.RESULT_OK);
             resp.setModel(reg);

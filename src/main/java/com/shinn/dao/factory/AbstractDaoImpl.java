@@ -221,6 +221,7 @@ public abstract class AbstractDaoImpl<T extends Serializable> {
             if(connection.isClosed()) {
                 connection = null;
                 connection = dataSource.getConnection();
+                connection.setAutoCommit(false);
             }
                 
             pStmnt = connection.prepareStatement(sqlStatement.getProperty(propertyName));
@@ -268,8 +269,10 @@ public abstract class AbstractDaoImpl<T extends Serializable> {
         T o = null;
         try {
             result = query(sqlStmnt,parameters);
-            o = (T) transform(result);
-//            closeConnectionObjects(connection, pStmnt);
+            if(result.next()) {
+            	o = (T) transform(result);
+            }
+            closeConnectionObjects(connection, pStmnt);
         } catch (Exception e) {
             logger.info(e.getMessage());
 //            closeConnectionObjects(connection, sqlStmnt)

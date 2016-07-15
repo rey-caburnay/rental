@@ -1,10 +1,9 @@
 (function() {
 
-	var injectParams = [ '$filter', 'TransactionService', 'adminService',
-			'Transaction' ];
+	var injectParams = [ '$filter', 'TransactionService', 'adminService','modalService'];
 
 	var TransactionController = function($filter, TransactionService,
-			adminService, Transaction) {
+			adminService,  modalService) {
 		var vm = this;
 		vm.ts = TransactionService;
 		vm.admin = adminService;
@@ -29,6 +28,7 @@
 		vm.apartments = [];
 
 		getApartments();
+		 showModal();
 
 		vm.getRooms = function(aptId) {
 			getRooms(aptId);
@@ -108,23 +108,6 @@
 		}
 		
 		function submit() {
-//			vm.model.aptId = vm.apartment;
-//			vm.txModel.roomId =  vm.room.id
-//			vm.txModel.renterId = vm.renter.id;
-//			 vm.txModel.renterLastName = vm.renter.lastname;
-//			 vm.txModel.renterFirstName = vm.renter.firstname;
-//			 vm.txModel.renterMI = vm.renter.mi;
-//			 vm.txModel.dueDate = vm.trans.collectionDate;
-//			 vm.txModel.txDate = new Date();
-//			 vm.txModel.startDate = vm.trans.startDate;
-//			 vm.txModel.endDate = vm.trans.endDate;
-//			 vm.txModel.deposit = vm.trans.deposit;
-//			 vm.txModel.balance = vm.balance;
-//			 vm.txModel.amount = vm.amount;
-//			 vm.txModel.txType = vm.trans.type;
-//			 vm.txModel.provider = '';
-//			 vm.txModel.status = vm.trans.status;
-//			 vm.txModel.userId = '';
 			vm.model.aptId = vm.model.apartment.id;
 			vm.model.roomId = vm.model.room.id;
 			
@@ -137,70 +120,33 @@
 			}
 			 vm.ts.saveTx(vm.model).then(function(response){
 				 console.log("status return :" + response);
+				
 			 });
-			 console.log("status return :" + status);
+			 
+		}
+		function showModal() {
+//			 var modalInstance = $uibModal.open({
+//			      animation: true,
+//			      templateUrl: 'resources/ui/modal.html',
+//			      controller: 'ModalInstanceCtrl',
+//			      size: 'sm',
+//			      resolve: {
+//			        items: function () {
+//			          return ['item1', 'item2', 'item3'];
+//			        }
+//			      }
+//			    });
+//
+//			    modalInstance.result.then(function (selectedItem) {
+//			      vm.model.lastname = selectedItem;
+//			    }, function () {
+//			      console.log('Modal dismissed at: ' + new Date());
+//			    });	
+			modalService.show();
+	        
 		}
 		
 	};
-	/*
-	 TransactionController.prototype = {
-	
-	 init:function () {
-
-	 },
-	
-	 getRooms: function () {
-	 this.rooms = this.getRooms1();
-	 },
-	 getCustomers: function () {
-	 //    			dataService.getCustomers(vm.currentPage - 1, vm.pageSize)
-	 //                 .then(function (data) {
-	 //                     vm.totalRecords = data.totalRecords;
-	 //                     vm.customers = data.results;
-	 //                     filterCustomersProducts('');
-	 //                 }, function (error) {
-	 $window.alert('hello');
-	 //                 });
-	 },
-	 test: function () {
-	 alert('hello');
-	 },
-	
-	 submit: function () {
-	 this.txModel.aptId = this.apartment;
-	 this.txModel.roomId =  this.roomId;
-	 this.txModel.renterId = this.renter.id;
-	 this.txModel.renterLastName = this.renter.lastname;
-	 this.txModel.renterFirstName = this.renter.firstname;
-	 this.txModel.renterMI = this.renter.mi;
-	 this.txModel.dueDate = this.trans.collectionDate;
-	 this.txModel.txDate = new Date();
-	 this.txModel.startDate = this.trans.startDate;
-	 this.txModel.endDate = this.trans.endDate;
-	 this.txModel.deposit = this.trans.deposit;
-	 this.txModel.balance = this.balance;
-	 this.txModel.amount = this.amount;
-	 this.txModel.txType = this.trans.type;
-	 this.txModel.provider = '';
-	 this.txModel.status = this.trans.status;
-	 this.txModel.userId = '';
-	 status = this.ts.saveTx(this.txModel);
-	 console.log("status return :" + status);
-	 },
-	
-	 cancel: function () {
-	
-	 },
-	 getRooms1: function () {
-	 this.admin.getRooms(this.apartment.id).then(function (response){
-	 return response.result;
-	
-	 });
-	 }
-	
-	
-	 }
-	 */
 
 	TransactionController.$inject = injectParams;
 	angular.module('rental').controller('TransactionController',
