@@ -1,21 +1,21 @@
-
+(function (){
 'use strict';
 
-var App = angular.module('rental',['ngRoute']);
+angular.module('rental',['ngRoute']);
 
 
 /**
  * Configure the Routes
  */
 
-App.config(['$routeProvider', function ($routeProvider) {
+angular.module('rental').config(['$routeProvider', function ($routeProvider) {
   var viewBase = 'resources/ui/content/';
   $routeProvider
     // Home
     .when("/", {
     	templateUrl: viewBase + "transaction.html", 
     	controller: "TransactionController",
-    	controllerAs:"tx"})
+    	controllerAs:"vm"})
     // Pages
     .when("/about", {templateUrl: viewBase + "about.html", controller: "UserController"})
     //.when("#/faq", {templateUrl: "/faq", controller: "UserController"})
@@ -30,7 +30,7 @@ App.config(['$routeProvider', function ($routeProvider) {
 }]);
 
 
-App.run(['$rootScope', '$location',
+angular.module('rental').run(['$rootScope', '$location',
     function ($rootScope, $location, authService) {
         
         //Client-side security. Server-side framework MUST add it's 
@@ -47,5 +47,5 @@ App.run(['$rootScope', '$location',
 
 }]);
 
-
+})();
 

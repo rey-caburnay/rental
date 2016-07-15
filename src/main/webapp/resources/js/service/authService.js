@@ -44,7 +44,7 @@
 
     authFactory.$inject = injectParams;
 
-    App.factory('authService', authFactory);
+    angular.module('rental').factory('authService', authFactory);
 
 }());
 

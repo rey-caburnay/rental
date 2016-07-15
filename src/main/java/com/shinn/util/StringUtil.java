@@ -9,6 +9,7 @@ import com.shinn.dao.factory.AbstractDaoImpl;
 
 public class StringUtil {
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(StringUtil.class);
+    public static final String YYYYMMDD = "yyyy-MM-dd";
     
     /**
      * 
@@ -16,10 +17,12 @@ public class StringUtil {
      * @return null 
      */
     public static Integer toInteger(String o) {
-        try {
-            return Integer.parseInt(o);
-        }catch(Exception e) {
-            logger.debug("Error in casting",e);
+        if(o!=null) {
+            try {
+                return Integer.parseInt(o);
+            }catch(Exception e) {
+                logger.debug("Error in casting",e);
+            }
         }
         return null;
     }
@@ -34,6 +37,9 @@ public class StringUtil {
      * @return
      */
     public static Date toDate(String dateString, String format){
+        if (dateString == null) {
+            return null;
+        }
         if (format == null) {
             format = "dd/MM/yyyy";
         }
@@ -55,6 +61,9 @@ public class StringUtil {
      * @return
      */
     public static Double toDouble(String value) {
+        if(value == null) {
+            return null;
+        }
         try {
             return Double.parseDouble(value);
         }catch(Exception e) {

@@ -24,5 +24,5 @@
 	}
 
 	Transaction.$inject = [];
-    App.factory('Transaction', Transaction);
+	angular.module('rental').factory('Transaction', Transaction);
 }())

@@ -12,8 +12,8 @@ public class RegistrationForm implements Serializable {
     String aptId = null;
     String roomId =  null;
     String renterId = null;
-    String renterLastName = null;
-    String renterFirstName = null;
+    String lastname = null;
+    String firstname = null;
     String renterMI = null;
     String mobileno = null;
     String telno = null;
@@ -43,18 +43,7 @@ public class RegistrationForm implements Serializable {
     public void setRenterId(String renterId) {
         this.renterId = renterId;
     }
-    public String getRenterLastName() {
-        return renterLastName;
-    }
-    public void setRenterLastName(String renterLastName) {
-        this.renterLastName = renterLastName;
-    }
-    public String getRenterFirstName() {
-        return renterFirstName;
-    }
-    public void setRenterFirstName(String renterFirstName) {
-        this.renterFirstName = renterFirstName;
-    }
+   
     public String getRenterMI() {
         return renterMI;
     }
@@ -157,16 +146,29 @@ public class RegistrationForm implements Serializable {
     public void setAddress(String address) {
         this.address = address;
     }
+    public String getLastname() {
+        return lastname;
+    }
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
+    }
+    public String getFirstname() {
+        return firstname;
+    }
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
+    }
     @Override
     public String toString() {
-        return "Registration [aptId=" + aptId + ", roomId=" + roomId + ", renterId=" + renterId + ", renterLastName="
-                + renterLastName + ", renterFirstName=" + renterFirstName + ", renterMI=" + renterMI + ", mobileno="
-                + mobileno + ", telno=" + telno + ", idPresented=" + idPresented + ", address=" + address + ", dueDate="
-                + dueDate + ", txDate=" + txDate + ", startDate=" + startDate + ", endDate=" + endDate + ", deposit="
-                + deposit + ", balance=" + balance + ", amount=" + amount + ", txType=" + txType + ", provider="
-                + provider + ", status=" + status + ", userId=" + userId + "]";
+        return "RegistrationForm [aptId=" + aptId + ", roomId=" + roomId + ", renterId=" + renterId + ", lastname="
+                + lastname + ", firstname=" + firstname + ", renterMI=" + renterMI + ", mobileno=" + mobileno
+                + ", telno=" + telno + ", idPresented=" + idPresented + ", address=" + address + ", dueDate=" + dueDate
+                + ", txDate=" + txDate + ", startDate=" + startDate + ", endDate=" + endDate + ", deposit=" + deposit
+                + ", balance=" + balance + ", amount=" + amount + ", txType=" + txType + ", provider=" + provider
+                + ", status=" + status + ", userId=" + userId + "]";
     }
-   
+    
+  
     
     
 

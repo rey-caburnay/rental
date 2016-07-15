@@ -34,10 +34,12 @@
     <script src="<c:url value='/resources/js/external/angular.min.js' />"></script>
     <script src="<c:url value='/resources/js/external/angular-route.js' />"></script>
     <script src="<c:url value='/resources/js/app.js' />"></script>
-    
+    <!-- filters -->
+    <script src="<c:url value='/resources/js/filter/filter.js' />"></script>
     <!-- services -->
     <script src="<c:url value='/resources/js/service/authService.js' />"></script>
     <script src="<c:url value='/resources/js/service/transaction.js' />"></script>
+     <script src="<c:url value='/resources/js/service/admin.js' />"></script>
     <!--  service model -->
     <script src="<c:url value='/resources/js/service/model/transaction.js' />"></script>
     <!-- controllers -->

@@ -7,41 +7,29 @@
 	var injectParams = ['$http'];
 
     var TransactionService = function ($http) {
-//    	this.http = $http;
-    	this.saveTx = function (model) {
-    		return $http.post('http://localhost:8080/rentService/tx/savetx', model    					)
-			.then(
-					function(response){
-						return response.data;
-					}, 
-					function(errResponse){
-						console.error('Error while fetching users');
-						return errResponse;
-					}
-			);
-    	}
+    	this.http = $http;
     	return this;
     };
-//    TransactionService.prototype = {
-//		saveTx: function (model) {
-//			return this.http.post('http://localhost:8080/rentService/tx/savetx', model    					)
-//				.then(
-//						function(response){
-//							return response.data;
-//						}, 
-//						function(errResponse){
-//							console.error('Error while fetching users');
-//							return $q.reject(errResponse);
-//						}
-//				);
-//			
-//		}
+    TransactionService.prototype = {
+		saveTx: function (model) {
+			return this.http.post('http://localhost:8080/rentService/tx/savetx', model    					)
+				.then(
+						function(response){
+							return response.data;
+						}, 
+						function(errResponse){
+							console.error('Error while fetching users');
+							return $q.reject(errResponse);
+						}
+				);
+			
+		}
  
-//    }
+    }
 
     TransactionService.$inject = injectParams;
 
-   App.service('TransactionService', TransactionService);
+    angular.module('rental').service('TransactionService', TransactionService);
 
 })();
 

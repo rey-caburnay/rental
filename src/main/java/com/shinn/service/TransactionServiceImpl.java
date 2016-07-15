@@ -34,14 +34,14 @@ public class TransactionServiceImpl implements TransactionService {
         Response<RegistrationForm> resp = new Response<RegistrationForm>();
         Transaction tx  = new Transaction();
         try {
-            Renter renter = renterDao.getRenterByName(reg.getRenterLastName(), 
-                    reg.getRenterLastName(), reg.getRenterMI());
+            Renter renter = renterDao.getRenterByName(reg.getLastname(), 
+                    reg.getFirstname(), reg.getRenterMI());
             /** create new record if null **/
             if (renter == null) {
                 renter = new Renter();
                 renter.setId(renterDao.getCurrentKey(Renter.TABLE_NAME));
-                renter.setFirstName(reg.getRenterFirstName());
-                renter.setLastName(reg.getRenterLastName());
+                renter.setFirstName(reg.getFirstname());
+                renter.setLastName(reg.getLastname());
                 renter.setInitial(reg.getRenterMI());
                 renter.setMobileNo(reg.getMobileno());
                 renter.setIdPresented(reg.getIdPresented());
@@ -54,10 +54,10 @@ public class TransactionServiceImpl implements TransactionService {
             tx.setId(rentalDao.getCurrentKey(Transaction.TABLE_NAME));
             tx.setAptId(StringUtil.toInteger(reg.getAptId()));
             tx.setRoomId(StringUtil.toInteger(reg.getRoomId()));
-            tx.setDueDate(StringUtil.toDate(reg.getDueDate(),null));
+            tx.setDueDate(StringUtil.toDate(reg.getDueDate(),StringUtil.YYYYMMDD));
             tx.setTxDate(new Date());
-            tx.setStartDate(StringUtil.toDate(reg.getStartDate(),null));
-            tx.setEndDate(StringUtil.toDate(reg.getEndDate(),null));
+            tx.setStartDate(StringUtil.toDate(reg.getStartDate(),StringUtil.YYYYMMDD));
+            tx.setEndDate(StringUtil.toDate(reg.getEndDate(),StringUtil.YYYYMMDD));
             tx.setDeposit(StringUtil.toDouble(reg.getDeposit()));
             tx.setRenterId(StringUtil.toInteger(reg.getRenterId()));
             tx.setBalance(StringUtil.toDouble(reg.getBalance()));
