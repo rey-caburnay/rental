@@ -13,9 +13,10 @@ angular.module('rental').config(['$routeProvider', function ($routeProvider) {
   $routeProvider
     // Home
     .when("/", {
-    	templateUrl: viewBase + "transaction.html", 
+    	templateUrl: viewBase + "home.html", 
     	controller: "TransactionController",
-    	controllerAs:"vm"})
+    	controllerAs:"vm"
+    })
     // Pages
     .when("/about", {templateUrl: viewBase + "about.html", controller: "UserController"})
     //.when("#/faq", {templateUrl: "/faq", controller: "UserController"})

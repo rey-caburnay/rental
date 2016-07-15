@@ -1,68 +1,37 @@
-	<div class="generic-container" ng-controller="UserController as ctrl">
-		<div class="panel panel-default">
-			<div class="panel-heading">
-				<span class="lead">User Registration Form </span>
-			</div>
-			<div class="formcontainer">
-				<form ng-submit="ctrl.submit()" name="myForm"
-					class="form-horizontal">
-					<input type="hidden" ng-model="ctrl.user.id" />
-					<div class="row">
-						<div class="form-group col-md-12">
-							<label class="col-md-2 control-lable" for="file">Name</label>
-							<div class="col-md-7">
-								<input type="text" ng-model="ctrl.user.username" name="uname"
-									class="username form-control input-sm"
-									placeholder="Enter your name" required ng-minlength="3" />
-								<div class="has-error" ng-show="myForm.$dirty">
-									<span ng-show="myForm.uname.$error.required">This is a
-										required field</span> <span ng-show="myForm.uname.$error.minlength">Minimum
-										length required is 3</span> <span ng-show="myForm.uname.$invalid">This
-										field is invalid </span>
-								</div>
-							</div>
-						</div>
-					</div>
-
-
-					<div class="row">
-						<div class="form-group col-md-12">
-							<label class="col-md-2 control-lable" for="file">Address</label>
-							<div class="col-md-7">
-								<input type="text" ng-model="ctrl.user.address"
-									class="form-control input-sm"
-									placeholder="Enter your Address. [This field is validation free]" />
-							</div>
-						</div>
-					</div>
-
-					<div class="row">
-						<div class="form-group col-md-12">
-							<label class="col-md-2 control-lable" for="file">Email</label>
-							<div class="col-md-7">
-								<input type="email" ng-model="ctrl.user.email" name="email"
-									class="email form-control input-sm"
-									placeholder="Enter your Email" required />
-								<div class="has-error" ng-show="myForm.$dirty">
-									<span ng-show="myForm.email.$error.required">This is a
-										required field</span> <span ng-show="myForm.email.$invalid">This
-										field is invalid </span>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="row">
-						<div class="form-actions floatRight">
-							<input type="submit" value="{{!ctrl.user.id ? 'Add' : 'Update'}}"
-								class="btn btn-primary btn-sm" ng-disabled="myForm.$invalid">
-							<button type="button" ng-click="ctrl.reset()"
-								class="btn btn-warning btn-sm" ng-disabled="myForm.$pristine">Reset
-								Form</button>
-						</div>
-					</div>
-				</form>
-			</div>
-		</div>
-
+<div class="generic-container">
+	<div class="panel panel-default">
+		<div id="page-wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1>Dashboard <small>Statistics and more</small></h1>
+                    <div class="alert alert-dismissable alert-warning">
+                        <button data-dismiss="alert" class="close" type="button">�</button>
+                        Welcome to the admin dashboard! Feel free to review all pages and modify the layout to your needs. 
+                        <br>
+                        This theme uses the <a href="https://www.shieldui.com">ShieldUI</a> JavaScript library for the 
+                        additional data visualization and presentation functionality illustrated here.
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <h3 class="panel-title"><i class="fa fa-bar-chart-o"></i> Traffic Sources One month tracking </h3>
+                        </div>
+                        <div class="panel-body">
+                            <div id="shieldui-grid1" class="sui-grid sui-grid-core"><div class="sui-gridheader"><table class="sui-table"><colgroup><col style="width:170px"><col><col><col></colgroup><thead><tr class="sui-columnheader"><th data-field="Source" class="sui-headercell"><a href="#" class="sui-link">Source</a></th><th data-field="Amount" class="sui-headercell"><a href="#" class="sui-link">Amount</a></th><th data-field="Percent" class="sui-headercell"><a href="#" class="sui-link">Percent</a></th><th data-field="Target" class="sui-headercell"><a href="#" class="sui-link">Target</a></th></tr></thead><tbody class="sui-hide"><tr><td></td><td></td><td></td><td></td></tr></tbody></table></div><div class="sui-gridcontent"><table class="sui-table"><colgroup><col style="width:170px"><col><col><col></colgroup><tbody><tr class="sui-row"><td class="sui-cell">Direct</td><td class="sui-cell">323</td><td class="sui-cell">23 %</td><td class="sui-cell">600</td></tr><tr class="sui-alt-row"><td class="sui-cell">Refer</td><td class="sui-cell">345</td><td class="sui-cell">45 %</td><td class="sui-cell">567</td></tr><tr class="sui-row"><td class="sui-cell">Social</td><td class="sui-cell">567</td><td class="sui-cell">23 %</td><td class="sui-cell">456</td></tr><tr class="sui-alt-row"><td class="sui-cell">Search</td><td class="sui-cell">234</td><td class="sui-cell">56 %</td><td class="sui-cell">890</td></tr><tr class="sui-row"><td class="sui-cell">Internal</td><td class="sui-cell">111</td><td class="sui-cell">12 %</td><td class="sui-cell">345</td></tr></tbody></table></div></div>Demo Version<a href="http://www.shieldui.com" target="_blank" style="color: grey; text-decoration: none;"> by ShieldUI</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                
+                
+                
+            </div>
+        </div>
 	</div>
+</div>
 <!-- /.container -->

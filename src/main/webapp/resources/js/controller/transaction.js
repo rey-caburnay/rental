@@ -8,6 +8,9 @@
 		vm.ts = TransactionService;
 		vm.admin = adminService;
 		vm.model;
+		vm.startDate;
+		vm.endDate;
+		vm.collectionDate;
 		vm.user = {
 			id : null,
 			username : '',
@@ -28,13 +31,16 @@
 		vm.apartments = [];
 
 		getApartments();
-		 showModal();
+	
 
 		vm.getRooms = function(aptId) {
 			getRooms(aptId);
 		};
 		vm.submit = function () {
 			submit();
+		}
+		vm.popup = function(model) {
+			showModal(model);
 		}
 		//test data
 		vm.model = {
@@ -111,38 +117,29 @@
 			vm.model.aptId = vm.model.apartment.id;
 			vm.model.roomId = vm.model.room.id;
 			
-			vm.model.startDate = vm.model.startDate.toISOString().substring(0, 10);
-			if (vm.model.endDate) {
-				vm.model.endDate = vm.model.endDate.toISOString().substring(0, 10);
+			vm.model.startDate = vm.startDate.toISOString().substring(0, 10);
+			if (vm.endDate) {
+				vm.model.endDate = vm.endDate.toISOString().substring(0, 10);
 			}
-			if (vm.model.collectionDate) {
-				vm.model.collectionDate = vm.model.collectionDate.toISOString().substring(0, 10);
+			if (vm.collectionDate) {
+				vm.model.collectionDate = vm.collectionDate.toISOString().substring(0, 10);
 			}
 			 vm.ts.saveTx(vm.model).then(function(response){
 				 console.log("status return :" + response);
-				
+				vm.popup(response);
 			 });
 			 
 		}
-		function showModal() {
-//			 var modalInstance = $uibModal.open({
-//			      animation: true,
-//			      templateUrl: 'resources/ui/modal.html',
-//			      controller: 'ModalInstanceCtrl',
-//			      size: 'sm',
-//			      resolve: {
-//			        items: function () {
-//			          return ['item1', 'item2', 'item3'];
-//			        }
-//			      }
-//			    });
-//
-//			    modalInstance.result.then(function (selectedItem) {
-//			      vm.model.lastname = selectedItem;
-//			    }, function () {
-//			      console.log('Modal dismissed at: ' + new Date());
-//			    });	
-			modalService.show();
+		function showModal(result) {
+			var msg ='Successfully Registered';
+			if(result.responseStatus != 'OK') {
+				msg = 'Failed to Register';
+			}
+			var options = {
+					header:msg,
+					service:result.result	
+			};
+			modalService.show(options);
 	        
 		}
 		

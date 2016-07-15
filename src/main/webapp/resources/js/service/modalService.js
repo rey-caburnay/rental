@@ -3,21 +3,13 @@
 	var injectParams = ['$uibModal'];
 	var ModalService = function ($uibModal) {
 		return {
-			show: function (options) {
-				if (!options) {
-					options = {
-						animation: true,
-				        templateUrl: 'resources/ui/modal.html',
-				         controller:'ModalInstanceCtrl as vm',
-				         size: 'lg',
-				         resolve: {
-				        model: function () {
-				        	return ['item1','item2','item3'];
-				        }
-				        
-				      }
-					};
-				}
+			show: function (model,size) {
+				var options = {};
+				options.animation = true;
+				options.templateUrl =  'resources/ui/modal.html';
+				options.controller = 'ModalInstanceCtrl as vm';
+				options.size = size || 'lg';
+				options.resolve =   {model: model}
 				 var modalInstance = $uibModal.open(options);
 
 				    modalInstance.result.then(function (selectedItem) {
@@ -39,7 +31,7 @@
 	var ModalInstanceCtrl = function ($uibModalInstance, model) {
 		var vm = this;
 		vm.model = model;
-		vm.header = "Im a modal fucker";
+		vm.header = model.header;
 		vm.ok = function () {
 			  $uibModalInstance.close('');
 		};
