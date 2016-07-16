@@ -1,7 +1,7 @@
 (function() {
 	'use strict'
-	var injectParams = ['$uibModal'];
-	var ModalService = function ($uibModal) {
+	var injectParams = ['$uibModal','$location'];
+	var ModalService = function ($uibModal,$location) {
 		return {
 			show: function (model,size) {
 				var options = {};
@@ -13,7 +13,7 @@
 				 var modalInstance = $uibModal.open(options);
 
 				    modalInstance.result.then(function (selectedItem) {
-				      return selectedItem;
+				      $location.path("/"+selectedItem);
 				    }, function () {
 				      console.log('Modal dismissed at: ' + new Date());
 				    });	

@@ -7,3 +7,13 @@
   border-color: #f05800;
   color: #ffffff;
 }
+ .btn-group-justified {
+    display: table;
+    table-layout: fixed;
+    border-collapse: separate;
+}
+.btnTrans {
+  width:100% !important;
+  height:90px;
+  padding:0px 20px 5px 20px;
+}

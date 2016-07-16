@@ -17,6 +17,11 @@ angular.module('rental').config(['$routeProvider', function ($routeProvider) {
     	controller: "TransactionController",
     	controllerAs:"vm"
     })
+    .when("/reg", {
+    	templateUrl: viewBase + "transaction.html", 
+    	controller: "TransactionController",
+    	controllerAs:"vm"
+    })
     // Pages
     .when("/about", {templateUrl: viewBase + "about.html", controller: "UserController"})
     //.when("#/faq", {templateUrl: "/faq", controller: "UserController"})
@@ -27,7 +32,7 @@ angular.module('rental').config(['$routeProvider', function ($routeProvider) {
     //.when("/blog", {templateUrl: "/blog", controller: "BlogCtrl"})
 //    .when("/blog/post", {templateUrl: "/content/blog_item", controller: "BlogCtrl"})
     // else 404
-//    .otherwise("/404", {templateUrl: "/content/404", controller: "PageCtrl"});
+    .otherwise({ redirectTo: '/' });
 }]);
 
 
