@@ -7,9 +7,12 @@ import org.springframework.stereotype.Service;
 
 import com.shinn.dao.factory.ResultStatus;
 import com.shinn.dao.repos.ApartmentDao;
+import com.shinn.dao.repos.RenterDao;
 import com.shinn.dao.repos.RoomDao;
 import com.shinn.service.model.Apartment;
 import com.shinn.service.model.Expense;
+import com.shinn.service.model.Renter;
+import com.shinn.service.model.RenterInfo;
 import com.shinn.ui.model.Response;
 import com.shinn.service.model.Room;
 
@@ -26,6 +29,9 @@ public class AdminServiceImpl implements AdminService {
     
     @Autowired
     RoomDao roomDao;
+    
+    @Autowired
+    RenterDao renterDao;
 
     public Response<Apartment> createApartment(Apartment apt) throws Exception {
 
@@ -93,4 +99,20 @@ public class AdminServiceImpl implements AdminService {
         // TODO Auto-generated method stub
         return null;
     }
+
+	@Override
+	public Response<RenterInfo> getRenters() {
+	  Response<RenterInfo> resp = new Response<Renter>();
+	  try {
+	      List<Renter> renters =  renterDao.getRenters();
+	     RenterInfo renterInfo = new
+	      
+	      resp.setResult(renters);
+	      resp.setResponseStatus(ResultStatus.RESULT_OK);
+	  }catch(Exception e) {
+	      resp.setErrorMsg(e.getMessage());
+	      resp.setResponseStatus(ResultStatus.GENERAL_ERROR);
+	  }
+	  return resp;
+	}
 }

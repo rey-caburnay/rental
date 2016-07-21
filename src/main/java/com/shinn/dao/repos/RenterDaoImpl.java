@@ -51,4 +51,9 @@ public class RenterDaoImpl extends AbstractDaoImpl<Renter> implements RenterDao 
         }
     }
 
+	@Override
+	public List<Renter> getRenters() {
+		 return getListResult("get-all-renters");
+	}
+
 }

@@ -1,42 +1,16 @@
 (function() {
 
-	var injectParams = [ '$filter', 'TransactionService', 'adminService','modalService'];
+	var injectParams = [ '$filter', 'TransactionService', 'adminService',
+			'modalService' ];
 
 	var CollectionController = function($filter, TransactionService,
-			adminService,  modalService) {
+			adminService, modalService) {
 		var vm = this;
-		vm.ts = TransactionService;
-		vm.admin = adminService;
-		vm.model;
-		vm.startDate;
-		vm.endDate;
-		vm.collectionDate;
-		vm.user = {
-			id : null,
-			username : '',
-			address : '',
-			email : ''
+		vm._selected;
+		vm.getRenters = function(aptId) {
+			getRenters();
 		};
-		vm.rooms = [];
-		vm.rentType = [ {
-			name : "innType",
-			label : "Inn Type"
-		}, {
-			name : "aptType",
-			label : "Apartment"
-		}, {
-			name : "aptType",
-			label : "Store"
-		}, ]
-		vm.apartments = [];
-
-		getApartments();
-	
-
-		vm.getRooms = function(aptId) {
-			getRooms(aptId);
-		};
-		vm.submit = function () {
+		vm.submit = function() {
 			submit();
 		}
 		vm.popup = function(model) {
@@ -44,21 +18,34 @@
 		}
 		//test data
 		vm.model = {
-				lastname: 'caburnay',
-				firstname:'rey',
-				renterMI: 'c',
-				address: 'cebu city',
-				mobileno:'01293213',
-				txType:{
-					name : "aptType",
-					label : "Apartment"
-				},
-				paymentType:'cash',
-				amount:5000,
-				apartment:{id:1, name:'Buhisan'},
-				room:{id:1, label:'1st Floor Room # 1'}
-				
-				
+			name : 'rey bryan caburnay',
+			address : 'cebu city',
+			mobileno : '01293213',
+
+			paymentType : 'cash',
+			amount : 5000,
+			apartment : {
+				id : 1,
+				name : 'Buhisan'
+			},
+			room : {
+				id : 1,
+				label : '1st Floor Room # 1'
+			}
+
+		}
+		vm.ngModelOptionsSelected = function(value) {
+			if (arguments.length) {
+				vm._selected = value;
+				vm.model.mobileno = vm.selected.mobileno;
+			} else {
+				return vm._selected;
+			}
+		}
+		function getRenters() {
+			return adminService.getRenters().then(function(response) {
+				return reponse.data;
+			})
 		}
 		function getApartments() {
 			return adminService.getApartments().then(function(response) {
@@ -72,7 +59,7 @@
 		function getRooms(aptId) {
 			return adminService.getRooms(aptId).then(
 					function(response) {
-						vm.rooms=[];
+						vm.rooms = [];
 						var rooms = response.result;
 						for (var i = 0; i < rooms.length; i++) {
 							var room = {
@@ -112,41 +99,41 @@
 				}
 			}
 		}
-		
+
 		function submit() {
 			vm.model.aptId = vm.model.apartment.id;
 			vm.model.roomId = vm.model.room.id;
-			
+
 			vm.model.startDate = vm.startDate.toISOString().substring(0, 10);
 			if (vm.endDate) {
 				vm.model.endDate = vm.endDate.toISOString().substring(0, 10);
 			}
 			if (vm.collectionDate) {
-				vm.model.collectionDate = vm.collectionDate.toISOString().substring(0, 10);
+				vm.model.collectionDate = vm.collectionDate.toISOString()
+						.substring(0, 10);
 			}
-			 vm.ts.saveTx(vm.model).then(function(response){
-				 console.log("status return :" + response);
+			vm.ts.saveTx(vm.model).then(function(response) {
+				console.log("status return :" + response);
 				vm.popup(response);
-			 });
-			 
+			});
+
 		}
 		function showModal(result) {
-			var msg ='Successfully Registered';
-			if(result.responseStatus != 'OK') {
+			var msg = 'Successfully Registered';
+			if (result.responseStatus != 'OK') {
 				msg = 'Failed to Register';
 			}
 			var options = {
-					header:msg,
-					service:result.result	
+				header : msg,
+				service : result.result
 			};
 			modalService.show(options);
-	        
+
 		}
-		
+
 	};
 
 	CollectionController.$inject = injectParams;
-	angular.module('rental').controller('collectionCtrl',
-			CollectionController);
+	angular.module('rental').controller('collectionCtrl', CollectionController);
 
 })();

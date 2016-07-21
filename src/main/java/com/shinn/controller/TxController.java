@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.shinn.dao.factory.AbstractDaoImpl;
 import com.shinn.dao.factory.ResultStatus;
 import com.shinn.service.TransactionService;
+import com.shinn.service.model.Transaction;
 import com.shinn.ui.model.RegistrationForm;
 import com.shinn.ui.model.Response;
 
@@ -39,5 +41,19 @@ public class TxController {
         } 
         return new ResponseEntity(HttpStatus.BAD_REQUEST);
     }
+    
+    @RequestMapping(value = "/gettx/{renterid}", method = RequestMethod.GET, 
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Response<Transaction>> getTx(@PathVariable String renterid){
+        logger.debug(renterid.toString());
+        Response<Transaction> resp = transactionService.createTx(tx);
+        logger.debug(resp.toString());
+        if(resp.getResponseStatus().equals(ResultStatus.RESULT_OK)){
+            return new ResponseEntity<Response<Transaction>>(resp, HttpStatus.OK);
+        } 
+        return new ResponseEntity(HttpStatus.BAD_REQUEST);
+    }
+    
+    
 
 }

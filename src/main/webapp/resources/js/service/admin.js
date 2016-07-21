@@ -35,6 +35,18 @@
     					}
     			);
         	},
+        	getRenters: function () {
+        		return $http.get('mst/renters')
+    			.then(
+    					function(response){
+    						return response.data;
+    					}, 
+    					function(errResponse){
+    						console.error('Error while fetching renters');
+    						defer.reject(errResponse);
+    					}
+    			);
+        	}
     	};
     	/**
     	 * 

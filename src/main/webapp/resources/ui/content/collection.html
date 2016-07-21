@@ -17,7 +17,9 @@
 <!--                 placeholder="Lastname Firstname Initial" class="form-control input-md" -->
 <!--                  data-ng-model="vm.model.name" -->
 <!--                  required > -->
-           <input type="text" ng-model="vm.model.name" placeholder="Lastname Firstname Initial" uib-typeahead="address for address in getLocation($viewValue)" typeahead-loading="Loadingmembers" typeahead-no-results="noResults" class="form-control">
+           <input type="text" ng-model="vm.ngModelOptionsSelected" placeholder="Lastname Firstname Initial" 
+           	  uib-typeahead="renter for renters in getRenters($viewValue)" 
+           	  typeahead-loading="Loadingmembers" typeahead-no-results="noResults" class="form-control">
               <i ng-show="Loadingmembers" class="glyphicon glyphicon-refresh"></i>
               <div ng-show="noResults">
                 <i class="glyphicon glyphicon-remove"></i> No Results Found

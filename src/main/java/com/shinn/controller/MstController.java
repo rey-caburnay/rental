@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.shinn.dao.factory.ResultStatus;
 import com.shinn.service.AdminService;
 import com.shinn.service.model.Apartment;
+import com.shinn.service.model.Renter;
+import com.shinn.service.model.RenterInfo;
 import com.shinn.service.model.Room;
 import com.shinn.ui.model.RegistrationForm;
 import com.shinn.ui.model.Response;
@@ -51,13 +53,28 @@ public class MstController {
      */
     @RequestMapping(value = "/rooms/{aptid}", method = RequestMethod.GET, 
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Response<Room>> getRooms(@PathVariable String aptid) {
+    public ResponseEntity<Response<Renter>> getRooms(@PathVariable String aptid) {
         logger.info(aptid);
         logger.info(adminService.toString());
-        Response<Room>resp = adminService.getRooms(StringUtil.toInteger(aptid));
+        Response<Renter>resp = adminService.getRenters();
         logger.debug(resp.toString());
         if(resp.getResponseStatus().equals(ResultStatus.RESULT_OK)){
-            return new ResponseEntity<Response<Room>>(resp, HttpStatus.OK);
+            return new ResponseEntity<Response<Renter>>(resp, HttpStatus.OK);
+        } 
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
+    }
+    
+    /**
+     * 
+     * @return
+     */
+    @RequestMapping(value = "/renters", method = RequestMethod.GET, 
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Response<RenterInfo>> getRenters() {
+        Response<RenterInfo>resp = adminService.getRenters();
+        logger.debug(resp.toString());
+        if(resp.getResponseStatus().equals(ResultStatus.RESULT_OK)){
+            return new ResponseEntity<Response<RenterInfo>>(resp, HttpStatus.OK);
         } 
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }

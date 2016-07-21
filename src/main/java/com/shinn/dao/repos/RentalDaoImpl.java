@@ -43,5 +43,12 @@ public class RentalDaoImpl extends AbstractDaoImpl<Transaction> implements Renta
                 model.getStatus(),
                 model.getUserId());
     }
+    /**
+     * get transaction /membership by renter's id
+     */
+	@Override
+	public Transaction getTransactionByRenterId(Integer renterId) {
+		return getObject("get-transaction-by-renterid", renterId);
+	}
 
 }

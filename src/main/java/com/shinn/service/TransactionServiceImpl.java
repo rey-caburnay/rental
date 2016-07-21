@@ -12,6 +12,7 @@ import com.shinn.dao.factory.ResultStatus;
 import com.shinn.dao.repos.RentalDao;
 import com.shinn.dao.repos.RenterDao;
 import com.shinn.service.model.Renter;
+import com.shinn.service.model.RenterInfo;
 import com.shinn.service.model.Transaction;
 import com.shinn.ui.model.RegistrationForm;
 import com.shinn.ui.model.Response;
@@ -79,5 +80,28 @@ public class TransactionServiceImpl implements TransactionService {
         }
         return resp;
     }
+
+	@Override
+	public Response<Transaction> getTxByRenterId(Integer renterId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+//    /**
+//     * 
+//     */
+//	@Override
+//	public Response<RenterInfo> getTxByRenterId(Integer renterId) {
+//		Response<RenterInfo> resp = new Response<RenterInfo>();
+//		try {
+//			Transaction tx = rentalDao.getTransactionByRenterId(renterId);
+//			resp.setmo
+//		    resp.setResponseStatus(ResultStatus.RESULT_OK);
+//		}catch(Exception e) {
+//			resp.setResponseStatus(ResultStatus.GENERAL_ERROR);
+//            resp.setErrorMsg(e.getMessage());
+//		}
+//		return resp;
+//	}
 
 }
