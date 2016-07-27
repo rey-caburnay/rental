@@ -82,7 +82,7 @@
   </entry>
   <entry key="get-renters-info">
     SELECT 
-       `renter`.`id` as `renterId`,
+       `renter`.`id`,
 	   `renter`.`firstname`,
 	   `renter`.`lastname`,
 	   `renter`.`initial`,

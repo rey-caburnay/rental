@@ -1,5 +1,6 @@
 package com.shinn.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -102,12 +103,13 @@ public class AdminServiceImpl implements AdminService {
 
 	@Override
 	public Response<RenterInfo> getRenters() {
-	  Response<RenterInfo> resp = new Response<Renter>();
+	  Response<RenterInfo> resp = new Response<RenterInfo>();
 	  try {
 	      List<Renter> renters =  renterDao.getRenters();
-	     RenterInfo renterInfo = new
+	      List<RenterInfo> rentersInfos = new ArrayList<RenterInfo>();
+	      RenterInfo renterInfo = new RenterInfo();
 	      
-	      resp.setResult(renters);
+	      resp.setResult(rentersInfos);
 	      resp.setResponseStatus(ResultStatus.RESULT_OK);
 	  }catch(Exception e) {
 	      resp.setErrorMsg(e.getMessage());
