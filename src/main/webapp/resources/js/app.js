@@ -13,17 +13,20 @@ angular.module('rental').config(['$routeProvider', function ($routeProvider) {
   $routeProvider
     // Home
     .when("/", {
-    	templateUrl: viewBase + "home.html", 
+    	templateUrl: viewBase + "home.html",
     	controller: "TransactionController",
     	controllerAs:"vm"
     })
     .when("/reg", {
-    	templateUrl: viewBase + "transaction.html", 
+    	templateUrl: viewBase + "transaction.html",
     	controller: "TransactionController",
-    	controllerAs:"vm"
+    	controllerAs: "vm"
     })
     // Pages
-    .when("/about", {templateUrl: viewBase + "about.html", controller: "UserController"})
+    .when("/collection", {templateUrl: viewBase + "collection.html",
+        controller: "CollectionController",
+        controllerAs: "vm"
+     })
     //.when("#/faq", {templateUrl: "/faq", controller: "UserController"})
 //    .when("/pricing", {templateUrl: "/pricing", controller: "PageCtrl"})
 //    .when("/services", {templateUrl: "/services", controller: "PageCtrl"})
@@ -38,8 +41,8 @@ angular.module('rental').config(['$routeProvider', function ($routeProvider) {
 
 angular.module('rental').run(['$rootScope', '$location',
     function ($rootScope, $location, authService) {
-        
-        //Client-side security. Server-side framework MUST add it's 
+
+        //Client-side security. Server-side framework MUST add it's
         //own security as well since client-based security is easily hacked
         $rootScope.$on("$routeChangeStart", function (event, next, current) {
 //            if (next && next.$$route && next.$$route.secure) {

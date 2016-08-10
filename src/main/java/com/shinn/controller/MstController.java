@@ -27,55 +27,55 @@ import com.shinn.util.StringUtil;
 @RequestMapping(value="/mst")
 public class MstController {
     private static final Logger logger = LoggerFactory.getLogger(MstController.class);
-    
+
     @Autowired
     AdminService adminService;
-    
+
     /**
-     * 
+     *
      * @return
      */
-    @RequestMapping(value = "/apartments", method = RequestMethod.GET, 
+    @RequestMapping(value = "/apartments", method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Response<Apartment>> getApartments() {
-        
+
         Response<Apartment>resp = adminService.getApartments();
         logger.debug(resp.toString());
         if(resp.getResponseStatus().equals(ResultStatus.RESULT_OK)){
             return new ResponseEntity<Response<Apartment>>(resp, HttpStatus.OK);
-        } 
+        }
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
-    
+
     /**
-     * 
+     *
      * @return
      */
-    @RequestMapping(value = "/rooms/{aptid}", method = RequestMethod.GET, 
+    @RequestMapping(value = "/rooms/{aptid}", method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Response<Renter>> getRooms(@PathVariable String aptid) {
+    public ResponseEntity<Response<RenterInfo>> getRooms(@PathVariable String aptid) {
         logger.info(aptid);
         logger.info(adminService.toString());
-        Response<Renter>resp = adminService.getRenters();
+        Response<RenterInfo>resp = adminService.getRenters();
         logger.debug(resp.toString());
         if(resp.getResponseStatus().equals(ResultStatus.RESULT_OK)){
-            return new ResponseEntity<Response<Renter>>(resp, HttpStatus.OK);
-        } 
+            return new ResponseEntity<Response<RenterInfo>>(resp, HttpStatus.OK);
+        }
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
-    
+
     /**
-     * 
+     *
      * @return
      */
-    @RequestMapping(value = "/renters", method = RequestMethod.GET, 
+    @RequestMapping(value = "/renters", method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Response<RenterInfo>> getRenters() {
         Response<RenterInfo>resp = adminService.getRenters();
         logger.debug(resp.toString());
         if(resp.getResponseStatus().equals(ResultStatus.RESULT_OK)){
             return new ResponseEntity<Response<RenterInfo>>(resp, HttpStatus.OK);
-        } 
+        }
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 

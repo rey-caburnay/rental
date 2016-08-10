@@ -44,6 +44,7 @@ CREATE TABLE `mst_room` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `Id_UNIQUE` (`id`,`aptId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
 /**** room_type***/
 CREATE TABLE `mst_room_type` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -108,7 +109,7 @@ CREATE TABLE `tx_rental` (
   `dueDate` date DEFAULT NULL,
   `txDate` date default NULL,
   `startDate` date default null,
-  `endDate` date default null,
+  `endDate` date null default null,
   `deposit` double(9,4) default 0.0000,
   `renterId` int(11) NOT NULL,
   `balance` double(9,4) default 0.0000,

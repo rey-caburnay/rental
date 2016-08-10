@@ -1,14 +1,14 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html ng-app="rental">
-  <head>  
+  <head>
     </style>
 <!--      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"> -->
      <link href="<c:url value='/resources/css/app.css' />" rel="stylesheet"></link>
      <link href="<c:url value='/resources/css/bootstrap.min.css' />" rel="stylesheet"></link>
      <link href="<c:url value='/resources/css/nav.css' />" rel="stylesheet"></link>
        <link href="<c:url value='/resources/css/main.css' />" rel="stylesheet"></link>
-     
+
   </head>
   <body  class="ng-cloak">
     <!--[if lt IE 7]>
@@ -37,18 +37,18 @@
             <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
         </div>
     </script>
-		
+
 	</div>
 
     <!-- Vendor: Javascripts -->
      <script src="<c:url value='/resources/js/external/jquery.js'/>"></script>
     <script src="<c:url value='/resources/js/external/bootstrap.min.js'/>"></script>
-  
-   
-<!--      <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script> -->
-   
 
-    
+
+<!--      <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script> -->
+
+
+
     <!-- Our Website Javascripts -->
     <script src="<c:url value='/resources/js/external/angular.min.js' />"></script>
     <script src="<c:url value='/resources/js/external/angular-route.js' />"></script>
@@ -66,5 +66,6 @@
     <!-- controllers -->
     <script src="<c:url value='/resources/js/controller/user_controller.js' />"></script>
     <script src="<c:url value='/resources/js/controller/transaction.js' />"></script>
+    <script src="<c:url value='/resources/js/controller/collection.js' />"></script>
   </body>
 </html>

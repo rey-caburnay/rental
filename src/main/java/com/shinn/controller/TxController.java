@@ -26,11 +26,11 @@ import com.shinn.ui.model.Response;
 @RequestMapping(value="/tx")
 public class TxController {
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(TxController.class);
-    
+
     @Autowired
     TransactionService transactionService;
-    
-    @RequestMapping(value = "/savetx", method = RequestMethod.POST, 
+
+    @RequestMapping(value = "/savetx", method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Response<RegistrationForm>> createTx(@RequestBody RegistrationForm tx) {
         logger.debug(tx.toString());
@@ -38,22 +38,23 @@ public class TxController {
         logger.debug(resp.toString());
         if(resp.getResponseStatus().equals(ResultStatus.RESULT_OK)){
             return new ResponseEntity<Response<RegistrationForm>>(resp, HttpStatus.OK);
-        } 
+        }
         return new ResponseEntity(HttpStatus.BAD_REQUEST);
     }
-    
-    @RequestMapping(value = "/gettx/{renterid}", method = RequestMethod.GET, 
+
+    @RequestMapping(value = "/gettx/{renterid}", method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Response<Transaction>> getTx(@PathVariable String renterid){
         logger.debug(renterid.toString());
-        Response<Transaction> resp = transactionService.createTx(tx);
+
+        Response<Transaction> resp = transactionService.getTxByRenterId(Integer.parseInt(renterid));
         logger.debug(resp.toString());
         if(resp.getResponseStatus().equals(ResultStatus.RESULT_OK)){
             return new ResponseEntity<Response<Transaction>>(resp, HttpStatus.OK);
-        } 
+        }
         return new ResponseEntity(HttpStatus.BAD_REQUEST);
     }
-    
-    
+
+
 
 }

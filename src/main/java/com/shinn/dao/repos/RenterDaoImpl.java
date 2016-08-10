@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import com.shinn.dao.factory.AbstractDaoImpl;
 import com.shinn.service.model.Renter;
+import com.shinn.service.model.RenterInfo;
 
 @Repository
 public class RenterDaoImpl extends AbstractDaoImpl<Renter> implements RenterDao {
@@ -39,7 +40,7 @@ public class RenterDaoImpl extends AbstractDaoImpl<Renter> implements RenterDao 
             model.getEmergencyContact(),
             model.getStatus()
             );
-        
+
     }
 
     @Override
@@ -52,7 +53,7 @@ public class RenterDaoImpl extends AbstractDaoImpl<Renter> implements RenterDao 
     }
 
 	@Override
-	public List<Renter> getRenters() {
+	public List<RenterInfo> getRenters() {
 		 return getListResult("get-all-renters");
 	}
 

@@ -11,7 +11,7 @@
     Select  id, username, name, email, mobile_no, status
     FROM mst_user;
   </entry>
-  
+
    <entry key="get-renter-by-id">
     Select  id, lastname, firstname, initial, email, mobileno, telno, address1 as address, status
     FROM mst_renter
@@ -22,7 +22,7 @@
     FROM mst_renter
     WHERE lastname = ? AND firstname = ? AND initial = ?
   </entry>
-  
+
   <entry key="get-users-by-id">
     Select  id, username, name, email, mobile_no, status
     FROM mst_user where id = ?;
@@ -64,9 +64,9 @@
 	    `status`
 	FROM `realmaster`.`mst_apartment`;
   </entry>
-  
+
   <entry key="get-rooms">
-    SELECT 
+    SELECT
        `id`,
 	   `aptId`,
 	   `floor`,
@@ -78,10 +78,10 @@
 	   `rate`,
 	   `status`
 	FROM `realmaster`.`mst_room`
-	WHERE `aptId` = ? 
+	WHERE `aptId` = ?
   </entry>
   <entry key="get-renters-info">
-    SELECT 
+    SELECT
        `renter`.`id`,
 	   `renter`.`firstname`,
 	   `renter`.`lastname`,
@@ -99,7 +99,7 @@
 	   `rent`.`txType` as `rentType`,
 	   `rent`.`roomId`,
 	   `apt`.`name` as `aptName`,
-	   `room`.`name` as `roomName`
+	   `room`.`roomNo` as `roomName`
 	FROM `realmaster`.`mst_renter` as `renter`
 	LEFT JOIN `realmaster`.`tx_rental` as `rent`
 	ON `renter`.`id` = `rent`.`renterId`
@@ -110,7 +110,7 @@
 	WHERE `rent`.`status` = 'active';
   </entry>
   <entry key="get-transaction-by-renterid">
-    SELECT 
+    SELECT
        `id`,
 	   `aptId`,
 	   `roomId`,
@@ -126,5 +126,5 @@
 	FROM `realmaster`.`tx_rental`
 	WHERE `renterId` = ?
   </entry>
-  
+
 </properties>

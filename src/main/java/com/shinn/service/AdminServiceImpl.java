@@ -27,10 +27,10 @@ public class AdminServiceImpl implements AdminService {
 
     @Autowired
     ApartmentDao apartmentDao;
-    
+
     @Autowired
     RoomDao roomDao;
-    
+
     @Autowired
     RenterDao renterDao;
 
@@ -43,7 +43,7 @@ public class AdminServiceImpl implements AdminService {
         // TODO Auto-generated method stub
         return null;
     }
-    
+
 
     /* (non-Javadoc)
      * @see com.shinn.service.AdminService#getApartments()
@@ -52,7 +52,7 @@ public class AdminServiceImpl implements AdminService {
     public Response<Apartment> getApartments() {
       Response<Apartment> resp = new Response<Apartment>();
       try {
-          
+
           List<Apartment> apartments =  apartmentDao.findAll();
           resp.setResult(apartments);
           resp.setResponseStatus(ResultStatus.RESULT_OK);
@@ -80,7 +80,7 @@ public class AdminServiceImpl implements AdminService {
     public Response<Room> getRooms(Integer aptId) {
         Response<Room> resp = new Response<Room>();
         try {
-            
+
             List<Room> rooms =  roomDao.getRooms(aptId);
             resp.setResult(rooms);
             resp.setResponseStatus(ResultStatus.RESULT_OK);
@@ -105,10 +105,7 @@ public class AdminServiceImpl implements AdminService {
 	public Response<RenterInfo> getRenters() {
 	  Response<RenterInfo> resp = new Response<RenterInfo>();
 	  try {
-	      List<Renter> renters =  renterDao.getRenters();
-	      List<RenterInfo> rentersInfos = new ArrayList<RenterInfo>();
-	      RenterInfo renterInfo = new RenterInfo();
-	      
+	      List<RenterInfo> rentersInfos = renterDao.getRenters();
 	      resp.setResult(rentersInfos);
 	      resp.setResponseStatus(ResultStatus.RESULT_OK);
 	  }catch(Exception e) {

@@ -14,8 +14,11 @@
     <jcl.slf4j.version>1.7.12</jcl.slf4j.version>
     <jstl.version>1.2</jstl.version>
     <servletapi.version>3.1.0</servletapi.version>
+    <deployer.hostname>localhost</deployer.hostname>
+    <deployer.tomcat.user>admin</deployer.tomcat.user>
+    <deployer.tomcat.password>admin</deployer.tomcat.password>
   </properties>
-    
+
   <scm>
     <connection>scm:git:https://github.com/7taghap/rental.git</connection>
     <developerConnection>scm:git:https://github.com/7taghap/rental.git</developerConnection>
@@ -120,7 +123,7 @@
    <resources>
         <resource>
             <directory>src/main/java</directory>
-            <includes>                      
+            <includes>
                 <include>**/*.xml</include>
             </includes>
         </resource>
@@ -149,5 +152,47 @@
     </plugins>
       <finalName>rentService</finalName>
   </build>
-  
+   <profiles>
+    <profile>
+      <id>test-env1</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.cargo</groupId>
+            <artifactId>cargo-maven2-plugin</artifactId>
+            <version>1.5.0</version>
+            <configuration>
+              <!-- Container configuration -->
+              <container>
+                <containerId>tomcat8x</containerId>
+                <type>remote</type>
+              </container>
+              <configuration>
+                <type>runtime</type>
+                <properties>
+                  <cargo.remote.username>${deployer.tomcat.user}</cargo.remote.username>
+                  <cargo.remote.password>${deployer.tomcat.password}</cargo.remote.password>
+                  <cargo.tomcat.manager.url>http://${deployer.hostname}:8080/manager</cargo.tomcat.manager.url>
+                  <cargo.hostname>${deployer.hostname}</cargo.hostname>
+                </properties>
+              </configuration>
+              <!-- Deployables configuration -->
+              <deployables>
+                <deployable>
+                  <groupId>${project.groupId}</groupId>
+                  <artifactId>${project.artifactId}</artifactId>
+                  <type>war</type>
+                  <properties>
+                    <context>/resTablet</context>
+                  </properties>
+                  <pingURL>http://${deployer.hostname}:8080/resTablet/</pingURL>
+                </deployable>
+              </deployables>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+
 </project>
