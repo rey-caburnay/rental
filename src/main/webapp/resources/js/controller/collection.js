@@ -49,8 +49,17 @@
             }
         }
         function getRenters() {
+            var reter = '';
             return adminService.getRenters().then(function(response) {
-                return response.data;
+                if(response.result.length > 0) {
+                    for(var i = 0; i < response.result.length; i++) {
+                        renter = response.result[i];
+                        response.result[i].name = renter.lastName || '' + " " + renter.firstName || '' + " " +
+                            renter.initial || ''
+                    }
+                }
+
+                return response.result;
             })
         }
         function getApartments() {
