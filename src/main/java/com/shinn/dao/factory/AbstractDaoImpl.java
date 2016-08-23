@@ -26,16 +26,16 @@ public abstract class AbstractDaoImpl<T extends Serializable> {
 
     @Autowired
     private Connection connection;
-    
+
     @Autowired
     private DataSource dataSource;
-    
+
     private JdbcTemplate jdbcTemplate;
 
 
     Class<T> clzz;
     PreparedStatement pStmnt = null;
-    
+
     SQLStatement sqlStatement = SQLStatement.getInstance();
 
     public AbstractDaoImpl() throws Exception {
@@ -45,7 +45,7 @@ public abstract class AbstractDaoImpl<T extends Serializable> {
     public void setClazz(Class<T> clzz) {
         this.clzz = clzz;
     }
-    
+
 //    @Autowired
 //    public void setDataSource(DataSource dataSource) {
 //        this.jdbcTemplate = new JdbcTemplate(dataSource);
@@ -209,7 +209,7 @@ public abstract class AbstractDaoImpl<T extends Serializable> {
     }
 
     /**
-     * 
+     *
      * @param propertyName
      * @param parameters
      * @return
@@ -223,7 +223,7 @@ public abstract class AbstractDaoImpl<T extends Serializable> {
                 connection = dataSource.getConnection();
                 connection.setAutoCommit(false);
             }
-                
+
             pStmnt = connection.prepareStatement(sqlStatement.getProperty(propertyName));
             this.setValues(pStmnt, parameters);
             result = pStmnt.executeQuery();
@@ -234,13 +234,13 @@ public abstract class AbstractDaoImpl<T extends Serializable> {
         return result;
     }
 
- 
+
     /**
-     * 
+     *
      * @param result
      * @param model
      * @return
-     * @throws Exception 
+     * @throws Exception
      */
     public <T> List<T> getListResult(String sqlStment, Object... parameters) {
         List<T> list = new ArrayList<T>();
@@ -252,12 +252,12 @@ public abstract class AbstractDaoImpl<T extends Serializable> {
             closeConnectionObjects(connection, pStmnt);
         } catch (Exception e) {
             list = null;
-             
-        } 
-       
+
+        }
+
         return list;
     }
-    
+
     /**
      * get result set map by an object
      * @param sqlStmnt
@@ -282,7 +282,7 @@ public abstract class AbstractDaoImpl<T extends Serializable> {
     }
 
     /**
-     * 
+     *
      * @param result
      * @param model
      * @return
@@ -297,6 +297,7 @@ public abstract class AbstractDaoImpl<T extends Serializable> {
                 Object value = null;
                 try {
                     columnName = f.getName();
+                    logger.info("column name:" + columnName);
                     value = result.getObject(columnName);
                 } catch (Exception e) {
                     logger.debug("column name:"+ columnName);
@@ -314,13 +315,13 @@ public abstract class AbstractDaoImpl<T extends Serializable> {
             return null;
         }
     }
-    
+
     /**
      * execute insert or update statment
      * @param sqlStmnt sql insert or update statement
      * @param parameters
      * @return
-     * @throws Exception 
+     * @throws Exception
      */
     public void executeSaveUpate(String sqlStmnt, Object... parameters) throws Exception {
         try {
@@ -333,7 +334,7 @@ public abstract class AbstractDaoImpl<T extends Serializable> {
         }
 
     }
-   
+
     /**
      * get the current auto increment key
      * from the table
@@ -352,7 +353,7 @@ public abstract class AbstractDaoImpl<T extends Serializable> {
         return key;
     }
     /**
-     * 
+     *
      */
     public final void commit() {
         try {
@@ -361,7 +362,7 @@ public abstract class AbstractDaoImpl<T extends Serializable> {
             logger.error("error commit:" + e.getMessage());
         }
     }
-    
+
     /**
      * roll back the transaction
      */

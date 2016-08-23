@@ -3,27 +3,31 @@ package com.shinn.service.model;
 import java.io.Serializable;
 
 public class RenterInfo extends Renter implements Serializable {
-	
-	
+
+
 	private Integer aptId;
-	
+
 	private Integer roomId;
-	
+
 	private String name;
-	
+
 	private String aptName;
-	
+
 	private String roomName;
-	
+
 	private String rentType;
-	
+
 	private String paymentType;
-	
+
 	private String amount;
 
 	private String electric;
-	
+
 	private String water;
+
+	public RenterInfo() {
+	    super();
+	}
 
     /**
      * @return the aptId
@@ -165,15 +169,13 @@ public class RenterInfo extends Renter implements Serializable {
         this.water = water;
     }
 
-    /* (non-Javadoc)
-     * @see java.lang.Object#toString()
-     */
     @Override
     public String toString() {
-        return "RenterInfo [aptId=" + aptId + ", roomId=" + roomId + ", name=" + name + ", aptName=" + aptName
-                + ", roomName=" + roomName + ", rentType=" + rentType + ", paymentType=" + paymentType + ", amount="
-                + amount + ", electric=" + electric + ", water=" + water + "]";
+        return "RenterInfo [aptId=" + aptId + ", roomId=" + roomId + ", name=" + name + ", aptName=" + aptName +
+                ", roomName=" + roomName + ", rentType=" + rentType + ", paymentType=" + paymentType + ", amount=" +
+                amount + ", electric=" + electric + ", water=" + water + ", id=" + id + ", lastName=" + lastName +
+                ", firstName=" + firstName + ", initial=" + initial + ", address=" + address + ", idPresented=" +
+                idPresented + ", mobileNo=" + mobileNo + ", telno=" + telno + ", email=" + email +
+                ", emergencyContact=" + emergencyContact + ", status=" + status + "]";
     }
-	
-	
 }

@@ -6,27 +6,27 @@ public class Renter implements Serializable {
     
     public static final String TABLE_NAME = "mst_renter";
     
-    private Integer id;
+    protected Integer id;
     
-    private String lastName;
+    protected String lastName;
     
-    private String firstName;
+    protected String firstName;
     
-    private String initial;
+    protected String initial;
     
-    private String address;
+    protected String address;
     
-    private String idPresented;
+    protected String idPresented;
     
-    private String mobileNo;
+    protected String mobileNo;
     
-    private String telno;
+    protected String telno;
     
-    private String email;
+    protected String email;
     
-    private String emergencyContact;
+    protected String emergencyContact;
     
-    private String status;
+    protected String status;
 
     public Integer getId() {
         return id;

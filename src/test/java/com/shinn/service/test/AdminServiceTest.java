@@ -33,6 +33,9 @@ public class AdminServiceTest {
     public void getRenters() {
 //        Assert.assertTrue(adminService.getRenters());
         Response<RenterInfo> resp = adminService.getRenters();
+        for(int i = 0; i < resp.getResult().size(); i++) {
+            System.out.println(resp.getResult().get(i).toString());
+        }
         Assert.assertTrue(resp.getResult().size() > 0);
     }
 }

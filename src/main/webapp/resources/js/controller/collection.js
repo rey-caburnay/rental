@@ -19,34 +19,11 @@
             },
             getterSetter : true
         };
+        vm.setRenter = function (renter) {
+            vm.model.mobileno = renter.mobileno;
+        }
         vm.popup = function(model) {
             showModal(model);
-        }
-        // test data
-        vm.model = {
-            name : 'rey bryan caburnay',
-            address : 'cebu city',
-            mobileno : '01293213',
-
-            paymentType : 'cash',
-            amount : 5000,
-            apartment : {
-                id : 1,
-                name : 'Buhisan'
-            },
-            room : {
-                id : 1,
-                label : '1st Floor Room # 1'
-            }
-
-        }
-        vm.ngModelOptionsSelected = function(value) {
-            if (arguments.length) {
-                vm._selected = value;
-                vm.model.mobileno = vm.selected.mobileno;
-            } else {
-                return vm._selected;
-            }
         }
         function getRenters() {
             var reter = '';
@@ -54,8 +31,8 @@
                 if(response.result.length > 0) {
                     for(var i = 0; i < response.result.length; i++) {
                         renter = response.result[i];
-                        response.result[i].name = renter.lastName || '' + " " + renter.firstName || '' + " " +
-                            renter.initial || ''
+                        response.result[i].name = (renter.lastName || '') + " " +
+                            (renter.firstName || '') + " " + (renter.initial || '')
                     }
                 }
 

@@ -9,11 +9,11 @@ import com.shinn.service.model.Renter;
 import com.shinn.service.model.RenterInfo;
 
 @Repository
-public class RenterDaoImpl extends AbstractDaoImpl<Renter> implements RenterDao {
+public class RenterDaoImpl extends AbstractDaoImpl<RenterInfo> implements RenterDao {
 
     public RenterDaoImpl() throws Exception {
         super();
-        setClazz(Renter.class);
+        setClazz(RenterInfo.class);
     }
 
     @Override

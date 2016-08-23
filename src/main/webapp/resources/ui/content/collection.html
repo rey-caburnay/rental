@@ -13,13 +13,10 @@
             <label class="col-md-3 control-label" for="name">Received From</label>
             <div class="col-md-9"
             data-ng-class="{'has-error': regForm.lastName.$error.required}">
-<!--               <input id="textinput" name="name" type="text" -->
-<!--                 placeholder="Lastname Firstname Initial" class="form-control input-md" -->
-<!--                  data-ng-model="vm.model.name" -->
-<!--                  required > -->
-           <input type="text" ng-model="vm.asyncSelected" placeholder="Lastname Firstname Initial"
+           <input type="text" ng-model="vm.asyncSelected" ng-model-options="vm.modelOptions" placeholder="Lastname Firstname Initial"
            	  uib-typeahead="renter as renter.name for renter in vm.renters"
-           	  typeahead-loading="Loadingmembers" typeahead-no-results="noResults" class="form-control">
+              typeahead-editable="false" typeahead-on-select="vm.setRenter($item)"
+           	  typeahead-loading="Loadingmembers" typeahead-no-results="noResults" class="form-control" required>
               <i ng-show="Loadingmembers" class="glyphicon glyphicon-refresh"></i>
               <div ng-show="noResults">
                 <i class="glyphicon glyphicon-remove"></i> No Results Found
