@@ -2,11 +2,30 @@ package com.shinn.service.model;
 
 import java.io.Serializable;
 
-public class RenterInfo extends Renter implements Serializable {
+public class RenterInfo implements Serializable {
 
-
-	private Integer aptId;
-
+    private Integer id;
+    
+    private String lastName;
+    
+    private String firstName;
+    
+    private String initial;
+    
+    private String address1;
+    
+    private String address2;
+    
+    private String mobileNo;
+    
+    private String telno;
+    
+    private String email;
+    
+	private String status;
+	
+    private Integer aptId;
+	
 	private Integer roomId;
 
 	private String name;

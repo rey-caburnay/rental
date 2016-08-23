@@ -53,15 +53,21 @@ public class MstController {
      */
     @RequestMapping(value = "/rooms/{aptid}", method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Response<RenterInfo>> getRooms(@PathVariable String aptid) {
+    public ResponseEntity<Response<Room>> getRooms(@PathVariable String aptid) {
         logger.info(aptid);
         logger.info(adminService.toString());
-        Response<RenterInfo>resp = adminService.getRenters();
-        logger.debug(resp.toString());
-        if(resp.getResponseStatus().equals(ResultStatus.RESULT_OK)){
-            return new ResponseEntity<Response<RenterInfo>>(resp, HttpStatus.OK);
+        Response<Room> resp = null;
+        ResponseEntity<Response<Room>> responseEntity = new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        try {
+            resp = adminService.getRooms(Integer.parseInt(aptid));
+            logger.debug(resp.toString());
+            if(resp.getResponseStatus().equals(ResultStatus.RESULT_OK)){
+                responseEntity = new ResponseEntity<Response<Room>>(resp, HttpStatus.OK);
+            }
+        } catch (Exception e) {
+            responseEntity = new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
         }
-        return new ResponseEntity(HttpStatus.NO_CONTENT);
+        return responseEntity;
     }
 
     /**
@@ -70,11 +76,11 @@ public class MstController {
      */
     @RequestMapping(value = "/renters", method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Response<RenterInfo>> getRenters() {
-        Response<RenterInfo>resp = adminService.getRenters();
+    public ResponseEntity<Response<Renter>> getRenters() {
+        Response<Renter>resp = adminService.getRenters();
         logger.debug(resp.toString());
         if(resp.getResponseStatus().equals(ResultStatus.RESULT_OK)){
-            return new ResponseEntity<Response<RenterInfo>>(resp, HttpStatus.OK);
+            return new ResponseEntity<Response<Renter>>(resp, HttpStatus.OK);
         }
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }

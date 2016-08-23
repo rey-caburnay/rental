@@ -9,11 +9,11 @@ import com.shinn.service.model.Renter;
 import com.shinn.service.model.RenterInfo;
 
 @Repository
-public class RenterDaoImpl extends AbstractDaoImpl<RenterInfo> implements RenterDao {
+public class RenterDaoImpl extends AbstractDaoImpl<Renter> implements RenterDao {
 
     public RenterDaoImpl() throws Exception {
         super();
-        setClazz(RenterInfo.class);
+        setClazz(Renter.class);
     }
 
     @Override
@@ -53,8 +53,8 @@ public class RenterDaoImpl extends AbstractDaoImpl<RenterInfo> implements Renter
     }
 
 	@Override
-	public List<RenterInfo> getRenters() {
-		 return getListResult("get-renters-info");
+	public List<Renter> getRenters() {
+		 return getListResult("get-active-renters");
 	}
 
 }

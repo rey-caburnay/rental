@@ -6,6 +6,7 @@
     var CollectionController = function ($filter, TransactionService,
             adminService, modalService) {
         var vm = this;
+        vm.services = [adminService,TransactionService, modalService];
         vm._selected;
         vm.renters = getRenters();
 
@@ -20,7 +21,8 @@
             getterSetter : true
         };
         vm.setRenter = function (renter) {
-            vm.model.mobileno = renter.mobileno;
+            vm.model.mobileno = renter.mobileNo;
+            vm.model.telno = renter.telno;
         }
         vm.popup = function(model) {
             showModal(model);
@@ -50,19 +52,19 @@
          */
         function getRooms(aptId) {
             return adminService.getRooms(aptId).then(
-                    function(response) {
-                        vm.rooms = [];
-                        var rooms = response.result;
-                        for (var i = 0; i < rooms.length; i++) {
-                            var room = {
-                                id : rooms[i].id,
-                                label : ordinal(rooms[i].floor)
-                                        + ' Floor - Room #' + rooms[i].roomNo
-                            }
-                            vm.rooms.push(room);
+                function(response) {
+                    vm.rooms = [];
+                    var rooms = response.result;
+                    for (var i = 0; i < rooms.length; i++) {
+                        var room = {
+                            id : rooms[i].id,
+                            label : ordinal(rooms[i].floor)
+                                    + ' Floor - Room #' + rooms[i].roomNo
                         }
-                        return vm.rooms;
-                    });
+                        vm.rooms.push(room);
+                    }
+                    return vm.rooms;
+                });
         }
         /**
          *
@@ -124,6 +126,22 @@
             };
             modalService.show(options);
 
+        }
+        function getApartment() {
+            return adminService.getApartment(aptId).then(
+                function(response) {
+                    vm.rooms = [];
+                    var rooms = response.result;
+                    for (var i = 0; i < rooms.length; i++) {
+                        var room = {
+                            id : rooms[i].id,
+                            label : ordinal(rooms[i].floor)
+                                    + ' Floor - Room #' + rooms[i].roomNo
+                        }
+                        vm.rooms.push(room);
+                    }
+                    return vm.rooms;
+                });
         }
 
     };

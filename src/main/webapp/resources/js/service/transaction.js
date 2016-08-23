@@ -28,7 +28,6 @@
     }
 
     TransactionService.$inject = injectParams;
-
     angular.module('rental').service('TransactionService', TransactionService);
 
 })();

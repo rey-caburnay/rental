@@ -102,10 +102,10 @@ public class AdminServiceImpl implements AdminService {
     }
 
 	@Override
-	public Response<RenterInfo> getRenters() {
-	  Response<RenterInfo> resp = new Response<RenterInfo>();
+	public Response<Renter> getRenters() {
+	  Response<Renter> resp = new Response<Renter>();
 	  try {
-	      List<RenterInfo> rentersInfos = renterDao.getRenters();
+	      List<Renter> rentersInfos = renterDao.getRenters();
 	      resp.setResult(rentersInfos);
 	      resp.setResponseStatus(ResultStatus.RESULT_OK);
 	  }catch(Exception e) {

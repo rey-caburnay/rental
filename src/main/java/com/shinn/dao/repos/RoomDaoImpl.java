@@ -33,5 +33,4 @@ public class RoomDaoImpl extends AbstractDaoImpl<Room> implements RoomDao{
     public List<Room> getRooms(Integer aptId) {
         return getListResult("get-rooms", aptId);
     }
-
 }

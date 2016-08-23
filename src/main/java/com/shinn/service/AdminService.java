@@ -22,6 +22,7 @@ public interface AdminService {
     public Response<Expense> createExpenses(Expense expense) throws Exception;
     public Response<Expense> getExpense(Integer id) throws Exception;
     
-    public Response<RenterInfo> getRenters();
+    public Response<Renter> getRenters();
+
 
 }

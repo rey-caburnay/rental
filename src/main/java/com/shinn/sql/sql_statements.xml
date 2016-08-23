@@ -64,7 +64,6 @@
 	    `status`
 	FROM `realmaster`.`mst_apartment`;
   </entry>
-
   <entry key="get-rooms">
     SELECT
        `id`,
@@ -79,6 +78,23 @@
 	   `status`
 	FROM `realmaster`.`mst_room`
 	WHERE `aptId` = ?
+  </entry>
+  <entry key="get-active-renters">
+    SELECT
+       `renter`.`id`,
+	   `renter`.`firstname`,
+	   `renter`.`lastname`,
+	   `renter`.`initial`,
+	   `renter`.`email`,
+	   `renter`.`mobileno`,
+	   `renter`.`address1`,
+	   `renter`.`telNo`,
+	   `renter`.`address2`,
+	   `renter`.`status`
+	FROM `realmaster`.`mst_renter` as `renter`
+	LEFT JOIN `realmaster`.`tx_rental` as `rent`
+	ON `renter`.`id` = `rent`.`renterId`
+	WHERE `rent`.`status` = 'active';
   </entry>
   <entry key="get-renters-info">
     SELECT
@@ -107,7 +123,7 @@
 	ON `rent`.`aptId` = `apt`.`id`
 	LEFT JOIN `realmaster`.`mst_room` as `room`
 	ON `rent`.`roomId` = `room`.`id`
-	WHERE `rent`.`status` = 'active';
+	WHERE  `renter`.`id` = ? and `rent`.`status` = 'active';
   </entry>
   <entry key="get-transaction-by-renterid">
     SELECT

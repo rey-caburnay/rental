@@ -20,6 +20,6 @@ public interface RenterDao extends GenericDao<Renter>{
      *
      * @return
      */
-    public List<RenterInfo> getRenters();
+    public List<Renter> getRenters();
 
 }

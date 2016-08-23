@@ -87,6 +87,12 @@ public class TransactionServiceImpl implements TransactionService {
 		return null;
 	}
 
+    @Override
+    public Response<RenterInfo> getRentersInfo(Integer renterId) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
 //    /**
 //     * 
 //     */
