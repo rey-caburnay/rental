@@ -6,6 +6,8 @@ import java.sql.SQLException;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -18,12 +20,13 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 import org.springframework.jdbc.datasource.*;
 
+
 @EnableWebMvc
 @Configuration
 @ComponentScan({ "com.shinn" })
 @PropertySource(value = { "classpath:application.properties" })
 public class SpringWebConfig extends WebMvcConfigurerAdapter {
-    
+
     @Autowired
     private Environment environment;
 
@@ -56,5 +59,7 @@ public class SpringWebConfig extends WebMvcConfigurerAdapter {
         Connection connection = dataSource().getConnection();
         return connection;
     }
+
+
 
 }

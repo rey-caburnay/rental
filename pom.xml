@@ -4,11 +4,10 @@
   <groupId>com.shinn.rental</groupId>
   <artifactId>rent-service</artifactId>
   <version>1.0.1-SNAPSHOT</version>
-  <packaging>war</packaging>
   <name>rent-service</name>
-  <description>rental RESTFul service</description>
   <properties>
-    <spring.version>4.2.0.RELEASE</spring.version>
+    <spring.boot.version>1.4.0.RELEASE</spring.boot.version>
+    <spring.version>4.3.2.RELEASE</spring.version>
     <jackson.version>2.5.3</jackson.version>
     <logback.version>1.1.3</logback.version>
     <jcl.slf4j.version>1.7.12</jcl.slf4j.version>
@@ -18,19 +17,36 @@
     <deployer.tomcat.user>admin</deployer.tomcat.user>
     <deployer.tomcat.password>admin</deployer.tomcat.password>
   </properties>
-
   <scm>
     <connection>scm:git:https://github.com/7taghap/rental.git</connection>
     <developerConnection>scm:git:https://github.com/7taghap/rental.git</developerConnection>
     <url>https://github.com/7taghap/rental.git</url>
   </scm>
-
+  <description>rental RESTFul service</description>
+  <parent>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-parent</artifactId>
+    <version>1.4.0.RELEASE</version>
+  </parent>
   <dependencies>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-tomcat</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-test</artifactId>
+      <scope>test</scope>
+    </dependency>
     <!-- rest service api -->
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-webmvc</artifactId>
-      <version>${spring.version}</version>
+      <!-- <version>${spring.version}</version> -->
       <exclusions>
         <exclusion>
           <groupId>commons-logging</groupId>
@@ -38,50 +54,42 @@
         </exclusion>
       </exclusions>
     </dependency>
-     <dependency>
+    <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-jdbc</artifactId>
-      <version>${spring.version}</version>
-     </dependency>
-      <dependency>
+    </dependency>
+    <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-core</artifactId>
-      <version>${spring.version}</version>
-     </dependency>
-
+    </dependency>
     <!-- Need this for json to/from object -->
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-core</artifactId>
       <version>${jackson.version}</version>
     </dependency>
-
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-databind</artifactId>
       <version>${jackson.version}</version>
     </dependency>
-
     <!-- JSTL for views -->
     <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>jstl</artifactId>
       <version>${jstl.version}</version>
     </dependency>
-
     <!-- Logging -->
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>jcl-over-slf4j</artifactId>
       <version>${jcl.slf4j.version}</version>
     </dependency>
-
     <dependency>
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-classic</artifactId>
       <version>${logback.version}</version>
     </dependency>
-
     <!-- compile only, deployed container will provide this -->
     <!-- Need this for config annotation -->
     <dependency>
@@ -95,6 +103,11 @@
       <artifactId>mysql-connector-java</artifactId>
       <version>5.1.9</version>
     </dependency>
+    <dependency>
+      <groupId>org.apache.tomcat.embed</groupId>
+      <artifactId>tomcat-embed-jasper</artifactId>
+      <scope>provided</scope>
+    </dependency>
     <!-- test -->
     <dependency>
       <groupId>junit</groupId>
@@ -105,34 +118,33 @@
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-test</artifactId>
-      <version>${spring.version}</version>
     </dependency>
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-context</artifactId>
-      <version>${spring.version}</version>
+      <!-- <version>${spring.version}</version> -->
     </dependency>
-      <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-all</artifactId>
-            <version>1.10.19</version>
-            <scope>test</scope>
-        </dependency>
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-all</artifactId>
+      <version>1.10.19</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
   <build>
-   <resources>
-        <resource>
-            <directory>src/main/java</directory>
-            <includes>
-                <include>**/*.xml</include>
-            </includes>
-        </resource>
-        <resource>
-            <directory>src/main/resources</directory>
-        </resource>
+    <resources>
+      <resource>
+        <directory>src/main/java</directory>
+        <includes>
+          <include>**/*.xml</include>
+        </includes>
+      </resource>
+      <resource>
+        <directory>src/main/resources</directory>
+      </resource>
     </resources>
     <plugins>
-    <plugin>
+      <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.3</version>
@@ -141,18 +153,14 @@
           <target>1.8</target>
         </configuration>
       </plugin>
-         <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-war-plugin</artifactId>
-        <version>2.6</version>
-        <configuration>
-          <failOnMissingWebXml>false</failOnMissingWebXml>
-        </configuration>
+      <plugin>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
       </plugin>
     </plugins>
-      <finalName>rentService</finalName>
+    <finalName>rentService</finalName>
   </build>
-   <profiles>
+  <profiles>
     <profile>
       <id>test-env1</id>
       <build>
@@ -194,5 +202,4 @@
       </build>
     </profile>
   </profiles>
-
 </project>
