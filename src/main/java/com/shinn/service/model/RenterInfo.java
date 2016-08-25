@@ -5,27 +5,27 @@ import java.io.Serializable;
 public class RenterInfo implements Serializable {
 
     private Integer id;
-    
+
     private String lastName;
-    
+
     private String firstName;
-    
+
     private String initial;
-    
+
     private String address1;
-    
+
     private String address2;
-    
+
     private String mobileNo;
-    
+
     private String telno;
-    
+
     private String email;
-    
+
 	private String status;
-	
+
     private Integer aptId;
-	
+
 	private Integer roomId;
 
 	private String name;
@@ -188,13 +188,17 @@ public class RenterInfo implements Serializable {
         this.water = water;
     }
 
+    /* (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
     @Override
     public String toString() {
-        return "RenterInfo [aptId=" + aptId + ", roomId=" + roomId + ", name=" + name + ", aptName=" + aptName +
-                ", roomName=" + roomName + ", rentType=" + rentType + ", paymentType=" + paymentType + ", amount=" +
-                amount + ", electric=" + electric + ", water=" + water + ", id=" + id + ", lastName=" + lastName +
-                ", firstName=" + firstName + ", initial=" + initial + ", address=" + address + ", idPresented=" +
-                idPresented + ", mobileNo=" + mobileNo + ", telno=" + telno + ", email=" + email +
-                ", emergencyContact=" + emergencyContact + ", status=" + status + "]";
+        return "RenterInfo [id=" + id + ", lastName=" + lastName + ", firstName=" + firstName + ", initial=" + initial +
+                ", address1=" + address1 + ", address2=" + address2 + ", mobileNo=" + mobileNo + ", telno=" + telno +
+                ", email=" + email + ", status=" + status + ", aptId=" + aptId + ", roomId=" + roomId + ", name=" +
+                name + ", aptName=" + aptName + ", roomName=" + roomName + ", rentType=" + rentType + ", paymentType=" +
+                paymentType + ", amount=" + amount + ", electric=" + electric + ", water=" + water + "]";
     }
+
+
 }

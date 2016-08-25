@@ -1,11 +1,11 @@
 (function() {
 
-	var injectParams = [ '$filter', 'TransactionService', 'adminService','modalService'];
+	var injectParams = [ '$filter', 'transactionService', 'adminService','modalService'];
 
-	var TransactionController = function($filter, TransactionService,
+	var TransactionController = function($filter, transactionService,
 			adminService,  modalService) {
 		var vm = this;
-		vm.ts = TransactionService;
+		vm.ts = transactionService;
 		vm.admin = adminService;
 		vm.model;
 		vm.startDate;
@@ -31,7 +31,7 @@
 		vm.apartments = [];
 
 		getApartments();
-	
+
 
 		vm.getRooms = function(aptId) {
 			getRooms(aptId);
@@ -57,8 +57,8 @@
 				amount:5000,
 				apartment:{id:1, name:'Buhisan'},
 				room:{id:1, label:'1st Floor Room # 1'}
-				
-				
+
+
 		}
 		function getApartments() {
 			return adminService.getApartments().then(function(response) {
@@ -67,7 +67,7 @@
 			});
 		}
 		/**
-		 * 
+		 *
 		 */
 		function getRooms(aptId) {
 			return adminService.getRooms(aptId).then(
@@ -86,7 +86,7 @@
 					});
 		}
 		/**
-		 * 
+		 *
 		 */
 		function ordinal(number) {
 			// Ensure that the passed in data is a number
@@ -112,11 +112,11 @@
 				}
 			}
 		}
-		
+
 		function submit() {
 			vm.model.aptId = vm.model.apartment.id;
 			vm.model.roomId = vm.model.room.id;
-			
+
 			vm.model.startDate = vm.startDate.toISOString().substring(0, 10);
 			if (vm.endDate) {
 				vm.model.endDate = vm.endDate.toISOString().substring(0, 10);
@@ -128,7 +128,7 @@
 				 console.log("status return :" + response);
 				vm.popup(response);
 			 });
-			 
+
 		}
 		function showModal(result) {
 			var msg ='Successfully Registered';
@@ -137,12 +137,12 @@
 			}
 			var options = {
 					header:msg,
-					service:result.result	
+					service:result.result
 			};
 			modalService.show(options);
-	        
+
 		}
-		
+
 	};
 
 	TransactionController.$inject = injectParams;

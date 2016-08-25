@@ -11,6 +11,7 @@ import com.shinn.dao.factory.AbstractDaoImpl;
 import com.shinn.dao.factory.ResultStatus;
 import com.shinn.dao.repos.RentalDao;
 import com.shinn.dao.repos.RenterDao;
+import com.shinn.dao.repos.RenterInfoDao;
 import com.shinn.service.model.Renter;
 import com.shinn.service.model.RenterInfo;
 import com.shinn.service.model.Transaction;
@@ -27,15 +28,17 @@ public class TransactionServiceImpl implements TransactionService {
     RentalDao rentalDao;
     @Autowired
     RenterDao renterDao;
-    
+    @Autowired
+    RenterInfoDao renterInfoDao;
+
     /**
-     * 
+     *
      */
     public Response<RegistrationForm> createTx(RegistrationForm reg)  {
         Response<RegistrationForm> resp = new Response<RegistrationForm>();
         Transaction tx  = new Transaction();
         try {
-            Renter renter = renterDao.getRenterByName(reg.getLastname(), 
+            Renter renter = renterDao.getRenterByName(reg.getLastname(),
                     reg.getFirstname(), reg.getRenterMI());
             /** create new record if null **/
             if (renter == null || renter.getId() == null) {
@@ -50,7 +53,7 @@ public class TransactionServiceImpl implements TransactionService {
                 renter.setAddress(reg.getAddress());
                 renter.setStatus(RentStatus.ACTIVE);
                 renterDao.saveUpdate(renter);
-             
+
             }
             reg.setRenterId(renter.getId()+"");
             tx.setId(rentalDao.getCurrentKey(Transaction.TABLE_NAME));
@@ -71,7 +74,7 @@ public class TransactionServiceImpl implements TransactionService {
             rentalDao.saveUpdate(tx);
             resp.setResponseStatus(ResultStatus.RESULT_OK);
             resp.setModel(reg);
-            
+
             rentalDao.commit();
         } catch(Exception e) {
             resp.setResponseStatus(ResultStatus.GENERAL_ERROR);
@@ -89,12 +92,11 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public Response<RenterInfo> getRentersInfo(Integer renterId) {
-        // TODO Auto-generated method stub
         return null;
     }
 
 //    /**
-//     * 
+//     *
 //     */
 //	@Override
 //	public Response<RenterInfo> getTxByRenterId(Integer renterId) {
