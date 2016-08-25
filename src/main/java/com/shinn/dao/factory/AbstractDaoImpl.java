@@ -311,7 +311,7 @@ public abstract class AbstractDaoImpl<T extends Serializable> {
             return instance;
 
         } catch (Exception e) {
-            logger.info(e.getMessage() +" " + columnName);
+            logger.info(e.getCause() +" " + columnName);
             return null;
         }
     }

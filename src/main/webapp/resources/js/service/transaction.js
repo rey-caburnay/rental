@@ -4,38 +4,39 @@
 (function () {
 
 //    var injectParams = ['config', 'customersService', 'customersBreezeService'];
-	var injectParams = ['$http'];
+	var injectParams = ['$q','$http'];
 
-    var TransactionService = function ($http) {
-    	this.http = $http;
+    var TransactionService = function ($q, $http) {
+        var http = $http,
+    	defer = $q.defer();
+
+        this.saveTx = function (model) {
+            return http.post('tx/savetx', model)
+                .then(
+                    function(response){
+                        return response.data;
+                    },
+                    function(errResponse){
+                        console.error('Error while fetching users');
+                        return defer.reject(errResponse);
+                    }
+                );
+        },
+        this.getRoomsByRenter = function (renterId) {
+            var ts = this;
+            return http.get('tx/getrooms/'+renterId)
+                .then(
+                    function(response){
+                        return response.data;
+                    },
+                    function(errResponse){
+                        console.error('Error while fetching rooms');
+                        return defer.reject(errResponse);
+                    }
+                );
+        }
     	return this;
     };
-    TransactionService.prototype = {
-		saveTx: function (model) {
-			return this.http.post('tx/savetx', model    					)
-    			.then(
-    				function(response){
-    					return response.data;
-    				},
-    				function(errResponse){
-    					console.error('Error while fetching users');
-    					return $q.reject(errResponse);
-    				}
-    			);
-		},
-		getRoomsByRenter: function (renterId) {
-		    return this.http.post('tx/getrooms', model                        )
-            .then(
-                function(response){
-                    return response.data;
-                },
-                function(errResponse){
-                    console.error('Error while fetching users');
-                    return $q.reject(errResponse);
-                }
-            );
-		}
-    }
 
     TransactionService.$inject = injectParams;
     angular.module('rental').service('transactionService', TransactionService);

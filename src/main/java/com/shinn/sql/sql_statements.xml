@@ -99,21 +99,17 @@
   <entry key="get-renters-info">
     SELECT
        renter.id,
-	   renter.firstname,
-	   renter.lastname,
-	   renter.initial,
-	   renter.email,
-	   renter.mobileno,
-	   renter.address1,
-	   renter.telNo,
-	   renter.address2,
-	   renter.status,
 	   rent.aptId,
 	   rent.roomId,
-	   rent.balance,
-	   rent.deposit,
 	   rent.txType as rentType,
 	   rent.roomId,
+	   rent.dueDate,
+	   rent.startDate,
+	   rent.endDate,
+	   rent.deposit,
+	   rent.balance,
+	   rent.txType,
+	   rent.amount,
 	   apt.name as aptName,
 	   room.roomNo as roomName
 	FROM realmaster.mst_renter as renter

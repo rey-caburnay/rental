@@ -1,13 +1,14 @@
 (function() {
 
-    var injectParams = [ '$filter', 'TransactionService', 'adminService',
+    var injectParams = [ '$filter', 'transactionService', 'adminService',
             'modalService' ];
 
     var CollectionController = function ($filter, transactionService,
             adminService, modalService) {
         var vm = this;
-        vm.services = [adminService,TransactionService, modalService];
+        vm.services = [adminService,transactionService, modalService];
         vm._selected;
+        vm.model = {}; //model for ui;
         vm.renters = getRenters();
 
         vm.submit = function() {
@@ -23,7 +24,7 @@
         vm.setRenter = function (renter) {
             vm.model.mobileno = renter.mobileNo;
             vm.model.telno = renter.telno;
-            get
+            vm.model.rooms = getRoomsByRenter(renter.id);
         }
         vm.popup = function(model) {
             showModal(model);
@@ -42,49 +43,12 @@
                 return response.result;
             })
         }
-        function getRoomsByRenter() {
-            return transactionService.getRooms().then(function(response) {
-                vm.apartments = response.result;
-                return vm.apartments;
-            });
-        }
-        /**
-         *
-         */
-        function getRooms(aptId) {
-            return adminService.getRooms(aptId).then(
-                function(response) {
-                    vm.rooms = [];
-                    var rooms = response.result;
-                    for (var i = 0; i < rooms.length; i++) {
-                        var room = {
-                            id : rooms[i].id,
-                            label : ordinal(rooms[i].floor)
-                                    + ' Floor - Room #' + rooms[i].roomNo
-                        }
-                        vm.rooms.push(room);
-                    }
-                    return vm.rooms;
+        function getRoomsByRenter(renterId) {
+            return transactionService.getRoomsByRenter(renterId)
+                .then(function(response) {
+                    vm.model.rooms = response.result;
+                    return  vm.model.rooms;
                 });
-        }
-
-        function submit() {
-            vm.model.aptId = vm.model.apartment.id;
-            vm.model.roomId = vm.model.room.id;
-
-            vm.model.startDate = vm.startDate.toISOString().substring(0, 10);
-            if (vm.endDate) {
-                vm.model.endDate = vm.endDate.toISOString().substring(0, 10);
-            }
-            if (vm.collectionDate) {
-                vm.model.collectionDate = vm.collectionDate.toISOString()
-                        .substring(0, 10);
-            }
-            vm.ts.saveTx(vm.model).then(function(response) {
-                console.log("status return :" + response);
-                vm.popup(response);
-            });
-
         }
         function showModal(result) {
             var msg = 'Successfully Registered';
@@ -96,7 +60,6 @@
                 service : result.result
             };
             modalService.show(options);
-
         }
         function getApartment() {
             return adminService.getApartment(aptId).then(

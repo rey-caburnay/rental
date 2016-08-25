@@ -1,9 +1,10 @@
 package com.shinn.service;
 
 import java.util.Date;
-
+import java.util.List;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -92,7 +93,16 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public Response<RenterInfo> getRentersInfo(Integer renterId) {
-        return null;
+        Response<RenterInfo> resp = new Response<RenterInfo>();
+        List<RenterInfo> renterInfos = renterInfoDao.getRentersInfo(renterId);
+        resp.setResponseStatus(ResultStatus.NO_RESULT);
+        resp.setErrorMsg(ResultStatus.NO_RESULT);
+        if (renterInfos != null && renterInfos.size() > 0) {
+            resp.setResponseStatus(ResultStatus.RESULT_OK);
+            resp.setResult(renterInfos);
+        } 
+        
+        return resp;
     }
 
 //    /**

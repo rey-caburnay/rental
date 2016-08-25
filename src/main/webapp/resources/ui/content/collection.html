@@ -49,9 +49,9 @@
             <label class="col-md-3 control-label" for="rentType">Room Rented</label>
             <div class="col-md-9"
               data-ng-class="{'has-error': regForm.rentType.$error.required}">
-             <select id="selectbasic" name="rentType" data-ng-model="vm.model.txType" data-ng-options="type.label for type in vm.rentType"
+             <select id="selectbasic" name="roomRented" data-ng-model="vm.model.room" 
+             	data-ng-options="room as (room.aptName + ' Room# ' + room.roomName)  for room in vm.model.rooms"
                class="form-control" required >
-             <option value="">-- choose rent type --</option>
               </select>
             </div>
           </div>
