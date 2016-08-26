@@ -9,6 +9,7 @@
         vm.services = [adminService,transactionService, modalService];
         vm._selected;
         vm.model = {}; //model for ui;
+        vm.model.rooms = [];
         vm.renters = getRenters();
 
         vm.submit = function() {
@@ -24,10 +25,21 @@
         vm.setRenter = function (renter) {
             vm.model.mobileno = renter.mobileNo;
             vm.model.telno = renter.telno;
-            vm.model.rooms = getRoomsByRenter(renter.id);
+            getRoomsByRenter(renter.id);
         }
-        vm.popup = function(model) {
+        vm.popup = function (model) {
             showModal(model);
+        }
+        vm.setRoomInfo = function (room) {
+
+            vm.model.amount = room.amount;
+            vm.model.paymentType = room.paymentType;
+            vm.model.deposit = room.deposit;
+            vm.model.balance = room.balance;
+            vm.model.amtInWords = room.amount;
+            vm.model.apartment = room.aptName;
+            vm.collectionDate = room.dueDate;
+            vm.model.total =  vm.model.balance - vm.model.deposit - vm.model.amount;
         }
         function getRenters() {
             var reter = '';
@@ -47,6 +59,10 @@
             return transactionService.getRoomsByRenter(renterId)
                 .then(function(response) {
                     vm.model.rooms = response.result;
+                    if(vm.model.rooms && vm.model.rooms.length > 0) {
+                        vm.model.room = vm.model.rooms[0];
+                        vm.setRoomInfo(vm.model.room);
+                    }
                     return  vm.model.rooms;
                 });
         }

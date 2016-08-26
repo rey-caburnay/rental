@@ -1,7 +1,7 @@
 (function (){
 'use strict';
 
-angular.module('rental',['ngRoute','ui.bootstrap']);
+angular.module('rental',['ngRoute','ui.bootstrap','ngSanitize']);
 
 
 /**

@@ -51,6 +51,7 @@
 
     <!-- Our Website Javascripts -->
     <script src="<c:url value='/resources/js/external/angular.min.js' />"></script>
+    <script src="<c:url value='/resources/js/external/angular-sanitize.js' />"></script>
     <script src="<c:url value='/resources/js/external/angular-route.js' />"></script>
     <script src="<c:url value='/resources/js/external/ui-bootstrap-1.3.3.min.js'/>"></script>
     <script src="<c:url value='/resources/js/app.js' />"></script>

@@ -64,7 +64,7 @@
 	});
 
 	// number to words
-	angular.module('rental').filter('words', function() {
+	angular.module('rental').filter('amtToWords', function() {
 		var th = [ '', 'thousand', 'million', 'billion', 'trillion' ];
 		var dg = [ 'zero', 'one', 'two', 'three', 'four', 'five', 'six',
 				'seven', 'eight', 'nine' ];
