@@ -109,9 +109,11 @@
 	   rent.deposit,
 	   rent.balance,
 	   rent.txType,
+	   rent.id as txId,
 	   rent.amount,
 	   apt.name as aptName,
-	   room.roomNo as roomName
+	   room.roomNo as roomName,
+	   room.rate as roomRate
 	FROM realmaster.mst_renter as renter
 	LEFT JOIN realmaster.tx_rental as rent
 	ON renter.id = rent.renterId

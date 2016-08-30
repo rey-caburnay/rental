@@ -18,3 +18,5 @@ INSERT INTO `realmaster`.`mst_room` (`id`, `aptId`, `floor`, `roomNo`, `roomType
 /*************** renters ******************/
 
 INSERT INTO `realmaster`.`tx_rental` (`id`, `aptId`, `roomId`, `dueDate`, `txDate`, `startDate`, `endDate`, `deposit`, `renterId`, `balance`, `txType`, `amount`, `status`,`userId`) VALUES ('1', '1', '1', '2016-09-29', '2016-08-01', '2016-09-01', null, '5000', '1', '0', '1', '5000', 'active','1');
+INSERT INTO `realmaster`.`tx_rental` (`id`, `aptId`, `roomId`, `dueDate`, `txDate`, `startDate`, `endDate`, `deposit`, `renterId`, `balance`, `txType`, `amount`, `status`,`userId`) VALUES ('2', '2', '1', '2016-09-29', '2016-08-01', '2016-09-01', null, '4000', '1', '0', '1', '5000', 'active','1');
+INSERT INTO `realmaster`.`tx_rental` (`id`, `aptId`, `roomId`, `dueDate`, `txDate`, `startDate`, `endDate`, `deposit`, `renterId`, `balance`, `txType`, `amount`, `status`,`userId`) VALUES ('3', '1', '2', '2016-09-29', '2016-08-01', '2016-09-01', null, '3000', '1', '0', '1', '5000', 'active','1');

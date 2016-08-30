@@ -5,14 +5,28 @@
 
     var CollectionController = function ($filter, transactionService,
             adminService, modalService) {
-        var vm = this;
+        var vm = this,
+        collection = {}, //model to map to services
+        paymentTypes = ["cash", "check", "online"];
+        COLLECTION_DAYS = 30;
+        
         vm.services = [adminService,transactionService, modalService];
         vm._selected;
         vm.model = {}; //model for ui;
+        vm.model.total = 0;
+        vm.model.paymentType = paymentTypes[0];
+        
         vm.model.rooms = [];
         vm.renters = getRenters();
 
-        vm.submit = function() {
+        vm.initModel = function () {
+            vm.model.total = 0;
+            vm.model.balance = 0;
+            vm.model.deposit = 0;
+            vm.model.amount = 0;
+        }
+        vm.initModel();
+        vm.submit = function () {
             submit();
         }
         vm.modelOptions = {
@@ -31,14 +45,22 @@
             showModal(model);
         }
         vm.setRoomInfo = function (room) {
-
+            var dueDate = new Date(room.dueDate),
+            newCollectionDate = new Date();
+            //map values to service
+            collection.txId = room.txId;
+            collection.renterId = room.id;
+            collection.roomId = roomId;
+            collection.aptId = room.aptId;
+            //map values to ui
             vm.model.amount = room.amount;
             vm.model.paymentType = room.paymentType;
             vm.model.deposit = room.deposit;
             vm.model.balance = room.balance;
             vm.model.amtInWords = room.amount;
             vm.model.apartment = room.aptName;
-            vm.collectionDate = room.dueDate;
+            newCollectionDate.setDate(dueDate.getDate() + COLLECTION_DAYS); 
+            vm.model.collectionDate = new Date(newCollectionDate);
             vm.model.total =  vm.model.balance - vm.model.deposit - vm.model.amount;
         }
         function getRenters() {
@@ -92,6 +114,17 @@
                     }
                     return vm.rooms;
                 });
+        }
+        function submit() {
+            collection.amountPaid = vm.model.amount;
+            collection.balance = vm.model.balance;
+            collection.deposit = vm.model.deposit;
+            collection.userId = 1;
+            transactionService.saveCollection(collection)
+                .then(function(response){
+                    console.log("status return :" + response);
+                    vm.popup(response);
+             });
         }
 
     };

@@ -55,7 +55,11 @@ public class TxController {
         }
         return new ResponseEntity(HttpStatus.BAD_REQUEST);
     }
-    
+    /**
+     * 
+     * @param renterid
+     * @return
+     */
     @RequestMapping(value = "/getrooms/{renterid}", method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Response<RenterInfo>> getRentersInfo(@PathVariable String renterid){
@@ -65,6 +69,22 @@ public class TxController {
         logger.debug(resp.toString());
         if(resp.getResponseStatus().equals(ResultStatus.RESULT_OK)){
             return new ResponseEntity<Response<RenterInfo>>(resp, HttpStatus.OK);
+        }
+        return new ResponseEntity(HttpStatus.BAD_REQUEST);
+    }
+    /**
+     * 
+     * @param renterid
+     * @return
+     */
+    @RequestMapping(value = "/collections", method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Response<RenterInfo>> collections(@RequestBody Collection tx) {
+        logger.debug(tx.toString());
+        Response<RegistrationForm> resp = transactionService.createTx(tx);
+        logger.debug(resp.toString());
+        if(resp.getResponseStatus().equals(ResultStatus.RESULT_OK)){
+            return new ResponseEntity<Response<RegistrationForm>>(resp, HttpStatus.OK);
         }
         return new ResponseEntity(HttpStatus.BAD_REQUEST);
     }

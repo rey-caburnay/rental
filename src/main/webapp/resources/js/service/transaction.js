@@ -35,6 +35,17 @@
                     }
                 );
         }
+        this.saveCollection = function(model) {
+            return http.post('tx/collection', model)
+                .then(function(response) {
+                    return response.data;
+                }, 
+                function(errResponse) {
+                    console.error('Error while fetching users');
+                    return defer.reject(errResponse);
+                }
+            );
+        }
     	return this;
     };
 

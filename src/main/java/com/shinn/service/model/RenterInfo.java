@@ -11,6 +11,7 @@ public class RenterInfo implements Serializable {
     private static final long serialVersionUID = 1L;
     
     private Integer id;
+    private Integer txId;
     private Integer aptId;
     private Integer roomId;
     private String aptName;
@@ -25,6 +26,7 @@ public class RenterInfo implements Serializable {
     private Double deposit;
     private Double balance;
     private Double amount;
+    private Double roomRate;
 
     /**
      * @return the id
@@ -206,17 +208,40 @@ public class RenterInfo implements Serializable {
     public void setAmount(Double amount) {
         this.amount = amount;
     }
+    /**
+     * @return the txId
+     */
+    public Integer getTxId() {
+        return txId;
+    }
+    /**
+     * @param txId the txId to set
+     */
+    public void setTxId(Integer txId) {
+        this.txId = txId;
+    }
+    /**
+     * @return the roomRate
+     */
+    public Double getRoomRate() {
+        return roomRate;
+    }
+    /**
+     * @param roomRate the roomRate to set
+     */
+    public void setRoomRate(Double roomRate) {
+        this.roomRate = roomRate;
+    }
     /* (non-Javadoc)
      * @see java.lang.Object#toString()
      */
     @Override
     public String toString() {
-        return "RenterInfo [id=" + id + ", aptId=" + aptId + ", roomId=" + roomId + ", aptName=" + aptName
-                + ", roomName=" + roomName + ", rentType=" + rentType + ", paymentType=" + paymentType + ", electric="
-                + electric + ", water=" + water + ", dueDate=" + dueDate + ", startDate=" + startDate + ", endDate="
-                + endDate + ", deposit=" + deposit + ", balance=" + balance + ", amount=" + amount + "]";
+        return "RenterInfo [id=" + id + ", txId=" + txId + ", aptId=" + aptId + ", roomId=" + roomId + ", aptName="
+                + aptName + ", roomName=" + roomName + ", rentType=" + rentType + ", paymentType=" + paymentType
+                + ", electric=" + electric + ", water=" + water + ", dueDate=" + dueDate + ", startDate=" + startDate
+                + ", endDate=" + endDate + ", deposit=" + deposit + ", balance=" + balance + ", amount=" + amount
+                + ", roomRate=" + roomRate + "]";
     }
- 
-
-
+  
 }

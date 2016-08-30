@@ -118,6 +118,25 @@ CREATE TABLE `tx_rental` (
   `amount` double(9,4) DEFAULT 0.000,
   `status` varchar(20) DEFAULT NULL,
   `userId` int(11) not null,
+   `updatedDate` date default NULL,
+   `updtCnt` int(11) default 0
   PRIMARY KEY (`id`),
   UNIQUE KEY `Id_UNIQUE` (`id`,`aptId`,`roomId`)
   )ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+  
+  /************* collections ***********/
+  CREATE TABLE `tx_collections` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `txId` int(11) NOT NULL,
+  `renterId` int(11) NOT NULL,
+  `roomId` int(11) NOT NULL,
+  `aptId` int(11) NOT NULL,
+  `amountPaid`  double(9,4) default 0.0000,
+  `balance`  double(9,4) default 0.0000,
+  `deposit` double(9,4) default 0.0000,
+  `txDate` date default NULL,
+   `userId` int(11) not null,
+  `status` varchar(20) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `Id_UNIQUE` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
