@@ -7,6 +7,7 @@ public class Collection implements Serializable {
     
     private Integer id;
     private Integer txId;
+    private Integer aptId;
     private Integer renterId;
     private Integer roomId;
     private Double amountPaid;
@@ -14,6 +15,9 @@ public class Collection implements Serializable {
     private Double deposit;
     private Date txDate;
     private Integer userId;
+    private Double change;
+    private Double cashReceived;
+    private String status;
     /**
      * @return the id
      */
@@ -122,14 +126,64 @@ public class Collection implements Serializable {
     public void setUserId(Integer userId) {
         this.userId = userId;
     }
+    /**
+     * @return the change
+     */
+    public Double getChange() {
+        return change;
+    }
+    /**
+     * @param change the change to set
+     */
+    public void setChange(Double change) {
+        this.change = change;
+    }
+    /**
+     * @return the cashReceived
+     */
+    public Double getCashReceived() {
+        return cashReceived;
+    }
+    /**
+     * @param cashReceived the cashReceived to set
+     */
+    public void setCashReceived(Double cashReceived) {
+        this.cashReceived = cashReceived;
+    }
+    
+    /**
+     * @return the aptId
+     */
+    public Integer getAptId() {
+        return aptId;
+    }
+    /**
+     * @param aptId the aptId to set
+     */
+    public void setAptId(Integer aptId) {
+        this.aptId = aptId;
+    }
+    
+    /**
+     * @return the status
+     */
+    public String getStatus() {
+        return status;
+    }
+    /**
+     * @param status the status to set
+     */
+    public void setStatus(String status) {
+        this.status = status;
+    }
     /* (non-Javadoc)
      * @see java.lang.Object#toString()
      */
     @Override
     public String toString() {
-        return "Collection [id=" + id + ", txId=" + txId + ", renterId=" + renterId + ", roomId=" + roomId
-                + ", amountPaid=" + amountPaid + ", balance=" + balance + ", deposit=" + deposit + ", txDate=" + txDate
-                + ", userId=" + userId + "]";
+        return "Collection [id=" + id + ", txId=" + txId + ", aptId=" + aptId + ", renterId=" + renterId + ", roomId="
+                + roomId + ", amountPaid=" + amountPaid + ", balance=" + balance + ", deposit=" + deposit + ", txDate="
+                + txDate + ", userId=" + userId + ", change=" + change + ", cashReceived=" + cashReceived + ", status="
+                + status + "]";
     }
-
 }

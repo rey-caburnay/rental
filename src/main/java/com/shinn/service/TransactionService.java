@@ -1,5 +1,6 @@
 package com.shinn.service;
 
+import com.shinn.service.model.Collection;
 import com.shinn.service.model.RenterInfo;
 import com.shinn.service.model.Transaction;
 import com.shinn.ui.model.RegistrationForm;
@@ -12,5 +13,7 @@ public interface TransactionService {
     public Response<Transaction> getTxByRenterId(Integer renterId);
     
     public Response<RenterInfo> getRentersInfo(Integer renterId);
+    
+    public Response<Collection> createCollection(Collection collection);
 
 }

@@ -113,7 +113,30 @@
               data-ng-class="{'has-error': regForm.amount.$error.required}">
               <input id="textinput" name="amount" type="text"
                 placeholder="placeholder" class="form-control input-md"
-                data-ng-model="vm.model.amount" required>
+                data-ng-model="vm.model.amount" 
+                data-ng-blur="vm.computeAmount()" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-md-3 control-label" for="selectbasic">Cash 
+              Received</label>
+            <div class="col-md-6"
+              data-ng-class="{'has-error': regForm.amount.$error.required}">
+              <input id="textinput" name="amount" type="text"
+                placeholder="placeholder" class="form-control input-md"
+                data-ng-model="vm.model.cashReceived" 
+                data-ng-blur="vm.computeAmount()" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-md-3 control-label" for="selectbasic">Change 
+              </label>
+            <div class="col-md-6"
+              data-ng-class="{'has-error': regForm.amount.$error.required}">
+              <input id="textinput" name="amount" type="text"
+                placeholder="placeholder" class="form-control input-md"
+                data-ng-model="vm.model.change" 
+                data-ng-blur="vm.computeAmount()" required>
             </div>
           </div>
           <div class="form-group">

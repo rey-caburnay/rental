@@ -10,9 +10,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.shinn.dao.factory.AbstractDaoImpl;
 import com.shinn.dao.factory.ResultStatus;
+import com.shinn.dao.repos.CollectionDao;
 import com.shinn.dao.repos.RentalDao;
 import com.shinn.dao.repos.RenterDao;
 import com.shinn.dao.repos.RenterInfoDao;
+import com.shinn.service.model.Collection;
 import com.shinn.service.model.Renter;
 import com.shinn.service.model.RenterInfo;
 import com.shinn.service.model.Transaction;
@@ -31,6 +33,8 @@ public class TransactionServiceImpl implements TransactionService {
     RenterDao renterDao;
     @Autowired
     RenterInfoDao renterInfoDao;
+    @Autowired
+    CollectionDao collectionDao;
 
     /**
      *
@@ -75,6 +79,8 @@ public class TransactionServiceImpl implements TransactionService {
             rentalDao.saveUpdate(tx);
             resp.setResponseStatus(ResultStatus.RESULT_OK);
             resp.setModel(reg);
+            
+            //TODO update the room details
 
             rentalDao.commit();
         } catch(Exception e) {
@@ -105,21 +111,27 @@ public class TransactionServiceImpl implements TransactionService {
         return resp;
     }
 
-//    /**
-//     *
-//     */
-//	@Override
-//	public Response<RenterInfo> getTxByRenterId(Integer renterId) {
-//		Response<RenterInfo> resp = new Response<RenterInfo>();
-//		try {
-//			Transaction tx = rentalDao.getTransactionByRenterId(renterId);
-//			resp.setmo
-//		    resp.setResponseStatus(ResultStatus.RESULT_OK);
-//		}catch(Exception e) {
-//			resp.setResponseStatus(ResultStatus.GENERAL_ERROR);
-//            resp.setErrorMsg(e.getMessage());
-//		}
-//		return resp;
-//	}
+    /* (non-Javadoc)
+     * @see com.shinn.service.TransactionService#createCollection(com.shinn.service.model.Collection)
+     */
+    @Override
+    public Response<Collection> createCollection(Collection collection) {
+        Response<Collection> resp = new Response<Collection>();
+        try {
+            collection.setTxDate(new Date());
+            collection.setStatus(RentStatus.PAID);
+            collectionDao.saveUpdate(collection);
+            resp.setResponseStatus(ResultStatus.RESULT_OK);
+            resp.setModel(collection);
+            collectionDao.commit();
+            
+            //TODO update tx_rental details
+        } catch(Exception e) {
+            resp.setResponseStatus(ResultStatus.GENERAL_ERROR);
+            resp.setErrorMsg(e.getMessage());
+            collectionDao.rollback();
+        }
+        return resp;
+    }
 
 }

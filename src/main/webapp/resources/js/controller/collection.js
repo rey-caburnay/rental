@@ -44,6 +44,17 @@
         vm.popup = function (model) {
             showModal(model);
         }
+        vm.computeAmount = function () {
+            var diff = vm.model.amount - vm.model.roomRate;
+            vm.model.cashReceived = vm.model.amount;
+          if (diff < 0) {
+              vm.model.balance = Math.abs(diff);
+              vm.model.change = 0;
+          } else {
+              vm.model.deposit = diff;
+              vm.model.change = diff;
+          }
+        }
         vm.setRoomInfo = function (room) {
             var dueDate = new Date(room.dueDate),
             newCollectionDate = new Date();

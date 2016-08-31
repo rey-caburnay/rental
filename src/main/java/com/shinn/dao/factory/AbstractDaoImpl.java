@@ -10,6 +10,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Savepoint;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -74,6 +75,26 @@ public abstract class AbstractDaoImpl<T extends Serializable> {
         } catch (SQLException e) {
             throw new Exception("SQLException:" + " Error on calling Rollback", e);
         }
+    }
+    /**
+     * 
+     * @param autoCommit
+     * @throws Exception
+     */
+    public void setAutoCommit(boolean autoCommit) throws Exception {
+        try {
+            connection.setAutoCommit(autoCommit);
+        } catch (Exception e) {
+            throw new Exception("SQLException:" + " Error on set auto commit", e);
+        }
+    }
+    /**
+     * 
+     * @return
+     * @throws SQLException
+     */
+    public Savepoint setSavePoint() throws SQLException {
+        return connection.setSavepoint();
     }
 
     /**

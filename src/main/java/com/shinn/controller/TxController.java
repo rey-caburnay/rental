@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.shinn.dao.factory.AbstractDaoImpl;
 import com.shinn.dao.factory.ResultStatus;
 import com.shinn.service.TransactionService;
+import com.shinn.service.model.Collection;
 import com.shinn.service.model.RenterInfo;
 import com.shinn.service.model.Transaction;
 import com.shinn.ui.model.RegistrationForm;
@@ -79,12 +80,12 @@ public class TxController {
      */
     @RequestMapping(value = "/collections", method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Response<RenterInfo>> collections(@RequestBody Collection tx) {
+    public ResponseEntity<Response<Collection>> collections(@RequestBody Collection tx) {
         logger.debug(tx.toString());
-        Response<RegistrationForm> resp = transactionService.createTx(tx);
+        Response<Collection> resp = transactionService.createCollection(tx);
         logger.debug(resp.toString());
         if(resp.getResponseStatus().equals(ResultStatus.RESULT_OK)){
-            return new ResponseEntity<Response<RegistrationForm>>(resp, HttpStatus.OK);
+            return new ResponseEntity<Response<Collection>>(resp, HttpStatus.OK);
         }
         return new ResponseEntity(HttpStatus.BAD_REQUEST);
     }

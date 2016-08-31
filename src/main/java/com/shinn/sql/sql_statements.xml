@@ -140,5 +140,21 @@
 	FROM realmaster.tx_rental
 	WHERE renterId = ?
   </entry>
+  <entry key="save-collection">
+    INSERT INTO realmaster.tx_collections
+	(txId, 
+	renterId, 
+	roomId,
+	aptId,
+	amountPaid,
+	balance,
+	deposit,
+	txDate,
+	userId,
+	status)
+	VALUES
+	(?,	?, ?, ?, ?,	?, ?, ?, ?,	?, ?);
+  </entry>
+  
 
 </properties>
