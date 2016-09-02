@@ -1,9 +1,10 @@
 package com.shinn.dao.repos;
 
 import java.util.List;
+import org.springframework.stereotype.Repository;
 import com.shinn.dao.factory.AbstractDaoImpl;
 import com.shinn.service.model.Collection;
-
+@Repository
 public class CollectionDaoImpl extends AbstractDaoImpl<Collection> implements CollectionDao {
 
     public CollectionDaoImpl() throws Exception {

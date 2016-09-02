@@ -5,6 +5,7 @@
   <artifactId>rent-service</artifactId>
   <version>1.0.1-SNAPSHOT</version>
   <name>rent-service</name>
+  <packaging>jar</packaging>
   <properties>
     <spring.boot.version>1.4.0.RELEASE</spring.boot.version>
     <spring.version>4.3.2.RELEASE</spring.version>
@@ -95,7 +96,7 @@
     <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>javax.servlet-api</artifactId>
-      <version>${servletapi.version}</version>
+<!--       <version>${servletapi.version}</version> -->
       <scope>provided</scope>
     </dependency>
     <dependency>
@@ -147,7 +148,6 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.3</version>
         <configuration>
           <source>1.8</source>
           <target>1.8</target>
@@ -157,9 +157,6 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
         <configuration>
-          <jvmArguments>
-<!--             -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005 -->
-          </jvmArguments>
         </configuration>
       </plugin>
     </plugins>
