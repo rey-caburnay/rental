@@ -2,159 +2,246 @@
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
   <entry key="get-current-key">
-  SELECT AUTO_INCREMENT
-	FROM  INFORMATION_SCHEMA.TABLES
-	WHERE TABLE_SCHEMA = 'realmaster'
-	AND   TABLE_NAME   = ?;
+    SELECT AUTO_INCREMENT
+    FROM INFORMATION_SCHEMA.TABLES
+    WHERE TABLE_SCHEMA = 'realmaster'
+    AND TABLE_NAME = ?;
   </entry>
   <entry key="get-users">
-    Select  id, username, name, email, mobile_no, status
+    Select id, username, name, email, mobile_no, status
     FROM mst_user;
   </entry>
 
-   <entry key="get-renter-by-id">
-    Select  id, lastname, firstname, initial, email, mobileno, telno, address1 as address, status
+  <entry key="get-renter-by-id">
+    Select id, lastname, firstname, initial, email,
+    mobileno, telno, address1 as address, status
     FROM mst_renter
-    WHERE id = ?;
+    WHERE id
+    = ?;
   </entry>
-   <entry key="get-renter-by-name">
-    Select  id, lastname, firstname, initial, email, mobileno, telno, address1 as address, status
+  <entry key="get-renter-by-name">
+    Select id, lastname, firstname, initial, email,
+    mobileno, telno, address1 as address, status
     FROM mst_renter
-    WHERE lastname = ? AND firstname = ? AND initial = ?
+    WHERE
+    lastname = ? AND firstname = ? AND initial = ?
   </entry>
 
   <entry key="get-users-by-id">
-    Select  id, username, name, email, mobile_no, status
+    Select id, username, name, email, mobile_no, status
     FROM mst_user where id = ?;
   </entry>
   <entry key="save-renter">
-    	INSERT INTO realmaster.mst_renter
-        (firstname,lastname,initial,email,mobileno,telno,address1,idPresentend,
-          emergencyContact,status)
-        VALUES(?,?,?,?,?,?,?,?,?,?);
+    INSERT INTO realmaster.mst_renter
+    (firstname,lastname,initial,email,mobileno,telno,address1,idPresentend,
+    emergencyContact,status)
+    VALUES(?,?,?,?,?,?,?,?,?,?);
   </entry>
   <entry key="save-transaction">
-  INSERT INTO realmaster.tx_rental
-	(aptId,
-	roomId,
-	dueDate,
-	txDate,
-	startDate,
-	endDate,
-	deposit,
-	renterId,
-	balance,
-	txType,
-	provider,
-	amount,
-	status,
-	userId)
-  VALUES
-	(?,?,?,?,?,?,?,?,?,?,?,?,?,?);
+    INSERT INTO realmaster.tx_rental
+    (id,
+    aptId,
+    roomId,
+    dueDate,
+    txDate,
+    startDate,
+    endDate,
+    deposit,
+    renterId,
+    balance,
+    txType,
+    provider,
+    amount,
+    status,
+    userId,
+    updatedDate,
+    updtCnt)
+    VALUES
+    (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);
+  </entry>
+  <entry key="update-transaction">
+    SET
+    @aptId = ?,
+    @roomId = ?,
+    @dueDate = ?,
+    @txDate = ?,
+    @startDate = ?,
+    @endDate = ?,
+    @deposit = ?,
+    @renterId = ?,
+    @balance = ?,
+    @txType = ?,
+    @provider = ?,
+    @amount = ?,
+    @status = ?,
+    @userId = ?,
+    @updatedDate = ?,
+    @updtCnt = ?;
+
+    UPDATE realmaster.tx_rental SET
+    aptId = @aptId,
+    roomId = @roomId,
+    dueDate =
+    @dueDate,
+    txDate = @txDate,
+    startDate = @startDate,
+    endDate = @endDate,
+    deposit = @deposit,
+    renterId = @renterId,
+    balance = @balance,
+    txType =
+    @txType,
+    provider = @provider,
+    amount = @amount,
+    status = @status,
+    userId = @userId,
+    updatedDate = @updatedDate,
+    updtCnt = @updtCnt
+    WHERE
+    aptId = @aptId AND roomId = @roomId
   </entry>
   <entry key="get-apartments">
-   	SELECT id,
-	    name,
-	    personIncharge,
-	    aptType,
-	    mobileNo,
-	    telNo,
-	    address1,
-	    address2,
-	    status
-	FROM realmaster.mst_apartment;
+    SELECT id,
+    name,
+    personIncharge,
+    aptType,
+    mobileNo,
+    telNo,
+    address1,
+    address2,
+    status
+    FROM realmaster.mst_apartment;
   </entry>
   <entry key="get-rooms">
     SELECT
-       id,
-	   aptId,
-	   floor,
-	   roomNo,
-	   roomType,
-	   size,
-	   occupied,
-	   telNo,
-	   rate,
-	   status
-	FROM realmaster.mst_room
-	WHERE aptId = ?
+    id,
+    aptId,
+    floor,
+    roomNo,
+    roomType,
+    size,
+    occupied,
+    telNo,
+    rate,
+    status
+    FROM realmaster.mst_room
+    WHERE aptId = ?
   </entry>
   <entry key="get-active-renters">
     SELECT
-       renter.id,
-	   renter.firstname,
-	   renter.lastname,
-	   renter.initial,
-	   renter.email,
-	   renter.mobileno,
-	   renter.address1,
-	   renter.telNo,
-	   renter.address2,
-	   renter.status
-	FROM realmaster.mst_renter as renter
-	LEFT JOIN realmaster.tx_rental as rent
-	ON renter.id = rent.renterId
-	WHERE rent.status = 'active';
+    renter.id,
+    renter.firstname,
+    renter.lastname,
+    renter.initial,
+    renter.email,
+    renter.mobileno,
+    renter.address1,
+    renter.telNo,
+    renter.address2,
+    renter.status
+    FROM realmaster.mst_renter as renter
+    LEFT JOIN realmaster.tx_rental as rent
+    ON renter.id = rent.renterId
+    WHERE rent.status = 'active';
   </entry>
   <entry key="get-renters-info">
     SELECT
-       renter.id,
-	   rent.aptId,
-	   rent.roomId,
-	   rent.txType as rentType,
-	   rent.roomId,
-	   rent.dueDate,
-	   rent.startDate,
-	   rent.endDate,
-	   rent.deposit,
-	   rent.balance,
-	   rent.txType,
-	   rent.id as txId,
-	   rent.amount,
-	   apt.name as aptName,
-	   room.roomNo as roomName,
-	   room.rate as roomRate
-	FROM realmaster.mst_renter as renter
-	LEFT JOIN realmaster.tx_rental as rent
-	ON renter.id = rent.renterId
-	LEFT JOIN realmaster.mst_apartment as apt
-	ON rent.aptId = apt.id
-	LEFT JOIN realmaster.mst_room as room
-	ON rent.roomId = room.id
-	WHERE  renter.id = ? and rent.status = 'active';
+    renter.id,
+    rent.aptId,
+    rent.roomId,
+    rent.txType as rentType,
+    rent.roomId,
+    rent.dueDate,
+    rent.startDate,
+    rent.endDate,
+    rent.deposit,
+    rent.balance,
+    rent.txType,
+    rent.id as txId,
+    rent.amount,
+    apt.name as aptName,
+    room.roomNo as roomName,
+    room.rate as roomRate
+    FROM realmaster.mst_renter as renter
+    LEFT JOIN realmaster.tx_rental as rent
+    ON renter.id = rent.renterId
+    LEFT JOIN realmaster.mst_apartment as apt
+    ON rent.aptId = apt.id
+    LEFT JOIN realmaster.mst_room as room
+    ON rent.roomId = room.id
+    WHERE renter.id = ? and rent.status = 'active';
   </entry>
   <entry key="get-transaction-by-renterid">
     SELECT
-       id,
-	   aptId,
-	   roomId,
-	   dueDate,
-	   txDate,
-	   startDate,
-	   endDate,
-	   renterId,
-	   balance,
-	   txType,
-	   status,
-	   amount
-	FROM realmaster.tx_rental
-	WHERE renterId = ?
+    id,
+    aptId,
+    roomId,
+    dueDate,
+    txDate,
+    startDate,
+    endDate,
+    renterId,
+    balance,
+    txType,
+    status,
+    amount
+    FROM realmaster.tx_rental
+    WHERE renterId = ?
   </entry>
   <entry key="save-collection">
     INSERT INTO realmaster.tx_collections
-	(txId, 
-	renterId, 
-	roomId,
-	aptId,
-	amountPaid,
-	balance,
-	deposit,
-	txDate,
-	userId,
-	status)
-	VALUES
-	(?,	?, ?, ?, ?,	?, ?, ?, ?,	?, ?);
+    (txId,
+    renterId,
+    roomId,
+    aptId,
+    amountPaid,
+    balance,
+    deposit,
+    txDate,
+    userId,
+    status)
+    VALUES
+    (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
   </entry>
+  <entry key="save-room">
+    INSERT INTO realmaster.mst_room
+   (id,
+    aptId,
+    floor,
+    roomNo,
+    roomType,
+    size,
+    occupied,
+    telNo,
+    rate,
+    status)
+    VALUES
+    (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+  </entry>
+  <entry key="update-room">
+    SET @id = ?,
+        @aptId = ?,
+        @floor = ?,
+        @roomNo = ?,
+        @roomType = ?,
+        @size = ?,
+        @occupied = ?,
+        @telNo = ?,
+        @rate = ?,
+        @status = ?;
+        
+    UPDATE realmaster.mst_room SET
+      id = @id
+      aptId = @aptId,
+      floor = @floor,
+      roomNo = @roomNo,
+      roomType = @roomType,
+      size = @size,
+      occupied = @occupied,
+      telNo = @telNo,
+      rate = @rate,
+      status = @status
+    WHERE id = @id
   
-
+  </entry>
 </properties>

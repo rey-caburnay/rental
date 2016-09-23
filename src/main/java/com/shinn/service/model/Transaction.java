@@ -21,6 +21,9 @@ public class Transaction implements Serializable{
 	private String provider;
 	private String status;
 	private Integer userId;
+	private Integer updtCnt;
+	private Date updateDate;
+	
 	/**
 	 * @return the id
 	 */
@@ -201,20 +204,41 @@ public class Transaction implements Serializable{
 	public void setUserId(Integer userId) {
 		this.userId = userId;
 	}
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString() {
-		return "Transaction [id=" + id + ", aptId=" + aptId + ", roomId=" + roomId + ", renterId=" + renterId
-				+ ", dueDate=" + dueDate + ", txDate=" + txDate + ", startDate=" + startDate + ", endDate=" + endDate
-				+ ", deposit=" + deposit + ", balance=" + balance + ", amount=" + amount + ", txType=" + txType
-				+ ", provider=" + provider + ", status=" + status + ", userId=" + userId + "]";
-	}
 	
-	
-	
-	
-	
-
+	/**
+     * @return the updtCnt
+     */
+    public Integer getUpdtCnt() {
+        return updtCnt;
+    }
+    /**
+     * @param updtCnt the updtCnt to set
+     */
+    public void setUpdtCnt(Integer updtCnt) {
+        this.updtCnt = updtCnt;
+    }
+    /**
+     * @return the updateDate
+     */
+    public Date getUpdateDate() {
+        return updateDate;
+    }
+    /**
+     * @param updateDate the updateDate to set
+     */
+    public void setUpdateDate(Date updateDate) {
+        this.updateDate = updateDate;
+    }
+    /* (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return "Transaction [id=" + id + ", aptId=" + aptId + ", roomId=" + roomId + ", renterId=" + renterId
+                + ", dueDate=" + dueDate + ", txDate=" + txDate + ", startDate=" + startDate + ", endDate=" + endDate
+                + ", deposit=" + deposit + ", balance=" + balance + ", amount=" + amount + ", txType=" + txType
+                + ", provider=" + provider + ", status=" + status + ", userId=" + userId + ", updtCnt=" + updtCnt
+                + ", updateDate=" + updateDate + "]";
+    }
+ 
 }

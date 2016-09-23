@@ -25,8 +25,21 @@ public class RoomDaoImpl extends AbstractDaoImpl<Room> implements RoomDao{
     }
 
     public void saveUpdate(Room model) throws Exception {
-        // TODO Auto-generated method stub
-        
+        String sqlStment = "save-room";
+        if (model.getId() != null && model.getId() > 0) {
+            sqlStment = "update-room";
+        }
+        executeSaveUpate(sqlStment, 
+                model.getId(),
+                model.getAptId(),
+                model.getFloor(),
+                model.getRoomNo(),
+                model.getRoomType(),
+                model.getSize(),
+                model.getOccupied(),
+                model.getTelNo(),
+                model.getRate(),
+                model.getStatus());
     }
 
     @Override

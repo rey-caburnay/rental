@@ -119,7 +119,7 @@ CREATE TABLE `tx_rental` (
   `status` varchar(20) DEFAULT NULL,
   `userId` int(11) not null,
    `updatedDate` date default NULL,
-   `updtCnt` int(11) default 0
+   `updtCnt` int(11) default 0,
   PRIMARY KEY (`id`),
   UNIQUE KEY `Id_UNIQUE` (`id`,`aptId`,`roomId`)
   )ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;

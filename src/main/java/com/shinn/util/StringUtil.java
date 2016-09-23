@@ -71,5 +71,12 @@ public class StringUtil {
         }
         return null;
     }
+    
+    public static boolean isNullOrEmpty(Object o) {
+        if (o == null || o.toString().equals("") || o.toString().length() < 0) {
+            return true;
+        }
+        return false;
+    }
 
 }

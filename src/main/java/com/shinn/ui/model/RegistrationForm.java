@@ -30,6 +30,7 @@ public class RegistrationForm implements Serializable {
     String provider = null;
     String status = null;
     String userId = null;
+    String personCount = null;
     
     public String getRoomId() {
         return roomId;
@@ -158,7 +159,14 @@ public class RegistrationForm implements Serializable {
     public void setFirstname(String firstname) {
         this.firstname = firstname;
     }
-	@Override
+    
+	public String getPersonCount() {
+        return personCount;
+    }
+    public void setPersonCount(String personCount) {
+        this.personCount = personCount;
+    }
+    @Override
 	public String toString() {
 		return "RegistrationForm [aptId=" + aptId + ", roomId=" + roomId + ", renterId=" + renterId + ", lastname="
 				+ lastname + ", firstname=" + firstname + ", renterMI=" + renterMI + ", mobileno=" + mobileno

@@ -20,7 +20,7 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 import org.springframework.jdbc.datasource.*;
 
-
+@EnableAutoConfiguration
 @EnableWebMvc
 @Configuration
 @ComponentScan({ "com.shinn" })
@@ -57,6 +57,7 @@ public class SpringWebConfig extends WebMvcConfigurerAdapter {
     @Bean(name = "connection")
     public Connection connection() throws SQLException {
         Connection connection = dataSource().getConnection();
+        connection.setAutoCommit(false);
         return connection;
     }
 

@@ -14,12 +14,15 @@ import com.shinn.dao.repos.CollectionDao;
 import com.shinn.dao.repos.RentalDao;
 import com.shinn.dao.repos.RenterDao;
 import com.shinn.dao.repos.RenterInfoDao;
+import com.shinn.dao.repos.RoomDao;
 import com.shinn.service.model.Collection;
 import com.shinn.service.model.Renter;
 import com.shinn.service.model.RenterInfo;
+import com.shinn.service.model.Room;
 import com.shinn.service.model.Transaction;
 import com.shinn.ui.model.RegistrationForm;
 import com.shinn.ui.model.Response;
+import com.shinn.util.DateUtil;
 import com.shinn.util.RentStatus;
 import com.shinn.util.StringUtil;
 
@@ -35,6 +38,8 @@ public class TransactionServiceImpl implements TransactionService {
     RenterInfoDao renterInfoDao;
     @Autowired
     CollectionDao collectionDao;
+    @Autowired
+    RoomDao roomDao;
 
     /**
      *
@@ -81,6 +86,10 @@ public class TransactionServiceImpl implements TransactionService {
             resp.setModel(reg);
             
             //TODO update the room details
+            Room room = roomDao.getById(Integer.parseInt(reg.getRoomId()));
+            room.setStatus(RentStatus.OCCUPIED);
+            room.setOccupied(Integer.parseInt(reg.getPersonCount()));
+            roomDao.saveUpdate(room);
 
             rentalDao.commit();
         } catch(Exception e) {
@@ -126,6 +135,17 @@ public class TransactionServiceImpl implements TransactionService {
             collectionDao.commit();
             
             //TODO update tx_rental details
+            Transaction tx = rentalDao.getById(collection.getTxId());
+            tx.setAmount(collection.getAmountPaid());
+            tx.setBalance(collection.getBalance());
+            tx.setDeposit(collection.getDeposit());
+            Date dueDate = tx.getDueDate();
+            dueDate = DateUtil.addDays(dueDate, DateUtil.THIRTYDAYS);
+            tx.setDueDate(dueDate);
+            rentalDao.saveUpdate(tx);
+            
+            //TODO send SMS
+                    
         } catch(Exception e) {
             resp.setResponseStatus(ResultStatus.GENERAL_ERROR);
             resp.setErrorMsg(e.getMessage());

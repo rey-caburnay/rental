@@ -27,7 +27,12 @@ public class RentalDaoImpl extends AbstractDaoImpl<Transaction> implements Renta
     }
 
     public void saveUpdate(Transaction model) throws Exception {
-        executeSaveUpate("save-transaction",
+        String sqlStment = "save-transaction";
+        if (model.getId() != null && model.getId() > 0) {
+            sqlStment = "update-transaction";
+        } 
+        executeSaveUpate(sqlStment,
+                model.getId(),
                 model.getAptId(),
                 model.getRoomId(),
                 model.getDueDate(),
@@ -41,7 +46,9 @@ public class RentalDaoImpl extends AbstractDaoImpl<Transaction> implements Renta
                 model.getProvider(),
                 model.getAmount(),
                 model.getStatus(),
-                model.getUserId());
+                model.getUserId(),
+                model.getUpdateDate(),
+                model.getUpdtCnt());
     }
     /**
      * get transaction /membership by renter's id
