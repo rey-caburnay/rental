@@ -1,0 +1,118 @@
+
+Message Receiver :
+
+<?php
+
+    try
+    {
+        $message_type = $_POST["message_type"];
+    }
+    catch (Exception $e)
+    {
+        echo "Error";
+        exit(0);
+    }
+
+    if (strtoupper($message_type) == "INCOMING")
+    {
+        try
+        {
+            $message = $_POST["message"];
+            $mobile_number = $_POST["mobile_number"];
+            $shortcode = $_POST["shortcode"];
+            $timestamp = $_POST["timestamp"];
+            $request_id = $_POST["request_id"];
+
+            echo "Accepted";
+            exit(0);
+        }
+        catch (Exception $e)
+        {
+            echo "Error";
+            exit(0);
+        }
+    }
+    else
+    {
+        echo "Error";
+        exit(0);
+    }
+
+?>
+
+
+Message Sender :
+
+<?php
+    $arr_post_body = array(
+        "message_type" => "SEND",
+        "mobile_number" => "639181234567",
+        "shortcode" => "29290123456",
+        "message_id" => "12345678901234567890123456789012",
+        "message" => urlencode("Welcome to My Service!"),
+        "client_id" => "9282657c81639d84ba8fc516ccadebb452827f315864459bbbf91844dc212a91",
+        "secret_key" => "6db6a0b59c31928f5d4f387db095916b34ec6ad1f084a9a54fb51272517a2e81"
+    );
+
+    $query_string = "";
+    foreach($arr_post_body as $key => $frow)
+    {
+        $query_string .= '&'.$key.'='.$frow;
+    }
+
+    $URL = "https://post.chikka.com/smsapi/request";
+
+    $curl_handler = curl_init();
+    curl_setopt($curl_handler, CURLOPT_URL, $URL);
+    curl_setopt($curl_handler, CURLOPT_POST, count($arr_post_body));
+    curl_setopt($curl_handler, CURLOPT_POSTFIELDS, $query_string);
+    curl_setopt($curl_handler, CURLOPT_RETURNTRANSFER, TRUE);
+    $response = curl_exec($curl_handler);
+    curl_close($curl_handler);
+
+    exit(0);
+
+	
+Message notification:
+
+<?php
+
+    try
+    {
+        $message_type = $_POST["message_type"];
+    }
+    catch (Exception $e)
+    {
+        echo "Error";
+        exit(0);
+    }
+
+    if (strtoupper($message_type) == "OUTGOING")
+    {
+        try
+        {
+            // Retrieve the parameters from the body
+            $message_id = $_POST["message_id"];
+            $mobile_number = $_POST["mobile_number"];
+            $shortcode = $_POST["shortcode"];
+            $status = $_POST["status"];
+            $timestamp = $_POST["timestamp"];
+            $credits_cost = $_POST["credits_cost"];
+            
+            echo "Accepted";
+            exit(0);
+        }
+        catch (Exception $e)
+        {
+            echo "Error";
+            exit(0);
+        }
+    }
+    else
+    {
+        echo "Error";
+        exit(0);
+    }
+
+?>
+

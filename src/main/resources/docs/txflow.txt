@@ -1,0 +1,60 @@
+collections
+
+properties
+	private Integer id;
+    private Integer txId;
+    private Integer aptId;
+    private Integer renterId;
+    private Integer roomId;
+    private Double amountPaid;
+    private Double balance;
+    private Double deposit;
+    private Date txDate;
+    private Integer userId;
+    private Double change;
+    private Double cashReceived;
+    private String status;
+	
+	
+	
+	process
+		save collections	
+		update tx_rental records.
+		send sms to owner, renters due date.
+		
+		
+		
+Registration
+
+properties
+	String aptId = null;
+    String roomId =  null;
+    String renterId = null;
+    String lastname = null;
+    String firstname = null;
+    String renterMI = null;
+    String mobileno = null;
+    String telno = null;
+    String idPresented = null;
+    String address = null;
+    String dueDate = null;
+    String txDate = null;
+    String startDate = null;
+    String endDate = null;
+    String deposit = null;
+    String balance = null;
+    String amount = null;
+//    String txType = null;
+    String provider = null;
+    String status = null;
+    String userId = null;
+    String personCount = null;
+	
+	process	
+		save registration
+		update room status
+		send sms ?
+		
+		
+		
+cron job to send sms

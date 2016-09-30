@@ -2,7 +2,7 @@ package com.shinn.configuration;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-
+import java.util.concurrent.Executor;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,13 +13,21 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
+import org.springframework.core.task.SimpleAsyncTaskExecutor;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 import org.springframework.jdbc.datasource.*;
+import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.concurrent.ScheduledExecutorTask;
+import org.springframework.scheduling.config.ScheduledTask;
+import org.springframework.scheduling.config.ScheduledTaskRegistrar;
+import org.springframework.scheduling.config.Task;
 
+@EnableScheduling
 @EnableAutoConfiguration
 @EnableWebMvc
 @Configuration
@@ -60,7 +68,5 @@ public class SpringWebConfig extends WebMvcConfigurerAdapter {
         connection.setAutoCommit(false);
         return connection;
     }
-
-
 
 }

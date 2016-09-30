@@ -171,6 +171,34 @@
     ON rent.roomId = room.id
     WHERE renter.id = ? and rent.status = 'active';
   </entry>
+  <entry key="get-renters-info-by-status">
+    SELECT
+    renter.id,
+    renter.mobileno as mobileNumber,
+    rent.aptId,
+    rent.roomId,
+    rent.txType as rentType,
+    rent.roomId,
+    rent.dueDate,
+    rent.startDate,
+    rent.endDate,
+    rent.deposit,
+    rent.balance,
+    rent.txType,
+    rent.id as txId,
+    rent.amount,
+    apt.name as aptName,
+    room.roomNo as roomName,
+    room.rate as roomRate
+    FROM realmaster.mst_renter as renter
+    LEFT JOIN realmaster.tx_rental as rent
+    ON renter.id = rent.renterId
+    LEFT JOIN realmaster.mst_apartment as apt
+    ON rent.aptId = apt.id
+    LEFT JOIN realmaster.mst_room as room
+    ON rent.roomId = room.id
+    WHERE rent.status = ?;
+  </entry>
   <entry key="get-transaction-by-renterid">
     SELECT
     id,
@@ -242,6 +270,61 @@
       rate = @rate,
       status = @status
     WHERE id = @id
-  
+  </entry>
+  <entry key="get-sms-by-id">
+    SELECT id, message, sender, recipient, sendDate, receivedDate, 
+      messageType, requestId, shortcode, timestamp, status, deleted
+    FROM tx_sms WHERE id = ?
+  </entry>
+    <entry key="get-all-sms">
+    SELECT id, message, sender, recipient, sendDate, receivedDate, 
+       messageType, requestId, shortcode, timestamp, status, deleted
+    FROM tx_sms
+  </entry>
+  <entry key="update-sms">
+    SET @id = ?,
+    @message = ?,
+    @sender = ?,
+    @recipient = ?,
+    @sendDate = ?,
+    @receivedDate = ?,
+    @messageType = ?,
+    @requestId = ?,
+    @shortcode = ?,
+    @timestamp = ?,
+    @status = ?,
+    @deleted = ?;
+
+    UPDATE realmaster.mst_room SET
+    id = @id
+    message = @message,
+    sender = @sender,
+    recipient = @recipient,
+    sendDate = @sendDate,
+    receivedDate = @receivedDate,
+    messageType = @messageType,
+    requestId = @requestId,
+    shortcode = @shortcode,
+    timestamp = @timestamp,
+    status = @status,
+    deleted = @deleted
+    WHERE id = @id
+  </entry>
+  <entry key="save-sms">
+    INSERT INTO realmaster.tx_sms
+   (id,
+    message,
+    sender,
+    recipient,
+    sendDate,
+    receivedDate,
+    messageType,
+    requestId,
+    shortcode,
+    timestamp,
+    status,
+    deleted)
+    VALUES
+    (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
   </entry>
 </properties>

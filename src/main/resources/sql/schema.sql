@@ -140,3 +140,21 @@ CREATE TABLE `tx_rental` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `Id_UNIQUE` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
+/********************** tx_sms ******************/
+CREATE TABLE `tx_sms` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `message` varchar(255) DEFAULT NULL,
+  `sender` varchar(15) DEFAULT NULL,
+  `recipient` varchar(15) DEFAULT NULL,
+  `sendDate` datetime DEFAULT NULL,
+  `receivedDate` datetime DEFAULT NULL,
+  `deleted` int(1) DEFAULT NULL,
+  `requestId` varchar(200) DEFAULT NULL,
+  `messageType` varchar(40) DEFAULT NULL,
+  `shortcode` varchar(200) DEFAULT NULL,
+  `timestamp` varchar(200) DEFAULT NULL,
+  `status` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+

@@ -19,4 +19,9 @@ public class RenterInfoDaoImpl extends AbstractDaoImpl<RenterInfo> implements Re
         return getListResult("get-renters-info", renterId);
     }
 
+    @Override
+    public List<RenterInfo> getRentersInfo(String status) {
+        return getListResult("get-renters-info-by-status", status);
+    }
+
 }

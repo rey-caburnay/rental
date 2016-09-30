@@ -37,7 +37,7 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao{
     }
     
     public User getUser(Integer id) {
-        return getObject("get-users-by-id",id);
+        return getObject("get-users-by-id", id);
     }
 
     public User getById(Integer id) throws Exception {
