@@ -27,7 +27,13 @@ public class RenterInfo implements Serializable {
     private Double balance;
     private Double amount;
     private Double roomRate;
+    private String roomDesc;
     private String mobileNumber;
+    private String firstName;
+    private String lastName;
+    private String email;
+    private String phone;
+    private String address;
 
     /**
      * @return the id
@@ -279,6 +285,20 @@ public class RenterInfo implements Serializable {
      */
     public void setMobileNumber(String mobileNumber) {
         this.mobileNumber = mobileNumber;
+    }
+
+    /**
+     * @return the roomDesc
+     */
+    public String getRoomDesc() {
+        return roomDesc;
+    }
+
+    /**
+     * @param roomDesc the roomDesc to set
+     */
+    public void setRoomDesc(String roomDesc) {
+        this.roomDesc = roomDesc;
     }
 
     /*

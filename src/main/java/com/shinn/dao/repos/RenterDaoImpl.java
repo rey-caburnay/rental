@@ -1,5 +1,6 @@
 package com.shinn.dao.repos;
 
+import java.util.Iterator;
 import java.util.List;
 
 import org.springframework.stereotype.Repository;
@@ -7,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import com.shinn.dao.factory.AbstractDaoImpl;
 import com.shinn.service.model.Renter;
 import com.shinn.service.model.RenterInfo;
+import com.shinn.service.model.Transaction;
 
 @Repository
 public class RenterDaoImpl extends AbstractDaoImpl<Renter> implements RenterDao {
@@ -54,7 +56,8 @@ public class RenterDaoImpl extends AbstractDaoImpl<Renter> implements RenterDao 
 
 	@Override
 	public List<Renter> getRenters() {
-		 return getListResult("get-active-renters");
+	    List<Renter> renters = getListResult("get-active-renters");
+		return renters;
 	}
 
 }

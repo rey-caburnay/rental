@@ -2,6 +2,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.UUID;
+
 import com.shinn.util.DateUtil;
 import com.shinn.util.RentStatus;
 import com.shinn.util.StringUtil;
@@ -28,7 +30,8 @@ public class BasicTest {
         
         System.out.println(smsmessage);
         System.out.println("month: " + DateUtil.getNameOfMonth(d.getMonth()));
-       
+        UUID idOne = UUID.randomUUID();
+        System.out.println(String.valueOf(idOne).substring(0,32));
         
         try {
             Date date = sdf.parse(dateInString);

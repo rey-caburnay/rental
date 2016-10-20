@@ -2,9 +2,12 @@ package com.shinn.dao.repos;
 
 import java.util.List;
 
+import org.springframework.stereotype.Repository;
+
 import com.shinn.dao.factory.AbstractDaoImpl;
 import com.shinn.service.model.Sms;
 
+@Repository
 public class SmsDaoImpl extends AbstractDaoImpl<Sms> implements SmsDao {
 
     public SmsDaoImpl() throws Exception {

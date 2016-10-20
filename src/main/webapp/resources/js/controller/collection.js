@@ -39,7 +39,10 @@
         vm.setRenter = function (renter) {
             vm.model.mobileno = renter.mobileNo;
             vm.model.telno = renter.telno;
-            getRoomsByRenter(renter.id);
+            vm.model.lastName = renter.lastName;
+            vm.model.firstName = renter.firstName;
+            vm.model.address = renter.address;
+//            getRoomsByRenter(renter.id);
         }
         vm.popup = function (model) {
             showModal(model);
@@ -75,7 +78,7 @@
             vm.model.total =  vm.model.balance - vm.model.deposit - vm.model.amount;
         }
         function getRenters() {
-            var reter = '';
+            var renter = '';
             return adminService.getRenters().then(function(response) {
                 if(response.result.length > 0) {
                     for(var i = 0; i < response.result.length; i++) {

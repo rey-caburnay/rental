@@ -1,5 +1,7 @@
 package com.shinn.chikka.model;
 
+import java.util.UUID;
+
 public class ChikkaMessage {
     private String messageType;
     private String mobileNumber;
@@ -102,4 +104,8 @@ public class ChikkaMessage {
         this.timestamp = timestamp;
     }
     
+    public String generateMessageId() {
+        UUID uid = UUID.randomUUID();
+        return String.valueOf(uid).substring(0, 32);
+    }
 }

@@ -15,8 +15,12 @@ INSERT INTO `realmaster`.`mst_room` (`id`, `aptId`, `floor`, `roomNo`, `roomType
 INSERT INTO `realmaster`.`mst_room` (`id`, `aptId`, `floor`, `roomNo`, `roomType`, `size`, `status`) VALUES ('4', '1', '2', '2', 'double', '1', 'active');
 INSERT INTO `realmaster`.`mst_room` (`id`, `aptId`, `floor`, `roomNo`, `roomType`, `size`, `status`) VALUES ('5', '2', '1', '1', 'house', '1', 'active');
 
-/*************** renters ******************/
+/*************** rentals ******************/
 
 INSERT INTO `realmaster`.`tx_rental` (`id`, `aptId`, `roomId`, `dueDate`, `txDate`, `startDate`, `endDate`, `deposit`, `renterId`, `balance`, `txType`, `amount`, `status`,`userId`) VALUES ('1', '1', '1', '2016-09-29', '2016-08-01', '2016-09-01', null, '5000', '1', '0', '1', '5000', 'active','1');
 INSERT INTO `realmaster`.`tx_rental` (`id`, `aptId`, `roomId`, `dueDate`, `txDate`, `startDate`, `endDate`, `deposit`, `renterId`, `balance`, `txType`, `amount`, `status`,`userId`) VALUES ('2', '2', '1', '2016-09-29', '2016-08-01', '2016-09-01', null, '4000', '1', '0', '1', '5000', 'active','1');
 INSERT INTO `realmaster`.`tx_rental` (`id`, `aptId`, `roomId`, `dueDate`, `txDate`, `startDate`, `endDate`, `deposit`, `renterId`, `balance`, `txType`, `amount`, `status`,`userId`) VALUES ('3', '1', '2', '2016-09-29', '2016-08-01', '2016-09-01', null, '3000', '1', '0', '1', '5000', 'active','1');
+
+/************** renters *******************/
+INSERT INTO `realmaster`.`mst_renter` (`id`, `firstname`, `lastname`, `initial`, `email`, `mobileno`, `telno`, `address1`, `address2`, `idPresentend`, `emergencyContact`, `status`) VALUES ('1', 'Rey', 'Caburnay', 'C', 'rey@emaol.com', '09954645794', '2399292', 'Cebu', 'Cebut', 'SSS_ID', '000000', 'active');
+INSERT INTO `realmaster`.`mst_renter` (`id`, `firstname`, `lastname`, `initial`, `email`, `mobileno`, `telno`, `address1`, `address2`, `idPresentend`, `emergencyContact`, `status`) VALUES ('2', 'Bryan', 'Rey', 'C', 'br@email.com', '09954645794', '12312', 'Cebu', 'Cebu', 'Drivers License', '00000', 'active');

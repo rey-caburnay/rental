@@ -1,6 +1,7 @@
 package com.shinn.service.model;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class Renter implements Serializable {
     
@@ -27,6 +28,8 @@ public class Renter implements Serializable {
     protected String emergencyContact;
     
     protected String status;
+    
+    private List<Transaction> transactions;
 
     public Integer getId() {
         return id;
@@ -116,14 +119,30 @@ public class Renter implements Serializable {
         this.email = email;
     }
 
-    @Override
-    public String toString() {
-        return "Renter [id=" + id + ", lastName=" + lastName + ", firstName=" + firstName + ", initial=" + initial
-                + ", address=" + address + ", idPresented=" + idPresented + ", mobileNo=" + mobileNo + ", telno="
-                + telno + ", email=" + email + ", emergencyContact=" + emergencyContact + ", status=" + status + "]";
+    /**
+     * @return the transactions
+     */
+    public List<Transaction> getTransactions() {
+        return transactions;
     }
 
-   
-    
+    /**
+     * @param transactions the transactions to set
+     */
+    public void setTransactions(List<Transaction> transactions) {
+        this.transactions = transactions;
+    }
+
+    /* (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return "Renter [id=" + id + ", lastName=" + lastName + ", firstName=" + firstName
+                + ", initial=" + initial + ", address=" + address + ", idPresented=" + idPresented
+                + ", mobileNo=" + mobileNo + ", telno=" + telno + ", email=" + email
+                + ", emergencyContact=" + emergencyContact + ", status=" + status
+                + ", transactions=" + transactions + "]";
+    }
 
 }

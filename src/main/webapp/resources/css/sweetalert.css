@@ -40,3 +40,30 @@ body.stop-scrolling{height:100%;overflow:hidden}.sweet-overlay{background-color:
       </div>
     </div></div>
 */
+
+/* samples */
+/* sample 1
+swal ({
+	title: "Are you sure?", 
+	text: "Your will not be able to recover this imaginary file!",
+	type: "warning", 
+	showCancelButton: true, 
+	confirmButtonColor: "#DD6B55"
+	confirmButtonText: "Yes, delete it!"
+}
+
+,
+function (){
+	alert ("Deleted!");
+}); */
+
+/* sample 2
+swal("Here's a message!")
+*/
+/* sample 3
+swal("Here's a message!", "It's pretty, isn't it?")
+*/
+/* sample 4
+swal("Good job!", "You clicked the button!", "success")
+*/
+

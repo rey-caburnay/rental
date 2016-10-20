@@ -7,7 +7,11 @@
      <link href="<c:url value='/resources/css/app.css' />" rel="stylesheet"></link>
      <link href="<c:url value='/resources/css/bootstrap.min.css' />" rel="stylesheet"></link>
      <link href="<c:url value='/resources/css/nav.css' />" rel="stylesheet"></link>
-       <link href="<c:url value='/resources/css/main.css' />" rel="stylesheet"></link>
+     <link href="<c:url value='/resources/css/main.css' />" rel="stylesheet"></link>
+     <link href="<c:url value='/resources/css/sweetalert.css' />" rel="stylesheet"></link>
+     <link href="<c:url value='/resources/css/skyform.css' />" rel="stylesheet"></link>
+     <link href="<c:url value='/resources/css/custom-sky-form.css' />" rel="stylesheet"></link>
+     <link href="<c:url value='/resources/css/font-awesome.min.css' />" rel="stylesheet"></link>
 
   </head>
   <body  class="ng-cloak">

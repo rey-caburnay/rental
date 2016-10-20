@@ -15,7 +15,9 @@ import org.springframework.web.context.WebApplicationContext;
 import com.shinn.configuration.SpringWebConfig;
 import com.shinn.configuration.test.TestContext;
 import com.shinn.service.AdminService;
+import com.shinn.service.TransactionService;
 import com.shinn.service.UserService;
+import com.shinn.service.model.Renter;
 import com.shinn.service.model.RenterInfo;
 import com.shinn.ui.model.Response;
 
@@ -24,9 +26,21 @@ import com.shinn.ui.model.Response;
 public class AdminServiceTest {
     @Autowired
     AdminService adminService;
+    @Autowired
+    TransactionService transactionService;
 
     @Before
     public void setup() {
     }
+    
+    @Test
+    public void getRenters() {
+//      Assert.assertTrue(adminService.getRenters());
+      Response<Renter> resp = adminService.getRenters();
+      for(int i = 0; i < resp.getResult().size(); i++) {
+          System.out.println(resp.getResult().get(i).toString());
+      }
+      Assert.assertTrue(resp.getResult().size() > 0);
+  }
   
 }

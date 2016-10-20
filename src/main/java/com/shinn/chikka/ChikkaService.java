@@ -13,6 +13,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 import com.fasterxml.jackson.core.JsonParseException;
@@ -26,8 +27,8 @@ import com.shinn.dao.repos.SmsDao;
 import com.shinn.service.model.Sms;
 import com.shinn.ui.model.Response;
 import com.shinn.util.StringUtil;
-import net.minidev.json.parser.JSONParser;
 
+@Component
 public class ChikkaService implements Chikka {
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(ChikkaService.class);
     

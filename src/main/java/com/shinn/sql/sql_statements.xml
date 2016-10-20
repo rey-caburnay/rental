@@ -140,9 +140,7 @@
     renter.address2,
     renter.status
     FROM realmaster.mst_renter as renter
-    LEFT JOIN realmaster.tx_rental as rent
-    ON renter.id = rent.renterId
-    WHERE rent.status = 'active';
+    WHERE status = 'active';
   </entry>
   <entry key="get-renters-info">
     SELECT
@@ -189,7 +187,8 @@
     rent.amount,
     apt.name as aptName,
     room.roomNo as roomName,
-    room.rate as roomRate
+    room.rate as roomRate,
+    room.roomDesc as roomDesc
     FROM realmaster.mst_renter as renter
     LEFT JOIN realmaster.tx_rental as rent
     ON renter.id = rent.renterId
@@ -215,6 +214,23 @@
     amount
     FROM realmaster.tx_rental
     WHERE renterId = ?
+  </entry>
+  <entry key="get-transaction-by-renterid-status">
+    SELECT
+    id,
+    aptId,
+    roomId,
+    dueDate,
+    txDate,
+    startDate,
+    endDate,
+    renterId,
+    balance,
+    txType,
+    status,
+    amount
+    FROM realmaster.tx_rental
+    WHERE renterId = ? AND status = ?
   </entry>
   <entry key="save-collection">
     INSERT INTO realmaster.tx_collections

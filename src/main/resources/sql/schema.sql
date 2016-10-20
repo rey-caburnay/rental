@@ -35,6 +35,7 @@ CREATE TABLE `mst_room` (
   `aptId` int(11) NOT NULL,
   `floor` int(5) DEFAULT NULL,
   `roomNo` varchar(255) DEFAULT NULL,
+  `roomDesc` varchar(255) DEFAULT NULL,
   `roomType` varchar(20) DEFAULT NULL,
   `size` int(5) DEFAULT 0,
   `occupied` int(5) DEFAULT 0,

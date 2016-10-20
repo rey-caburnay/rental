@@ -1,6 +1,6 @@
 package com.shinn.controller;
 
-import javax.security.auth.callback.ChoiceCallback;
+
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,12 +11,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.shinn.chikka.Chikka;
-import com.shinn.chikka.ChikkaConstants;
 import com.shinn.chikka.model.ChikkaMessage;
-import com.shinn.dao.factory.ResultStatus;
 import com.shinn.service.model.Apartment;
+import com.shinn.service.model.Sms;
 import com.shinn.ui.model.Response;
-import com.shinn.util.StringUtil;
 
 @RestController
 @RequestMapping(value="/notify")
@@ -44,6 +42,8 @@ public class NotificationController {
         logger.info("Message: " + message);
         logger.info("Timestamp: " + timestamp);
         
+        Response<Sms> resp = new Response<Sms>();
+        
         ChikkaMessage chikkaRequest = new ChikkaMessage();
         chikkaRequest.setMessage(message);
         chikkaRequest.setMessageType(message_type);
@@ -53,8 +53,8 @@ public class NotificationController {
         chikkaRequest.setTimestamp(timestamp);
         chikkaRequest.setMessageId(messageId);
 
-        String result = chikka.readMessage(chikkaRequest);
-        return new ResponseEntity(result, HttpStatus.OK);
+        resp  = chikka.readMessage(chikkaRequest);
+        return new ResponseEntity(resp, HttpStatus.OK);
     }
     
     @RequestMapping(value = "/receiver", method = RequestMethod.POST,
@@ -74,6 +74,8 @@ public class NotificationController {
         logger.info("Message: " + message);
         logger.info("Timestamp: " + timestamp);
         
+        Response<Sms> resp = new Response<Sms>();
+        
         ChikkaMessage chikkaRequest = new ChikkaMessage();
         chikkaRequest.setMessage(message);
         chikkaRequest.setMessageType(message_type);
@@ -82,7 +84,7 @@ public class NotificationController {
         chikkaRequest.setRequestId(request_id);
         chikkaRequest.setTimestamp(timestamp);
 
-        String result = chikka.readMessage(chikkaRequest);
-        return new ResponseEntity(result, HttpStatus.OK);
+        resp = chikka.readMessage(chikkaRequest);
+        return new ResponseEntity(resp, HttpStatus.OK);
     }
 }

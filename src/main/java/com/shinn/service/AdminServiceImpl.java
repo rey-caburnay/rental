@@ -2,6 +2,7 @@ package com.shinn.service;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Iterator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.shinn.dao.factory.ResultStatus;
 import com.shinn.dao.repos.ApartmentDao;
+import com.shinn.dao.repos.RentalDao;
 import com.shinn.dao.repos.RenterDao;
 import com.shinn.dao.repos.RoomDao;
 import com.shinn.service.model.Apartment;
@@ -18,6 +20,7 @@ import com.shinn.service.model.RenterInfo;
 import com.shinn.ui.model.Response;
 import com.shinn.util.RentStatus;
 import com.shinn.service.model.Room;
+import com.shinn.service.model.Transaction;
 
 /**
  * administrative service for the system
@@ -33,6 +36,8 @@ public class AdminServiceImpl implements AdminService {
     RoomDao roomDao;
     @Autowired
     RenterDao renterDao;
+    @Autowired
+    RentalDao rentalDao;
     
     /**
      * 
@@ -148,6 +153,12 @@ public class AdminServiceImpl implements AdminService {
 	  Response<Renter> resp = new Response<Renter>();
 	  try {
 	      List<Renter> rentersInfos = renterDao.getRenters();
+	      Iterator<Renter> itr = rentersInfos.iterator();
+	        while(itr.hasNext()) {
+	            Renter renter = itr.next();
+	            List<Transaction> tx = rentalDao.getTransactionByRenterId(renter.getId(), RentStatus.ACTIVE);
+	            renter.setTransactions(tx);
+	        }
 	      resp.setResult(rentersInfos);
 	      resp.setResponseStatus(ResultStatus.RESULT_OK);
 	  }catch(Exception e) {

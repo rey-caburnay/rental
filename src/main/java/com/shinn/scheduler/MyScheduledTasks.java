@@ -19,7 +19,7 @@ public class MyScheduledTasks {
      * "0 0 0 25 12 ?" = every Christmas Day at midnight
      * 
      */
-        @Scheduled(cron = "0 0 9-10")
+        @Scheduled(cron = "0 0 10 * * *")
         public void run() {
 
             System.out.println("sendMailToCustomers Job ran at " 

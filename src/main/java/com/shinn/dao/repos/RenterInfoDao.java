@@ -12,4 +12,5 @@ public interface RenterInfoDao {
      * @return
      */
     public List<RenterInfo> getRentersInfo(String status);
+    
 }
