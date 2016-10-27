@@ -127,6 +127,21 @@
     FROM realmaster.mst_room
     WHERE aptId = ?
   </entry>
+  <entry key="get-room-by-id">
+    SELECT
+    id,
+    aptId,
+    floor,
+    roomNo,
+    roomType,
+    size,
+    occupied,
+    telNo,
+    rate,
+    status
+    FROM realmaster.mst_room
+    WHERE id = ?
+  </entry>
   <entry key="get-active-renters">
     SELECT
     renter.id,
@@ -217,20 +232,23 @@
   </entry>
   <entry key="get-transaction-by-renterid-status">
     SELECT
-    id,
-    aptId,
-    roomId,
-    dueDate,
-    txDate,
-    startDate,
-    endDate,
-    renterId,
-    balance,
-    txType,
-    status,
-    amount
-    FROM realmaster.tx_rental
-    WHERE renterId = ? AND status = ?
+    rental.id,
+    rental.aptId,
+    apt.name as aptName,
+    rental.roomId,
+    rental.dueDate,
+    rental.txDate,
+    rental.startDate,
+    rental.endDate,
+    rental.renterId,
+    rental.balance,
+    rental.txType,
+    rental.status,
+    rental.amount
+    FROM realmaster.tx_rental rental
+    LEFT JOIN realmaster.mst_apartment apt
+    ON rental.aptId = apt.id
+    WHERE rental.renterId = ? AND rental.status = ?
   </entry>
   <entry key="save-collection">
     INSERT INTO realmaster.tx_collections

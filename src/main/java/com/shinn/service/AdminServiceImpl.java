@@ -157,6 +157,12 @@ public class AdminServiceImpl implements AdminService {
 	        while(itr.hasNext()) {
 	            Renter renter = itr.next();
 	            List<Transaction> tx = rentalDao.getTransactionByRenterId(renter.getId(), RentStatus.ACTIVE);
+	            Iterator<Transaction> itr2 = tx.iterator();
+	            while(itr2.hasNext()) {
+	                Transaction t = itr2.next();
+	                Room room = roomDao.getById(t.getRoomId());
+	                t.setRoom(room);
+	            }
 	            renter.setTransactions(tx);
 	        }
 	      resp.setResult(rentersInfos);

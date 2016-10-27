@@ -1,20 +1,34 @@
 (function() {
+    'use strict';
 
-    var injectParams = [ '$filter', 'transactionService', 'adminService',
+    var injectParams = [ '$scope','$filter', 'transactionService', 'adminService',
             'modalService' ];
 
-    var CollectionController = function ($filter, transactionService,
+    var CollectionController = function ($scope, $filter, transactionService,
             adminService, modalService) {
         var vm = this,
         collection = {}, //model to map to services
-        paymentTypes = ["cash", "check", "online"];
+        paymentTypes = ["cash", "check", "online"],
         COLLECTION_DAYS = 30;
         
         vm.services = [adminService,transactionService, modalService];
+        vm.popup = modalService;
         vm._selected;
         vm.model = {}; //model for ui;
         vm.model.total = 0;
         vm.model.paymentType = paymentTypes[0];
+        vm.label = {
+            deposit: "Deposit",
+            total: "Total"
+        }
+        vm.payment = {
+            cash : true,
+            credit : false,
+            check : false,
+            paypal : false,
+            visa : false,
+            master : false
+        };
         
         vm.model.rooms = [];
         vm.renters = getRenters();
@@ -24,6 +38,11 @@
             vm.model.balance = 0;
             vm.model.deposit = 0;
             vm.model.amount = 0;
+            vm.model.cash = {
+                    amtpaid : '',
+                    cashchanged : '',
+                    cashreceived : ''
+            }
         }
         vm.initModel();
         vm.submit = function () {
@@ -37,16 +56,19 @@
             getterSetter : true
         };
         vm.setRenter = function (renter) {
+            vm.initModel();
             vm.model.mobileno = renter.mobileNo;
             vm.model.telno = renter.telno;
             vm.model.lastName = renter.lastName;
             vm.model.firstName = renter.firstName;
             vm.model.address = renter.address;
+            vm.model.transactions = renter.transactions;
+            computeRooms(renter.transactions);
 //            getRoomsByRenter(renter.id);
         }
-        vm.popup = function (model) {
-            showModal(model);
-        }
+//        vm.popup = function (model) {
+//            showModal(model);
+//        }
         vm.computeAmount = function () {
             var diff = vm.model.amount - vm.model.roomRate;
             vm.model.cashReceived = vm.model.amount;
@@ -77,6 +99,72 @@
             vm.model.collectionDate = new Date(newCollectionDate);
             vm.model.total =  vm.model.balance - vm.model.deposit - vm.model.amount;
         }
+
+        vm.paymentType = function () {
+            vm.payment.cash = false;
+            vm.payment.credit = false;
+            vm.payment.check = false;
+            vm.payment.paypal = false;
+            vm.payment.visa = false;
+            vm.payment.master = false;
+            switch (vm.model.paymentType) {
+            case "cash":
+                vm.payment.cash = true;
+                break;
+            case "visa":
+                vm.payment.visa = true;
+                vm.payment.credit = true;
+                break;
+            case "master":
+                vm.payment.master = true;
+                vm.payment.credit = true;
+                break;
+            case "check":
+                vm.payment.check = true;
+                break;
+            case "paypal":
+                vm.payment.paypal = true;
+                break;
+            default:
+                vm.payment.cash = true;
+            }
+        }
+        vm.removeItem = function (index) {
+            if (index > -1) {
+                vm.model.transactions.splice(index, 1);
+            }
+            computeRooms(vm.model.transactions);
+        }
+        vm.submit = function () {
+          
+            submit();
+        }
+        $scope.$watchCollection('vm.model.cash',
+        function (newValue) {
+            vm.model.cash.cashreceivederror = false;
+            if (vm.model.cash.amtpaid > vm.model.cash.cashreceived) {
+                vm.model.cash.cashreceivederror = true;
+                vm.model.cashrecivedNote  = 'Cash Received is smaller than the Amount paid';    
+            }
+            vm.model.cash.cashchanged = vm.model.cash.amtpaid - vm.model.total;
+            
+        })
+        
+        /* functions to communicate with server */
+        function computeRooms(transactions) {
+            vm.initModel();
+            for (var i = 0; i < transactions.length; i++) {
+                vm.model.total = (vm.model.total || 0) + (transactions[i].room.rate || 0);
+                vm.model.deposit = (vm.model.deposit || 0) + (transactions[i].deposit || 0);
+                vm.model.balance = (vm.model.balance || 0) + (transactions[i].balance || 0);
+            }
+            
+            vm.model.total = vm.model.total - vm.model.deposit;
+            vm.model.deposit = vm.model.deposit;
+            if (vm.model.deposit < 1 && vm.model.balance > 1) {
+                vm.model.deposit = vm.model.balance;
+            } 
+        }
         function getRenters() {
             var renter = '';
             return adminService.getRenters().then(function(response) {
@@ -102,17 +190,17 @@
                     return  vm.model.rooms;
                 });
         }
-        function showModal(result) {
-            var msg = 'Successfully Registered';
-            if (result.responseStatus != 'OK') {
-                msg = 'Failed to Register';
-            }
-            var options = {
-                header : msg,
-                service : result.result
-            };
-            modalService.show(options);
-        }
+//        function showModal(result) {
+//            var msg = 'Successfully Registered';
+//            if (result.responseStatus != 'OK') {
+//                msg = 'Failed to Register';
+//            }
+//            var options = {
+//                header : msg,
+//                service : result.result
+//            };
+//            modalService.show(options);
+//        }
         function getApartment() {
             return adminService.getApartment(aptId).then(
                 function(response) {
@@ -130,9 +218,32 @@
                 });
         }
         function submit() {
-            collection.amountPaid = vm.model.amount;
-            collection.balance = vm.model.balance;
-            collection.deposit = vm.model.deposit;
+            collection.id = '';
+            collection.txId = '';
+            collection.aptId = '';
+            collection.renterId = '';
+            collection.roomId = '';
+            collection.balance = '';
+            collection.deposit = '';
+            collection.txDate = ''; // server will handle this
+            collection.status = ''; // server will handle this
+            if(vm.model.cash.cashreceivederror) {
+                vm.popup.showError("Cash Recevied is lesser than the actual amount paid by the customers, " +
+                		"Please adjust to continue the transaction.")
+                return;
+            } 
+            if (vm.payment.cash) {
+                collection.cashReceived = vm.model.cash.cashreceived || 0;
+                collection.amountPaid = vm.model.cash.amtpaid || 0;
+                collection.change = vm.model.cash.change || 0;
+            } else  if (vm.payment.credit) {
+                //TODO
+            } else if (vm.payment.check) {
+                //TODO
+            } else  if (vm.payment.paypal) {
+                //TODO
+            }
+            collection.transactions = vm.model.transactions;
             collection.userId = 1;
             transactionService.saveCollection(collection)
                 .then(function(response){

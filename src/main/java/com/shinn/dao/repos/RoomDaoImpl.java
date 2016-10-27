@@ -17,7 +17,7 @@ public class RoomDaoImpl extends AbstractDaoImpl<Room> implements RoomDao{
     }
 
     public Room getById(Integer id) throws Exception {
-        return getObject("", id);
+        return getObject("get-room-by-id", id);
     }
 
     public List<Room> findAll() throws Exception {

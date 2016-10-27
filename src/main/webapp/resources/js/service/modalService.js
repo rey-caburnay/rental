@@ -3,21 +3,48 @@
 	var injectParams = ['$uibModal','$location'];
 	var ModalService = function ($uibModal,$location) {
 		return {
-			show: function (model,size) {
-				var options = {};
-				options.animation = true;
-				options.templateUrl =  'resources/ui/modal.html';
-				options.controller = 'ModalInstanceCtrl as vm';
-				options.size = size || 'lg';
-				options.resolve =   {model: model}
-				 var modalInstance = $uibModal.open(options);
-
-				    modalInstance.result.then(function (selectedItem) {
-				      $location.path("/"+selectedItem);
-				    }, function () {
-				      console.log('Modal dismissed at: ' + new Date());
-				    });	
-			}
+//			show: function (model,size) {
+//				var options = {};
+//				options.animation = true;
+//				options.templateUrl =  'resources/ui/modal.html';
+//				options.controller = 'ModalInstanceCtrl as vm';
+//				options.size = size || 'lg';
+//				options.resolve =   {model: model}
+//				 var modalInstance = $uibModal.open(options);
+//
+//				    modalInstance.result.then(function (selectedItem) {
+//				      $location.path("/"+selectedItem);
+//				    }, function () {
+//				      console.log('Modal dismissed at: ' + new Date());
+//				    });	
+//			}
+		    show: function (message) {
+		        swal(message,"", "success");
+		    },
+		    showSuccess: function (message) {
+                swal(message,"", "success");
+            },
+		    showError: function (message) {
+		        swal(message,"", "error");
+		    }
+//		    show: function (message) {
+//		        swal(message, "You clicked the button!", "success");
+//		    },
+//		    show: function (message) {
+//		        swal({title: "Are you sure?",   
+//		             text: "You will not be able to recover this imaginary file!",   
+//		             type: "warning",   
+//		             showCancelButton: true,   
+//		             confirmButtonColor: "#DD6B55",   
+//		             confirmButtonText: "Yes, delete it!",   
+//		             closeOnConfirm: false 
+//		             }, 
+//		             function() {
+//		                 swal("Deleted!", "Your imaginary file has been deleted.", "success"); 
+//		             }); 
+//		    }
+		    
+		    
 		}
 	} 
 	ModalService.$inject = injectParams;

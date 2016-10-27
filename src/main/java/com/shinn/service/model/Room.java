@@ -10,9 +10,13 @@ public class Room implements Serializable{
 	
 	private Integer floor;
 	
+	private String description;
+	
 	private Integer occupied;
 	
 	private String roomNo;
+	
+	private String roomName;
 	
 	private String roomType;
 	
@@ -162,6 +166,33 @@ public class Room implements Serializable{
      */
     public void setOccupied(Integer occupied) {
         this.occupied = occupied;
+    }
+    /**
+     * @return the description
+     */
+    public String getDescription() {
+        return description;
+    }
+
+    /**
+     * @param description the description to set
+     */
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    /**
+     * @return the roomName
+     */
+    public String getRoomName() {
+        return roomName;
+    }
+
+    /**
+     * @param roomName the roomName to set
+     */
+    public void setRoomName(String roomName) {
+        this.roomName = roomName;
     }
 
     /* (non-Javadoc)

@@ -8,6 +8,7 @@ public class Transaction implements Serializable{
 	
 	private Integer id;
 	private Integer aptId;
+	private String aptName;
 	private Integer roomId;
 	private Integer renterId;
 	private Date dueDate;
@@ -23,6 +24,8 @@ public class Transaction implements Serializable{
 	private Integer userId;
 	private Integer updtCnt;
 	private Date updateDate;
+	private Room room;
+	
 	
 	/**
 	 * @return the id
@@ -229,16 +232,40 @@ public class Transaction implements Serializable{
     public void setUpdateDate(Date updateDate) {
         this.updateDate = updateDate;
     }
+    /**
+     * @return the room
+     */
+    public Room getRoom() {
+        return room;
+    }
+    /**
+     * @param room the room to set
+     */
+    public void setRoom(Room room) {
+        this.room = room;
+    }
+    /**
+     * @return the aptName
+     */
+    public String getAptName() {
+        return aptName;
+    }
+    /**
+     * @param aptName the aptName to set
+     */
+    public void setAptName(String aptName) {
+        this.aptName = aptName;
+    }
     /* (non-Javadoc)
      * @see java.lang.Object#toString()
      */
     @Override
     public String toString() {
-        return "Transaction [id=" + id + ", aptId=" + aptId + ", roomId=" + roomId + ", renterId=" + renterId
-                + ", dueDate=" + dueDate + ", txDate=" + txDate + ", startDate=" + startDate + ", endDate=" + endDate
-                + ", deposit=" + deposit + ", balance=" + balance + ", amount=" + amount + ", txType=" + txType
-                + ", provider=" + provider + ", status=" + status + ", userId=" + userId + ", updtCnt=" + updtCnt
-                + ", updateDate=" + updateDate + "]";
+        return "Transaction [id=" + id + ", aptId=" + aptId + ", aptName=" + aptName + ", roomId="
+                + roomId + ", renterId=" + renterId + ", dueDate=" + dueDate + ", txDate=" + txDate
+                + ", startDate=" + startDate + ", endDate=" + endDate + ", deposit=" + deposit
+                + ", balance=" + balance + ", amount=" + amount + ", txType=" + txType
+                + ", provider=" + provider + ", status=" + status + ", userId=" + userId
+                + ", updtCnt=" + updtCnt + ", updateDate=" + updateDate + ", room=" + room + "]";
     }
- 
 }

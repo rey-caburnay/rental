@@ -2,6 +2,7 @@ package com.shinn.service.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 public class Collection implements Serializable {
     
@@ -18,6 +19,7 @@ public class Collection implements Serializable {
     private Double change;
     private Double cashReceived;
     private String status;
+    private List<Transaction> transactions;
     /**
      * @return the id
      */
@@ -176,14 +178,27 @@ public class Collection implements Serializable {
     public void setStatus(String status) {
         this.status = status;
     }
+    /**
+     * @return the transactions
+     */
+    public List<Transaction> getTransactions() {
+        return transactions;
+    }
+    /**
+     * @param transactions the transactions to set
+     */
+    public void setTransactions(List<Transaction> transactions) {
+        this.transactions = transactions;
+    }
     /* (non-Javadoc)
      * @see java.lang.Object#toString()
      */
     @Override
     public String toString() {
-        return "Collection [id=" + id + ", txId=" + txId + ", aptId=" + aptId + ", renterId=" + renterId + ", roomId="
-                + roomId + ", amountPaid=" + amountPaid + ", balance=" + balance + ", deposit=" + deposit + ", txDate="
-                + txDate + ", userId=" + userId + ", change=" + change + ", cashReceived=" + cashReceived + ", status="
-                + status + "]";
+        return "Collection [id=" + id + ", txId=" + txId + ", aptId=" + aptId + ", renterId="
+                + renterId + ", roomId=" + roomId + ", amountPaid=" + amountPaid + ", balance="
+                + balance + ", deposit=" + deposit + ", txDate=" + txDate + ", userId=" + userId
+                + ", change=" + change + ", cashReceived=" + cashReceived + ", status=" + status
+                + ", transactions=" + transactions + "]";
     }
 }

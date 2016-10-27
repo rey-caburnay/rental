@@ -1,13 +1,14 @@
 <div class="generic-container" id="collection">
   <!-- sky form  -->
   <form action="#" id="sky-form" class="sky-form"
-    novalidate="novalidate">
+     name="collectionForm">
     <header>Collections</header>
     <fieldset>
       <div class="row">
         <section class="col col-6">
           <label class="input"> <i
             class="icon-prepend fa fa-user"></i> <input type="text"
+            autocomplete="off"
             name="lname" placeholder="Last Name"
             ng-model="vm.model.lastName"
             ng-model-options="vm.modelOptions"
@@ -39,7 +40,7 @@
         <section class="col col-6">
           <label class="input"> <i
             class="icon-prepend fa fa-phone"></i> <input type="tel"
-            data-ng-model="vm.model.telno
+            data-ng-model="vm.model.telno"
             name="phone" placeholder="Phone">
           </label>
         </section>
@@ -63,23 +64,26 @@
         <div class="cart">
           <div class="cart-top">
             <h3 class="cart-top-title">Rooms</h3>
-            <div class="cart-top-info" data-ng-bind-html = "vm.model.roomCount"> Acquired</div>
+            <div class="cart-top-info" data-ng-bind-html="vm.model.roomCount"> Acquired</div>
           </div>
           <ul>
-            <li class="cart-item">
+            <li class="cart-item" data-ng-repeat="tx in vm.model.transactions">
               <span class="cart-item-pic">
-                <img src="http://upload.wikimedia.org/wikipedia/en/a/a7/Random_Access_Memories.jpg">
-              </span> 
-              <span class="cart-item-name">Item Name</span> 
-              <span class="cart-item-desc">Description</span> 
-              <span class="cart-item-price">$16.80</span> 
-              <span class="cart-item-remove"><i class="fa fa-times" aria-hidden="true"></i></span>
+                <img src="resources/images/blank.jpg">
+              </span>
+              <span class="cart-item-name" data-ng-bind-html="tx.aptName + ' ' + tx.room.roomType + ' Room#' + tx.room.roomNo"></span> 
+              <span class="cart-item-desc" data-ng-bind-html="tx.room.description"></span> 
+              <span class="cart-item-price" data-ng-bind-html="tx.room.rate"></span> 
+              <span class="cart-item-remove" data-ng-click="vm.removeItem($index)"><i class="fa fa-times" aria-hidden="true"></i></span>
             </li>
           </ul>
           <div class="cart-bottom">
-            <span class="cart-item-deposit">deposit : $3424.00</span> <span
-              class="cart-item-total">Total : $3424.00</span>
-            <!--       <a href="#" class="cart-button">Continue</a> -->
+            <div class='deposit'>
+              <label data-ng-bind-html="vm.label.deposit"></label><span class="cart-item-deposit" data-ng-bind-html="vm.model.deposit"></span>
+            </div>
+            <div class='total'> 
+              <label data-ng-bind-html="vm.label.total"></label><span class="cart-item-total" data-ng-bind-html="vm.model.total"></span>
+            </div>
           </div>
         </div>
       </section>
@@ -88,56 +92,66 @@
     <fieldset>
       <section>
         <div class="inline-group">
-          <label class="radio"><input type="radio"
-            name="radio-inline"><i class="rounded-x"></i>Cash</label> <label
-            class="radio"><input type="radio"
-            name="radio-inline"><i class="rounded-x"></i>Check</label> <label
-            class="radio"><input type="radio"
-            name="radio-inline" checked=""><i class="rounded-x"></i>Visa</label>
-          <label class="radio"><input type="radio"
-            name="radio-inline"><i class="rounded-x"></i>MasterCard</label>
-          <label class="radio"><input type="radio"
-            name="radio-inline"><i class="rounded-x"></i>PayPal</label>
+          <label class="radio"><input type="radio" 
+            name="radio-cash" data-ng-checked="vm.payment.cash"  
+            value="cash" data-ng-model="vm.model.paymentType" data-ng-change="vm.paymentType()"><i class="rounded-x"></i>Cash</label> <label
+            class="radio"><input type="radio" name="radio-check" value="check"
+            data-ng-checked="vm.payment.check" 
+            data-ng-model="vm.model.paymentType" data-ng-change="vm.paymentType()"><i class="rounded-x"></i>Check</label> <label
+            class="radio"><input type="radio" name="radio-credit" 
+            data-ng-checked="vm.payment.master" value="master" data-ng-model="vm.model.paymentType" data-ng-change="vm.paymentType()"><i class="rounded-x"></i>Visa</label>
+          <label class="radio"><input type="radio" name="radio-credit" value="visa" 
+          data-ng-checked="vm.payment.visa" data-ng-model="vm.model.paymentType" data-ng-change="vm.paymentType()"><i class="rounded-x"></i>MasterCard</label>
+          <label class="radio"><input type="radio" name="radio-paypal" value="paypal" 
+          data-ng-checked="vm.payment.paypal" data-ng-model="vm.model.paymentType" data-ng-change="vm.paymentType()"><i class="rounded-x"></i>PayPal</label>
         </div>
       </section>
-      <div class="cash-form">
+      <div class="cash-form" data-ng-class="{'hide': !vm.payment.cash}">
        <div class="row">
           <section class="col col-4">
-            <label class="input"> <input type="text" name="cash"
-              id="cash" placeholder="Cash Recieved">
+            <label class="input" data-ng-class="{'state-error': vm.model.cash.cashreceivederror}"> 
+            <input type="number" name="cash"   autocomplete="off"
+              id="cash" placeholder="Cash Recieved" data-ng-model="vm.model.cash.cashreceived" required>
             </label>
+            <div class="note note-error" data-ng-class="{'hide' : !vm.model.cash.cashreceivederror}" data-ng-bind-html="vm.model.cashrecivedNote"></div>
           </section>
            <section class="col col-4">
-            <label class="input"> <input type="text" name="amtpaid"
-              id="amtpaid" placeholder="Amount Paid">
+            <label class="input"> <input type="number" name="amtpaid" autocomplete="off"
+              id="amtpaid" placeholder="Amount Paid" data-ng-model="vm.model.cash.amtpaid" required>
             </label>
           </section>
-          <section class="col col-4">
-            <label class="input"> <input type="text" name="cashchange"
-              id="cashchange" placeholder="Cash Change">
+          <section class="col col-2">
+            <label class="input"> <input type="number" name="cashchange"
+              id="cashchange" placeholder="Cash Change" readonly data-ng-model="vm.model.cash.cashchanged">
             </label>
+            <div class="note">Cash Change</div>
+          </section>
+          <section class="col col-2">
+            <label class="input"> <input type="number" name="cashchange"
+              id="cashchange" placeholder="Cash Change" readonly data-ng-model="vm.model.cash.cashchanged">
+            </label>
+            <div class="note">Balanace / Deposit </div>
           </section>
         </div>
       </div> 
-       <div class="check-form">
+       <div class="check-form" data-ng-class="{'hide': !vm.payment.check}">
          <div class="row">
           <section class="col col-4">
               <label class="input"> <input type="text" name="checknumber"
-                id="checknumber" placeholder="Check Number">
+                id="checknumber" placeholder="Check Number" data-ng-model="vm.model.check.checknumber">
               </label>
             </section>
             <section class="col col-4">
               <label class="input"> <input type="text" name="amt"
-                id="amt" placeholder="Amount">
+                id="amt" placeholder="Amount" data-ng-model="vm.model.check.cashreceived">
               </label>
             </section>
             <section class="col col-4">
               <label class="input"> <input type="text" name="duedate"
-                id="duedate" placeholder="Due Date">
+                id="duedate" placeholder="Due Date" data-ng-model="vm.model.check.duedate">
               </label>
             </section>
           </div>
-       
           <section>
             <label class="input"> <input type="text" name="name"
               id="name" placeholder="Name">
@@ -145,54 +159,59 @@
           </section>
            <section>
             <label class="input"> <input type="text" name="amtinwords"
-              id=""amtinwords"" placeholder="Amount in Words">
+              id=""amtinwords"" placeholder="Amount in Words" data-ng-model="vm.model.check.amtinwords">
             </label>
           </section>
       </div> 
-      <div class = "credit-form">
+      <div class = "credit-form" data-ng-class="{'hide': !vm.payment.credit}">
       <section>
         <label class="input"> <input type="text" name="name"
-          placeholder="Name on card">
+          placeholder="Name on card"
+          data-ng-model="vm.model.credit.name">
         </label>
       </section>
-
       <div class="row">
         <section class="col col-10">
           <label class="input"> <input type="text" name="card"
-            id="card" placeholder="Card number">
+            id="card" placeholder="Card number"
+            data-ng-model="vm.model.credit.cardnumber">
           </label>
         </section>
         <section class="col col-2">
           <label class="input"> <input type="text" name="cvv"
-            id="cvv" placeholder="CVV2">
+            id="cvv" placeholder="CVV2"
+            data-ng-model="vm.model.credit.ccv">
           </label>
         </section>
       </div>
-
       <div class="row">
         <label class="label col col-4">Expiration date</label>
         <section class="col col-4">
           <label class="input"> <input type="text" name="month"
-            id="month" placeholder="Month">
+            id="month" placeholder="Month"
+            data-ng-model="vm.model.credit.month">
           </label>
         </section>
         <section class="col col-4">
           <label class="input"> <input type="text" name="year"
-            id="year" placeholder="Year">
+            id="year" placeholder="Year"
+            data-ng-model="vm.model.credit.year">
           </label>
         </section>
       </div>
       </div>
-      <div class="paypal-form">
+      <div class="paypal-form" data-ng-class="{'hide': !vm.payment.paypal}">
          <div class="row">
           <section class="col col-6">
               <label class="input"> <input type="text" name="email"
-                id="email" placeholder="Email Address">
+                id="email" placeholder="Email Address"
+                data-ng-model="vm.model.paypal.email">
               </label>
             </section>
             <section class="col col-6">
               <label class="input"> <input type="password" name="password"
-                id="password" placeholder="Password">
+                id="password" placeholder="Password"
+                data-ng-model="vm.model.paypal.password">
               </label>
             </section>
           </div>
@@ -200,7 +219,7 @@
     </fieldset>
 
     <footer>
-      <button type="submit" class="btn-u">Continue</button>
+      <button type="button" class="btn-u" data-ng-click="vm.submit()">Continue</button>
     </footer>
   </form>
   <!-- sky form end -->

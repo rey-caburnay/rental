@@ -78,7 +78,7 @@ public class TxController {
      * @param renterid
      * @return
      */
-    @RequestMapping(value = "/collections", method = RequestMethod.GET,
+    @RequestMapping(value = "/collections", method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Response<Collection>> collections(@RequestBody Collection tx) {
         logger.debug(tx.toString());
