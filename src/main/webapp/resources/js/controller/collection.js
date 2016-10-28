@@ -141,12 +141,23 @@
         }
         $scope.$watchCollection('vm.model.cash',
         function (newValue) {
+            vm.model.cash.baldep = 0;
             vm.model.cash.cashreceivederror = false;
             if (vm.model.cash.amtpaid > vm.model.cash.cashreceived) {
                 vm.model.cash.cashreceivederror = true;
                 vm.model.cashrecivedNote  = 'Cash Received is smaller than the Amount paid';    
             }
-            vm.model.cash.cashchanged = vm.model.cash.amtpaid - vm.model.total;
+            vm.model.cash.cashchanged = vm.model.cash.cashreceived - vm.model.cash.amtpaid;
+            if(vm.model.cash.cashchanged < 0) {
+                vm.model.cash.cashchanged = 0;
+            }
+            if (vm.model.cash.amtpaid > vm.model.total && !vm.model.cash.cashreceivederror) {
+                vm.model.cash.depoist = vm.model.amtpaid - vm.model.total;
+                vm.model.cash.baldep = vm.model.cash.deposit;
+            } else if (vm.model.cash.amtpaid < vm.model.total && !vm.model.cash.cashreceivederror) {
+                vm.model.cash.balance = vm.model.total - vm.model.cash.amtpaid;
+                vm.model.cash.baldep = vm.model.cash.amtpaid - vm.model.total;
+            }
             
         })
         
@@ -218,24 +229,21 @@
                 });
         }
         function submit() {
-            collection.id = '';
-            collection.txId = '';
-            collection.aptId = '';
-            collection.renterId = '';
-            collection.roomId = '';
-            collection.balance = '';
-            collection.deposit = '';
             collection.txDate = ''; // server will handle this
             collection.status = ''; // server will handle this
+            collection.cash = {};
+            collection.credit = {};
             if(vm.model.cash.cashreceivederror) {
                 vm.popup.showError("Cash Recevied is lesser than the actual amount paid by the customers, " +
                 		"Please adjust to continue the transaction.")
                 return;
             } 
             if (vm.payment.cash) {
-                collection.cashReceived = vm.model.cash.cashreceived || 0;
-                collection.amountPaid = vm.model.cash.amtpaid || 0;
-                collection.change = vm.model.cash.change || 0;
+                collection.cash.cashReceived = vm.model.cash.cashreceived || 0;
+                collection.cash.amountPaid = vm.model.cash.amtpaid || 0;
+                collection.cash.change = vm.model.cash.change || 0;
+                collection.cash.balance = vm.model.cash.balance || 0;
+                collection.cash.deposit = vm.model.cash.deposit || 0;
             } else  if (vm.payment.credit) {
                 //TODO
             } else if (vm.payment.check) {

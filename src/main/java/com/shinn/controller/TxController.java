@@ -21,6 +21,7 @@ import com.shinn.service.TransactionService;
 import com.shinn.service.model.Collection;
 import com.shinn.service.model.RenterInfo;
 import com.shinn.service.model.Transaction;
+import com.shinn.ui.model.CollectionForm;
 import com.shinn.ui.model.RegistrationForm;
 import com.shinn.ui.model.Response;
 
@@ -80,15 +81,16 @@ public class TxController {
      */
     @RequestMapping(value = "/collections", method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Response<Collection>> collections(@RequestBody Collection tx) {
-        logger.debug(tx.toString());
-        Response<Collection> resp = transactionService.createCollection(tx);
+    public ResponseEntity<Response<CollectionForm>> createCollection(@RequestBody CollectionForm collectionForm) {
+        logger.debug(collectionForm.toString());
+        Response<CollectionForm> resp = transactionService.createCollection(collectionForm);
         logger.debug(resp.toString());
         if(resp.getResponseStatus().equals(ResultStatus.RESULT_OK)){
-            return new ResponseEntity<Response<Collection>>(resp, HttpStatus.OK);
+            return new ResponseEntity<Response<CollectionForm>>(resp, HttpStatus.OK);
         }
         return new ResponseEntity(HttpStatus.BAD_REQUEST);
     }
+
 
 
 

@@ -7,17 +7,20 @@ import java.util.List;
 public class Collection implements Serializable {
     
     private Integer id;
-    private Integer txId;
-    private Integer aptId;
     private Integer renterId;
-    private Integer roomId;
     private Double amountPaid;
     private Double balance;
     private Double deposit;
-    private Date txDate;
-    private Integer userId;
     private Double change;
     private Double cashReceived;
+    
+ // put on details
+    private Integer aptId; 
+    private Integer roomId;
+    private Integer txId;
+    
+    private Date txDate;
+    private Integer userId;
     private String status;
     private List<Transaction> transactions;
     /**

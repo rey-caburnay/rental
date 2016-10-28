@@ -1,6 +1,7 @@
 package com.shinn.service;
 
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,7 @@ import com.shinn.service.model.Renter;
 import com.shinn.service.model.RenterInfo;
 import com.shinn.service.model.Room;
 import com.shinn.service.model.Transaction;
+import com.shinn.ui.model.CollectionForm;
 import com.shinn.ui.model.RegistrationForm;
 import com.shinn.ui.model.Response;
 import com.shinn.util.DateUtil;
@@ -143,6 +145,81 @@ public class TransactionServiceImpl implements TransactionService {
             dueDate = DateUtil.addDays(dueDate, DateUtil.THIRTYDAYS);
             tx.setDueDate(dueDate);
             rentalDao.saveUpdate(tx);
+            
+            //TODO send SMS
+                    
+        } catch(Exception e) {
+            resp.setResponseStatus(ResultStatus.GENERAL_ERROR);
+            resp.setErrorMsg(e.getMessage());
+            collectionDao.rollback();
+        }
+        return resp;
+    }
+    
+    @Override
+    public Response<CollectionForm> createCollection(CollectionForm collectionForm) {
+        Response<CollectionForm> resp = new Response<CollectionForm>();
+        try {
+            int roomsRented =  collectionForm.getTransactions().size();
+            Double amountPaid = 0d;
+            Double cashReceived = 0d;
+            Double balance = 0d;
+            Double deposit = 0d;
+            Double change = 0d;
+            Iterator<Transaction> itr = collectionForm.getTransactions().iterator();
+            while (itr.hasNext()) {
+                Transaction tx = itr.next();
+                Room room = tx.getRoom();
+                Collection collection = new Collection();
+                collection.setAptId(tx.getAptId());
+                collection.setRoomId(tx.getRoomId());
+                collection.setTxDate(new Date());
+                collection.setStatus(RentStatus.PAID);
+                collection.setTxId(tx.getId());
+                collection.setUserId(StringUtil.toInteger(collectionForm.getUserId()));
+                /** payments **/
+              //if multiple room divide the payments to each room
+                switch (collectionForm.getPaymentType()) {
+                    case "visa":
+                    case "credit":
+                    case "master":
+                        break;
+                    case "cash":
+                        break;
+                     default: //cash
+                         amountPaid = StringUtil.toDouble(collectionForm.getCash().getAmountPaid()) - room.getRate();
+                         if (amountPaid > 0 && roomsRented > 1 && itr.hasNext()) {
+                             collection.setAmountPaid(room.getRate()); //set as full paid
+                             collection.setCashReceived(room.getRate());
+                             collection.setChange(0d);
+                             collection.setBalance(0d);
+                             collection.setDeposit(0d);
+                         }
+                         collection.setAmountPaid(StringUtil.toDouble(collectionForm.getCash().getAmountPaid()));
+                         collection.setCashReceived(StringUtil.toDouble(collectionForm.getCash().getCashRecieved()));
+                         collection.setChange(StringUtil.toDouble(collectionForm.getCash().getCashChange()));
+                         collection.setBalance(StringUtil.toDouble(collectionForm.getCash().getBalance()));
+                         collection.setDeposit(StringUtil.toDouble(collectionForm.getCash().getDeposit()));
+                }
+                
+                
+                
+                collectionDao.saveUpdate(collection);
+                resp.setResponseStatus(ResultStatus.RESULT_OK);
+//                resp.setModel(collection);
+                
+            }
+            collectionDao.commit();
+            
+//            //TODO update tx_rental details
+//            Transaction tx = rentalDao.getById(collection.getTxId());
+//            tx.setAmount(collection.getAmountPaid());
+//            tx.setBalance(collection.getBalance());
+//            tx.setDeposit(collection.getDeposit());
+//            Date dueDate = tx.getDueDate();
+//            dueDate = DateUtil.addDays(dueDate, DateUtil.THIRTYDAYS);
+//            tx.setDueDate(dueDate);
+//            rentalDao.saveUpdate(tx);
             
             //TODO send SMS
                     

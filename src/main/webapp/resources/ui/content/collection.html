@@ -71,6 +71,7 @@
               <span class="cart-item-pic">
                 <img src="resources/images/blank.jpg">
               </span>
+              <label class="cart-item-due">Due Date:<span class="cart-item-due" data-ng-bind-html="tx.dueDate"></span></label>
               <span class="cart-item-name" data-ng-bind-html="tx.aptName + ' ' + tx.room.roomType + ' Room#' + tx.room.roomNo"></span> 
               <span class="cart-item-desc" data-ng-bind-html="tx.room.description"></span> 
               <span class="cart-item-price" data-ng-bind-html="tx.room.rate"></span> 
@@ -128,9 +129,9 @@
           </section>
           <section class="col col-2">
             <label class="input"> <input type="number" name="cashchange"
-              id="cashchange" placeholder="Cash Change" readonly data-ng-model="vm.model.cash.cashchanged">
+              id="cashchange" placeholder="Cash Change" readonly data-ng-model="vm.model.cash.baldep">
             </label>
-            <div class="note">Balanace / Deposit </div>
+            <div class="note">Balanace(-) / Deposit (+) </div>
           </section>
         </div>
       </div> 

@@ -96,8 +96,8 @@
     <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>javax.servlet-api</artifactId>
-<!--       <version>${servletapi.version}</version> -->
-<!--       <scope>provided</scope> -->
+      <!-- <version>${servletapi.version}</version> -->
+      <!-- <scope>provided</scope> -->
     </dependency>
     <dependency>
       <groupId>mysql</groupId>
@@ -107,6 +107,12 @@
     <dependency>
       <groupId>org.apache.tomcat.embed</groupId>
       <artifactId>tomcat-embed-jasper</artifactId>
+      <!-- <scope>provided</scope> -->
+    </dependency>
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <version>1.12.4</version>
 <!--       <scope>provided</scope> -->
     </dependency>
     <!-- test -->

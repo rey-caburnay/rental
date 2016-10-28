@@ -70,7 +70,7 @@ body, .form-control{
 .cart-top {
   position: relative;
   z-index: 1;
-  height: 45px;
+  height: 35px;
   line-height: 24px;
   padding: 8px 15px;
   font-size: 18px;
@@ -104,7 +104,7 @@ body, .form-control{
   line-height: 100px;
   padding: 10px 80px 10px 15px;
   font-weight: bold;
-  font-size: 18px;
+  font-size: 16px;
   /* background: #525252; */
   border-bottom: 1px solid #222;
   /* background-image: -webkit-linear-gradient(top, #575757, #4e4e4e); */
@@ -149,7 +149,17 @@ body, .form-control{
   -webkit-box-shadow: inset 0 1px rgba(255, 255, 255, 0.1), inset 0 0 0 1px rgba(255, 255, 255, 0.12);
   box-shadow: inset 0 1px rgba(255, 255, 255, 0.1), inset 0 0 0 1px rgba(255, 255, 255, 0.12);
 }
-
+.cart-item-due {
+    position:relative;
+    top:-30px;
+}
+.cart-item-due span {
+    position:relative;
+    top:0px;
+    width:40%;
+    left:5px;
+    color:chocolate;
+}
 .cart-item-name {
   position: relative;
 
@@ -157,12 +167,16 @@ body, .form-control{
 
 .cart-item-desc {
   display:table;
+  position:absolute;
+  top:35%;
+  left:20%;
   font-size: 15px;
   font-weight: normal;
   color: #2299cc;
   overflow:hidden;
   width:70%;
 }
+
 .cart-item-price {
   position: absolute;
   top: 50%;

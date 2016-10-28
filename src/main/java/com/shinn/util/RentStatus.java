@@ -4,6 +4,7 @@ public class RentStatus {
     
     public static final String ACTIVE = "active";
     public static final String PAID = "paid"; 
+    public static final String BALANCE = "balance";
     public static final String OCCUPIED = "occupied";
     public static final int NOTIFY_BEFORE_DUE = 3;
     public static final int NOTIFY_ON_DUE = 0;

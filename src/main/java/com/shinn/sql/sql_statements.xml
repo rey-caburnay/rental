@@ -138,6 +138,7 @@
     occupied,
     telNo,
     rate,
+    description,
     status
     FROM realmaster.mst_room
     WHERE id = ?
