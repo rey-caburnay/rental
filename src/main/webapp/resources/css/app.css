@@ -99,6 +99,12 @@ body, .form-control{
   float: right;
 }
 
+.cart-top-msg {
+    left: 30%;
+    position:relative;
+    color:red;
+}
+
 .cart-item {
   position: relative;
   line-height: 100px;
@@ -175,6 +181,16 @@ body, .form-control{
   color: #2299cc;
   overflow:hidden;
   width:70%;
+}
+
+label.cart-item-full {
+    position:absolute;
+    top:-20px;
+    left:350px;
+}
+label.cart-item-full input {
+    
+    margin:10px;
 }
 
 .cart-item-price {

@@ -1,5 +1,6 @@
 package com.shinn.service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -161,54 +162,30 @@ public class TransactionServiceImpl implements TransactionService {
         Response<CollectionForm> resp = new Response<CollectionForm>();
         try {
             int roomsRented =  collectionForm.getTransactions().size();
-            Double amountPaid = 0d;
+            Double amountPaid = StringUtil.toDouble(collectionForm.getCash().getAmountPaid());
             Double cashReceived = 0d;
             Double balance = 0d;
             Double deposit = 0d;
             Double change = 0d;
+            List<Transaction> notFullyPaid = new ArrayList<Transaction>();
+            List<Transaction> fullyPaid = new ArrayList<>();
             Iterator<Transaction> itr = collectionForm.getTransactions().iterator();
             while (itr.hasNext()) {
                 Transaction tx = itr.next();
-                Room room = tx.getRoom();
-                Collection collection = new Collection();
-                collection.setAptId(tx.getAptId());
-                collection.setRoomId(tx.getRoomId());
-                collection.setTxDate(new Date());
-                collection.setStatus(RentStatus.PAID);
-                collection.setTxId(tx.getId());
-                collection.setUserId(StringUtil.toInteger(collectionForm.getUserId()));
-                /** payments **/
-              //if multiple room divide the payments to each room
-                switch (collectionForm.getPaymentType()) {
-                    case "visa":
-                    case "credit":
-                    case "master":
-                        break;
-                    case "cash":
-                        break;
-                     default: //cash
-                         amountPaid = StringUtil.toDouble(collectionForm.getCash().getAmountPaid()) - room.getRate();
-                         if (amountPaid > 0 && roomsRented > 1 && itr.hasNext()) {
-                             collection.setAmountPaid(room.getRate()); //set as full paid
-                             collection.setCashReceived(room.getRate());
-                             collection.setChange(0d);
-                             collection.setBalance(0d);
-                             collection.setDeposit(0d);
-                         }
-                         collection.setAmountPaid(StringUtil.toDouble(collectionForm.getCash().getAmountPaid()));
-                         collection.setCashReceived(StringUtil.toDouble(collectionForm.getCash().getCashRecieved()));
-                         collection.setChange(StringUtil.toDouble(collectionForm.getCash().getCashChange()));
-                         collection.setBalance(StringUtil.toDouble(collectionForm.getCash().getBalance()));
-                         collection.setDeposit(StringUtil.toDouble(collectionForm.getCash().getDeposit()));
+                if(tx.isFullPaid()) {
+                    fullyPaid.add(tx);
+                } else {
+                    notFullyPaid.add(tx);
+                        
                 }
-                
-                
-                
-                collectionDao.saveUpdate(collection);
-                resp.setResponseStatus(ResultStatus.RESULT_OK);
-//                resp.setModel(collection);
-                
             }
+            
+            CollectionForm updtdForm = this.saveCollection(collectionForm, fullyPaid);
+            updtdForm = this.saveCollection(updtdForm, notFullyPaid);
+                
+                
+            
+            
             collectionDao.commit();
             
 //            //TODO update tx_rental details
@@ -222,6 +199,12 @@ public class TransactionServiceImpl implements TransactionService {
 //            rentalDao.saveUpdate(tx);
             
             //TODO send SMS
+            
+            
+            resp.setResponseStatus(ResultStatus.RESULT_OK);
+//            resp.setModel(collection);
+            
+
                     
         } catch(Exception e) {
             resp.setResponseStatus(ResultStatus.GENERAL_ERROR);
@@ -229,6 +212,71 @@ public class TransactionServiceImpl implements TransactionService {
             collectionDao.rollback();
         }
         return resp;
+    }
+    
+    private CollectionForm saveCollection(CollectionForm form, List<Transaction> transactions) {
+        try {
+            int roomsRented =  form.getTransactions().size();
+            Double amountPaid = StringUtil.toDouble(form.getCash().getAmountPaid());
+            Double cashReceived = 0d;
+            Double balance = 0d;
+            Double deposit = 0d;
+            Double change = 0d;
+            Iterator<Transaction> itr = transactions.iterator();
+            while (itr.hasNext()) {
+                Transaction tx = itr.next();
+                Room room = tx.getRoom();
+                Collection collection = new Collection();
+                collection.setAptId(tx.getAptId());
+                collection.setRoomId(tx.getRoomId());
+                collection.setTxDate(new Date());
+                collection.setStatus(RentStatus.PAID);
+                collection.setTxId(tx.getId());
+                collection.setUserId(StringUtil.toInteger(form.getUserId()));
+                /** payments **/
+              //if multiple room divide the payments to each room
+                switch (form.getPaymentType()) {
+                    case "visa":
+                    case "credit":
+                    case "master":
+                        break;
+                    case "cash":
+                        break;
+                     default: //cash
+                         if (tx.isFullPaid()) {
+                             amountPaid = amountPaid - tx.getAmount();
+                             collection.setAmountPaid(tx.getAmount()); //set as full paid
+                             collection.setCashReceived(tx.getAmount());
+                             collection.setChange(0d);
+                             collection.setBalance(0d);
+                             collection.setDeposit(0d);
+                         } else {
+                             amountPaid = amountPaid - tx.getAmount();
+                             if (amountPaid > 0 ) {
+                                 
+                             }
+                             collection.setAmountPaid(room.getRate()); //set as full paid
+                             collection.setCashReceived(room.getRate());
+                             collection.setChange(0d);
+                             collection.setBalance(0d);
+                             collection.setDeposit(0d);
+                         }
+
+                         collection.setAmountPaid(StringUtil.toDouble(form.getCash().getAmountPaid()));
+                         collection.setCashReceived(StringUtil.toDouble(form.getCash().getCashRecieved()));
+                         collection.setChange(StringUtil.toDouble(form.getCash().getCashChange()));
+                         collection.setBalance(StringUtil.toDouble(form.getCash().getBalance()));
+                         collection.setDeposit(StringUtil.toDouble(form.getCash().getDeposit()));
+                }
+                collectionDao.saveUpdate(collection);
+            }
+            form.getCash().setAmountPaid(amountPaid+"");
+        } catch(Exception e) {
+            logger.error(e.getMessage());
+//            collectionDao.rollback();
+        }
+        
+        return form;
     }
 
 }

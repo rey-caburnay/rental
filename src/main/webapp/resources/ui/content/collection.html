@@ -64,6 +64,7 @@
         <div class="cart">
           <div class="cart-top">
             <h3 class="cart-top-title">Rooms</h3>
+            <div class="cart-top-msg" data-ng-class="{'hide':!vm.model.fullPaidError}">Please uncheck PIF for rooms that is not fully paid!</div>
             <div class="cart-top-info" data-ng-bind-html="vm.model.roomCount"> Acquired</div>
           </div>
           <ul>
@@ -72,9 +73,10 @@
                 <img src="resources/images/blank.jpg">
               </span>
               <label class="cart-item-due">Due Date:<span class="cart-item-due" data-ng-bind-html="tx.dueDate"></span></label>
+              <label class="cart-item-full">PIF<input type="checkbox" data-ng-model="tx.isFullPaid" data-ng-change="vm.toggleFullPaid($index)"></label>
               <span class="cart-item-name" data-ng-bind-html="tx.aptName + ' ' + tx.room.roomType + ' Room#' + tx.room.roomNo"></span> 
               <span class="cart-item-desc" data-ng-bind-html="tx.room.description"></span> 
-              <span class="cart-item-price" data-ng-bind-html="tx.room.rate"></span> 
+              <span class="cart-item-price" data-ng-bind-html="tx.amount"></span> 
               <span class="cart-item-remove" data-ng-click="vm.removeItem($index)"><i class="fa fa-times" aria-hidden="true"></i></span>
             </li>
           </ul>

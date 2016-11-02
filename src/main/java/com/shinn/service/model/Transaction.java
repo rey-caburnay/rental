@@ -3,6 +3,9 @@ package com.shinn.service.model;
 import java.io.Serializable;
 import java.util.Date;
 
+import lombok.ToString;
+
+@ToString
 public class Transaction implements Serializable{
     public static final String TABLE_NAME = "tx_rental";
 	
@@ -25,6 +28,7 @@ public class Transaction implements Serializable{
 	private Integer updtCnt;
 	private Date updateDate;
 	private Room room;
+	private boolean isFullPaid;
 	
 	
 	/**
@@ -256,16 +260,17 @@ public class Transaction implements Serializable{
     public void setAptName(String aptName) {
         this.aptName = aptName;
     }
-    /* (non-Javadoc)
-     * @see java.lang.Object#toString()
+    /**
+     * @return the isFullPaid
      */
-    @Override
-    public String toString() {
-        return "Transaction [id=" + id + ", aptId=" + aptId + ", aptName=" + aptName + ", roomId="
-                + roomId + ", renterId=" + renterId + ", dueDate=" + dueDate + ", txDate=" + txDate
-                + ", startDate=" + startDate + ", endDate=" + endDate + ", deposit=" + deposit
-                + ", balance=" + balance + ", amount=" + amount + ", txType=" + txType
-                + ", provider=" + provider + ", status=" + status + ", userId=" + userId
-                + ", updtCnt=" + updtCnt + ", updateDate=" + updateDate + ", room=" + room + "]";
+    public boolean isFullPaid() {
+        return isFullPaid;
     }
+    /**
+     * @param isFullPaid the isFullPaid to set
+     */
+    public void setFullPaid(boolean isFullPaid) {
+        this.isFullPaid = isFullPaid;
+    }
+
 }

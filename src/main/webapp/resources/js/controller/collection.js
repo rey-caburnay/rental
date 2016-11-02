@@ -139,10 +139,27 @@
           
             submit();
         }
+        
+        vm.toggleFullPaid = function ($index) {
+            validateCash();
+//            var total = 0;
+//            for(var i = 0; i < vm.model.transactions.length; i++) {
+//                //search full paid items
+//                if(vm.model.transactions[i].isFullPaid) {
+//                    total = total + vm.model.transactions.amount;
+//                }
+//            }
+//            if (total < vm.model.total) {
+//                //error
+//                vm.model.cash.cashreceivederror = true;
+//            }
+        }
+        
         $scope.$watchCollection('vm.model.cash',
-        function (newValue) {
+        function (newValue, oldValue) {
             vm.model.cash.baldep = 0;
             vm.model.cash.cashreceivederror = false;
+            vm.model.fullPaidError = false;
             if (vm.model.cash.amtpaid > vm.model.cash.cashreceived) {
                 vm.model.cash.cashreceivederror = true;
                 vm.model.cashrecivedNote  = 'Cash Received is smaller than the Amount paid';    
@@ -158,16 +175,40 @@
                 vm.model.cash.balance = vm.model.total - vm.model.cash.amtpaid;
                 vm.model.cash.baldep = vm.model.cash.amtpaid - vm.model.total;
             }
+            validateCash();
+            
             
         })
         
-        /* functions to communicate with server */
+        function validateCash() {
+            var total = 0;
+            vm.model.fullPaidError = false;
+            if(vm.model.transactions) {
+                for(var i = 0; i < vm.model.transactions.length; i++) {
+                    //search full paid items
+                    if(vm.model.transactions[i].isFullPaid) {
+                        total = total + vm.model.transactions[i].amount;
+                    }
+                }
+                if (total > vm.model.cash.amtpaid) {
+                    //error
+                    if ((vm.model.cash.baldep + vm.model.total) != 0) {
+                        vm.model.fullPaidError = true;
+                    }
+                }
+            }
+        }
+
+        
+        /* private functions and functions to communicate with server */
         function computeRooms(transactions) {
             vm.initModel();
             for (var i = 0; i < transactions.length; i++) {
-                vm.model.total = (vm.model.total || 0) + (transactions[i].room.rate || 0);
+                vm.model.total = (vm.model.total || 0) + (transactions[i].amount || 0);
                 vm.model.deposit = (vm.model.deposit || 0) + (transactions[i].deposit || 0);
                 vm.model.balance = (vm.model.balance || 0) + (transactions[i].balance || 0);
+                transactions[i].isFullPaid = true;
+                vm.model.transactions.isFullPaid = true;
             }
             
             vm.model.total = vm.model.total - vm.model.deposit;
@@ -233,9 +274,8 @@
             collection.status = ''; // server will handle this
             collection.cash = {};
             collection.credit = {};
-            if(vm.model.cash.cashreceivederror) {
-                vm.popup.showError("Cash Recevied is lesser than the actual amount paid by the customers, " +
-                		"Please adjust to continue the transaction.")
+            if(vm.model.cash.cashreceivederror || vm.model.fullPaidError) {
+                vm.popup.showError("Please fix/adjust inputs to continue the transaction.")
                 return;
             } 
             if (vm.payment.cash) {
