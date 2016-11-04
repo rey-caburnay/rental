@@ -29,7 +29,8 @@ public class Transaction implements Serializable{
 	private Date updateDate;
 	private Room room;
 	private boolean isFullPaid;
-	
+	private Expense electric;
+	private Expense water;
 	
 	/**
 	 * @return the id
@@ -271,6 +272,30 @@ public class Transaction implements Serializable{
      */
     public void setFullPaid(boolean isFullPaid) {
         this.isFullPaid = isFullPaid;
+    }
+    /**
+     * @return the electric
+     */
+    public Expense getElectric() {
+        return electric;
+    }
+    /**
+     * @param electric the electric to set
+     */
+    public void setElectric(Expense electric) {
+        this.electric = electric;
+    }
+    /**
+     * @return the water
+     */
+    public Expense getWater() {
+        return water;
+    }
+    /**
+     * @param water the water to set
+     */
+    public void setWater(Expense water) {
+        this.water = water;
     }
 
 }

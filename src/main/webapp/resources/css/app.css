@@ -107,12 +107,12 @@ body, .form-control{
 
 .cart-item {
   position: relative;
-  line-height: 100px;
+  line-height: 120px;
   padding: 10px 80px 10px 15px;
   font-weight: bold;
   font-size: 16px;
   /* background: #525252; */
-  border-bottom: 1px solid #222;
+  border-bottom: 1px solid #222 !important;
   /* background-image: -webkit-linear-gradient(top, #575757, #4e4e4e); */
   background-image: -moz-linear-gradient(top, #575757, #4e4e4e);
   background-image: -o-linear-gradient(top, #575757, #4e4e4e);
@@ -128,10 +128,9 @@ body, .form-control{
 .cart-item-pic {
   position: relative;
   float: left;
-  margin: -2px 12px 0 -7px;
+  margin: 10px 12px 0px 15px !important;
   width:100px;
   height:100px;
-
 }
 .cart-item-pic > img {
   display: block;
@@ -184,9 +183,10 @@ body, .form-control{
 }
 
 label.cart-item-full {
-    position:absolute;
-    top:-20px;
-    left:350px;
+    position:absolute !important;
+    top: 40px;
+    left: 70%;
+    width: 150px;
 }
 label.cart-item-full input {
     
@@ -195,17 +195,16 @@ label.cart-item-full input {
 
 .cart-item-price {
   position: absolute;
-  top: 50%;
+  top: 15%;
   right: 15px;
-  margin-top: -10px;
   color: #000;
 }
 
 .cart-item-remove {
 	position:absolute;
-	left:95%;
+	left:96%;
 	float:right;
-	top:20px;
+	top:10px;
 	color:#ab1818;
 }
 
@@ -228,22 +227,25 @@ label.cart-item-full input {
     position:relative;
 }
 .cart-bottom .deposit label {
+    top: 25px;
     left:70%;
-    font-size:15px;
+    font-size:16px;
     position:absolute;
 }
 .cart-bottom .deposit span {
     right: 5px;
     position:absolute;
-    top:40px;
+    font-size:16px;
+    top: 25px;
 
 }
 .cart-bottom .total {
     line-height:40px;
     font-size:25px;
     width:100%;
-    top:20px;
+    top: 40px;
     position:relative;
+    margin-right: 5px !important;
 
 }
 .cart-bottom .total label {
@@ -251,6 +253,22 @@ label.cart-item-full input {
     position:absolute;
 }
 .cart-bottom .total span {
+    right: 5px;
+    font-size:25px;
+    position:absolute;
+}
+.cart-bottom .total-expense {
+    font-size:25px;
+    width:100%;
+    top: 20px;
+    position:relative;
+    margin-right: 5px !important;
+}
+.cart-bottom .total-expense label {
+    left:70%;
+    position:absolute;
+}
+.cart-bottom .total-expense span {
     right: 5px;
     font-size:25px;
     position:absolute;
@@ -302,4 +320,34 @@ button.btn-u {
     width:120px;
     font-weight:600;
     text-shadow:darkblue;
+}
+
+.cart-item-expense {
+  position: relative;
+  padding: 10px 80px 10px 15px;
+  font-size:16px;
+  border-bottom: 1px solid #222 !important;
+  background-image: -moz-linear-gradient(top, #575757, #4e4e4e);
+  background-image: -o-linear-gradient(top, #575757, #4e4e4e);
+  -webkit-box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+.cart-expense-title {
+     margin:5px !important;
+}
+
+.cart-expense-price-electric  {
+  position: absolute;
+  top: 80%;
+  right: 10px;
+  color: #000;
+}
+.cart-expense-price-water  {
+  position: absolute;
+  top: 80%;
+  left: 44%;
+  color: #000;
+}
+.cart-item-expense .row .note {
+  font-size:15px;
 }

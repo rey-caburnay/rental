@@ -213,7 +213,12 @@ public class TransactionServiceImpl implements TransactionService {
         }
         return resp;
     }
-    
+    /**
+     * 
+     * @param form
+     * @param transactions
+     * @return
+     */
     private CollectionForm saveCollection(CollectionForm form, List<Transaction> transactions) {
         try {
             int roomsRented =  form.getTransactions().size();

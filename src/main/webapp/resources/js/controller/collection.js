@@ -18,7 +18,7 @@
         vm.model.total = 0;
         vm.model.paymentType = paymentTypes[0];
         vm.label = {
-            deposit: "Deposit",
+            deposit: "Expenses",
             total: "Total"
         }
         vm.payment = {
@@ -142,17 +142,6 @@
         
         vm.toggleFullPaid = function ($index) {
             validateCash();
-//            var total = 0;
-//            for(var i = 0; i < vm.model.transactions.length; i++) {
-//                //search full paid items
-//                if(vm.model.transactions[i].isFullPaid) {
-//                    total = total + vm.model.transactions.amount;
-//                }
-//            }
-//            if (total < vm.model.total) {
-//                //error
-//                vm.model.cash.cashreceivederror = true;
-//            }
         }
         
         $scope.$watchCollection('vm.model.cash',

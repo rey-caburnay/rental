@@ -62,11 +62,16 @@ CREATE TABLE `mst_expenses` (
   `aptId` int(11) NOT NULL,
   `descripton` varchar(50) DEFAULT NULL,
   `expType` varchar(50) DEFAULT NULL,
-  `amount` double(9,4) DEFAULT 0.000,
+  `amount` double(9,4) DEFAULT '0.0000',
   `status` varchar(20) DEFAULT NULL,
+  `roomId` int(11) DEFAULT NULL,
+  `currentReading` int(11) DEFAULT NULL,
+  `previousReading` int(11) DEFAULT NULL,
+  `provider` varchar(45) DEFAULT NULL,
+  `previousAmount` double(9,4) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `Id_UNIQUE` (`id`,`aptId`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /**** electric ***/
 CREATE TABLE `mst_electric` (

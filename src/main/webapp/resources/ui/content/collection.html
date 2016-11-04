@@ -58,38 +58,104 @@
         </label>
       </section>
     </fieldset>
-    <fieldset>
+    <fieldset data-ng-class="{'hide': !vm.model.transactions}">
+      
       <section>
-        <!-- item display -->
-        <div class="cart">
-          <div class="cart-top">
-            <h3 class="cart-top-title">Rooms</h3>
-            <div class="cart-top-msg" data-ng-class="{'hide':!vm.model.fullPaidError}">Please uncheck PIF for rooms that is not fully paid!</div>
-            <div class="cart-top-info" data-ng-bind-html="vm.model.roomCount"> Acquired</div>
-          </div>
-          <ul>
-            <li class="cart-item" data-ng-repeat="tx in vm.model.transactions">
-              <span class="cart-item-pic">
-                <img src="resources/images/blank.jpg">
-              </span>
-              <label class="cart-item-due">Due Date:<span class="cart-item-due" data-ng-bind-html="tx.dueDate"></span></label>
-              <label class="cart-item-full">PIF<input type="checkbox" data-ng-model="tx.isFullPaid" data-ng-change="vm.toggleFullPaid($index)"></label>
-              <span class="cart-item-name" data-ng-bind-html="tx.aptName + ' ' + tx.room.roomType + ' Room#' + tx.room.roomNo"></span> 
-              <span class="cart-item-desc" data-ng-bind-html="tx.room.description"></span> 
-              <span class="cart-item-price" data-ng-bind-html="tx.amount"></span> 
-              <span class="cart-item-remove" data-ng-click="vm.removeItem($index)"><i class="fa fa-times" aria-hidden="true"></i></span>
-            </li>
-          </ul>
-          <div class="cart-bottom">
-            <div class='deposit'>
-              <label data-ng-bind-html="vm.label.deposit"></label><span class="cart-item-deposit" data-ng-bind-html="vm.model.deposit"></span>
+      <!-- tabs -->
+      <div class="sky-tabs sky-tabs-pos-top-left sky-tabs-anim-flip sky-tabs-response-to-icons">
+        <input type="radio" name="sky-tabs" checked="" id="sky-tab1" class="sky-tab-content-1">
+        <label for="sky-tab1"><span><span><i class="fa fa-home"></i>Rooms</span></span></label>
+        
+        <input type="radio" name="sky-tabs" id="sky-tab2" class="sky-tab-content-2">
+        <label for="sky-tab2"><span><span><i class="fa fa-money"></i>Expenses</span></span></label>
+        
+        <ul>
+          <li class="sky-tab-content-1">      
+            <!-- item display -->
+            
+              <div class="grid-row">
+              <div class="cart">
+<!--                 <div class="cart-top"> -->
+<!--                   <h3 class="cart-top-title">Rooms</h3> -->
+<!--                   <div class="cart-top-msg" data-ng-class="{'hide':!vm.model.fullPaidError}">Please uncheck PIF for rooms that is not fully paid!</div> -->
+<!--                   <div class="cart-top-info" data-ng-bind-html="vm.model.roomCount"> Acquired</div> -->
+<!--                 </div> -->
+                <ul>
+                  <li class="cart-item" data-ng-repeat="tx in vm.model.transactions">
+                    <span class="cart-item-pic">
+                      <img src="resources/images/blank.jpg">
+                    </span>
+                    <label class="cart-item-due">Due Date:<span class="cart-item-due" data-ng-bind-html="tx.dueDate"></span></label>
+                    <label class="cart-item-full input"><input type="text"  name="amountPaid" placeholder="Amount Paid" data-ng-model="tx.amtPaid"></label>
+                    <span class="cart-item-name" data-ng-bind-html="tx.aptName + ' ' + tx.room.roomType + ' Room#' + tx.room.roomNo"></span> 
+                    <span class="cart-item-desc" data-ng-bind-html="tx.room.description"></span> 
+                    <span class="cart-item-price" data-ng-bind-html="tx.amount"></span> 
+                    <span class="cart-item-remove" data-ng-click="vm.removeItem($index)"><i class="fa fa-times" aria-hidden="true"></i></span>
+                  </li>
+                </ul>
+                <div class="cart-bottom">
+                  <div class='deposit'>
+                    <label data-ng-bind-html="vm.label.deposit"></label><span class="cart-item-deposit" data-ng-bind-html="vm.model.deposit"></span>
+                  </div>
+                  <div class='total'> 
+                    <label data-ng-bind-html="vm.label.total"></label><span class="cart-item-total" data-ng-bind-html="vm.model.total"></span>
+                  </div>
+                </div>
+              </div>
+            </div>    
+          </li>
+          <li class="sky-tab-content-2">
+               <ul>
+                <li class="cart-item-expense" data-ng-repeat="tx in vm.model.transactions">
+                <label class="cart-expense-title" data-ng-bind-html="tx.aptName + ' ' + tx.room.roomType + ' Room#' + tx.room.roomNo"></label>
+                  <div class="row">
+                    <section class="col col-3">
+                      <label class="input"> 
+                        <input type="number" name="previousReading"   autocomplete="off"
+                          id="previousReading" placeholder="Previous Reading" data-ng-model="tx.electric.previousReading">
+                      </label>
+                      <div class="note">Electric</div>
+                    </section>
+                    <section class="col col-3">
+                      <label class="input"> <input type="text" name="currentReading" autocomplete="off"
+                        id="currentReading" placeholder="Current Reading" data-ng-model="tx.electric.currentReading">
+                      </label>
+                      <div class="note">Electric</div>
+                    </section>
+                    <section class="col col-3">
+                      <label class="input"> 
+                        <input type="number" name="previousReading"   autocomplete="off"
+                          id="previousReading" placeholder="Previous Reading" data-ng-model="tx.electric.previousReading">
+                      </label>
+                      <div class="note">Water</div>
+                    </section>
+                    <section class="col col-3">
+                      <label class="input"> <input type="text" name="currentReading" autocomplete="off"
+                        id="currentReading" placeholder="Current Reading" data-ng-model="tx.electric.currentReading">
+                      </label>
+                      <div class="note">Water</div>
+                    </section>
+                  </div>
+                  
+                  <span class="cart-expense-price-electric" data-ng-bind-html="tx.amount"></span> 
+                  <span class="cart-expense-price-water" data-ng-bind-html="tx.amount"></span>
+                </li>
+              </ul>
+                <div class="cart-bottom">
+                  <div class='total-expense'> 
+                    <label data-ng-bind-html="vm.label.total"></label><span class="cart-item-total" data-ng-bind-html="vm.model.total"></span>
+                  </div>
             </div>
-            <div class='total'> 
-              <label data-ng-bind-html="vm.label.total"></label><span class="cart-item-total" data-ng-bind-html="vm.model.total"></span>
-            </div>
-          </div>
-        </div>
+          </li>
+        </ul>
+      </div>
+        
+
+
       </section>
+      
+      
+      
     </fieldset>
     <header>Payment Method</header>
     <fieldset>
