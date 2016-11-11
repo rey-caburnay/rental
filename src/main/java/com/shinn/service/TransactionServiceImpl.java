@@ -13,11 +13,13 @@ import org.springframework.transaction.annotation.Transactional;
 import com.shinn.dao.factory.AbstractDaoImpl;
 import com.shinn.dao.factory.ResultStatus;
 import com.shinn.dao.repos.CollectionDao;
+import com.shinn.dao.repos.CollectionDetailsDao;
 import com.shinn.dao.repos.RentalDao;
 import com.shinn.dao.repos.RenterDao;
 import com.shinn.dao.repos.RenterInfoDao;
 import com.shinn.dao.repos.RoomDao;
 import com.shinn.service.model.Collection;
+import com.shinn.service.model.CollectionDetails;
 import com.shinn.service.model.Renter;
 import com.shinn.service.model.RenterInfo;
 import com.shinn.service.model.Room;
@@ -41,6 +43,8 @@ public class TransactionServiceImpl implements TransactionService {
     RenterInfoDao renterInfoDao;
     @Autowired
     CollectionDao collectionDao;
+    @Autowired
+    CollectionDetailsDao collectionDetailsDao;
     @Autowired
     RoomDao roomDao;
 
@@ -122,90 +126,61 @@ public class TransactionServiceImpl implements TransactionService {
         
         return resp;
     }
-
-    /* (non-Javadoc)
-     * @see com.shinn.service.TransactionService#createCollection(com.shinn.service.model.Collection)
-     */
-    @Override
-    public Response<Collection> createCollection(Collection collection) {
-        Response<Collection> resp = new Response<Collection>();
-        try {
-            collection.setTxDate(new Date());
-            collection.setStatus(RentStatus.PAID);
-            collectionDao.saveUpdate(collection);
-            resp.setResponseStatus(ResultStatus.RESULT_OK);
-            resp.setModel(collection);
-            collectionDao.commit();
-            
-            //TODO update tx_rental details
-            Transaction tx = rentalDao.getById(collection.getTxId());
-            tx.setAmount(collection.getAmountPaid());
-            tx.setBalance(collection.getBalance());
-            tx.setDeposit(collection.getDeposit());
-            Date dueDate = tx.getDueDate();
-            dueDate = DateUtil.addDays(dueDate, DateUtil.THIRTYDAYS);
-            tx.setDueDate(dueDate);
-            rentalDao.saveUpdate(tx);
-            
-            //TODO send SMS
-                    
-        } catch(Exception e) {
-            resp.setResponseStatus(ResultStatus.GENERAL_ERROR);
-            resp.setErrorMsg(e.getMessage());
-            collectionDao.rollback();
-        }
-        return resp;
-    }
-    
     @Override
     public Response<CollectionForm> createCollection(CollectionForm collectionForm) {
         Response<CollectionForm> resp = new Response<CollectionForm>();
         try {
-            int roomsRented =  collectionForm.getTransactions().size();
-            Double amountPaid = StringUtil.toDouble(collectionForm.getCash().getAmountPaid());
-            Double cashReceived = 0d;
-            Double balance = 0d;
-            Double deposit = 0d;
-            Double change = 0d;
-            List<Transaction> notFullyPaid = new ArrayList<Transaction>();
-            List<Transaction> fullyPaid = new ArrayList<>();
+            Collection collection = new Collection();
+            collection.setTxDate(new Date());
+            collection.setStatus(RentStatus.PAID);
+            collection.setRenterId(collectionForm.getRenterId());
+            collection.setUserId(StringUtil.toInteger(collectionForm.getUserId()));
+            collection.setCashReceived(StringUtil.toDouble(collectionForm.getCash().getCashReceived()));
+            collection.setAmountPaid(StringUtil.toDouble(collectionForm.getCash().getAmountPaid()));
+            collection.setDeposit(StringUtil.toDouble(collectionForm.getCash().getDeposit()));
+            collection.setBalance(StringUtil.toDouble(collectionForm.getCash().getBalance()));
+            collection.setChange(StringUtil.toDouble(collectionForm.getCash().getCashChange()));
+            int collectionId = collectionDao.saveUpdate(collection);
             Iterator<Transaction> itr = collectionForm.getTransactions().iterator();
             while (itr.hasNext()) {
                 Transaction tx = itr.next();
-                if(tx.isFullPaid()) {
-                    fullyPaid.add(tx);
-                } else {
-                    notFullyPaid.add(tx);
-                        
+                Room room = tx.getRoom();
+                CollectionDetails collectionDetails = new CollectionDetails();
+                collectionDetails.setCollectionId(collectionId);
+                collectionDetails.setAptId(tx.getAptId());
+                collectionDetails.setRoomId(tx.getRoomId());
+                collectionDetails.setTxDate(new Date());
+                collectionDetails.setStatus(RentStatus.PAID);
+                collectionDetails.setTxId(tx.getId());
+                switch (collectionForm.getPaymentType()) {
+                    case "visa":
+                    case "credit":
+                    case "master":
+                        break;
+                    default: //cash
+                         if (!tx.isFullPaid()) {
+                             collection.setStatus(RentStatus.PARTIAL);
+                         } 
+                         collectionDetails.setAmountPaid(tx.getAmountPaid()); //set as full paid
+                         collectionDetails.setBalance(tx.getBalance());
+                         collectionDetails.setDeposit(tx.getDeposit());
                 }
+               collectionDetailsDao.saveUpdate(collectionDetails);
+               //TODO update tx_rental details
+               Double newAmount = (tx.getRoom().getRate() + tx.getBalance()) - tx.getDeposit();
+               if(newAmount < 0) {
+                   newAmount = 0d;
+               }
+               tx.setAmount(newAmount);
+               tx.setDueDate(collectionForm.getCollectionDate());
+               tx.setTxType(collectionForm.getPaymentType());
+               tx.setUserId(StringUtil.toInteger(collectionForm.getUserId()));
+               tx.setUpdateDate(new Date());
+               tx.setUpdtCnt(tx.getUpdtCnt() == null ? 1 : tx.getUpdtCnt() + 1);
+               rentalDao.saveUpdate(tx);
             }
-            
-            CollectionForm updtdForm = this.saveCollection(collectionForm, fullyPaid);
-            updtdForm = this.saveCollection(updtdForm, notFullyPaid);
-                
-                
-            
-            
-            collectionDao.commit();
-            
-//            //TODO update tx_rental details
-//            Transaction tx = rentalDao.getById(collection.getTxId());
-//            tx.setAmount(collection.getAmountPaid());
-//            tx.setBalance(collection.getBalance());
-//            tx.setDeposit(collection.getDeposit());
-//            Date dueDate = tx.getDueDate();
-//            dueDate = DateUtil.addDays(dueDate, DateUtil.THIRTYDAYS);
-//            tx.setDueDate(dueDate);
-//            rentalDao.saveUpdate(tx);
-            
-            //TODO send SMS
-            
-            
+            collectionDetailsDao.commit();
             resp.setResponseStatus(ResultStatus.RESULT_OK);
-//            resp.setModel(collection);
-            
-
-                    
         } catch(Exception e) {
             resp.setResponseStatus(ResultStatus.GENERAL_ERROR);
             resp.setErrorMsg(e.getMessage());
@@ -219,6 +194,7 @@ public class TransactionServiceImpl implements TransactionService {
      * @param transactions
      * @return
      */
+    /**
     private CollectionForm saveCollection(CollectionForm form, List<Transaction> transactions) {
         try {
             int roomsRented =  form.getTransactions().size();
@@ -238,7 +214,6 @@ public class TransactionServiceImpl implements TransactionService {
                 collection.setStatus(RentStatus.PAID);
                 collection.setTxId(tx.getId());
                 collection.setUserId(StringUtil.toInteger(form.getUserId()));
-                /** payments **/
               //if multiple room divide the payments to each room
                 switch (form.getPaymentType()) {
                     case "visa":
@@ -283,5 +258,5 @@ public class TransactionServiceImpl implements TransactionService {
         
         return form;
     }
-
+*/
 }

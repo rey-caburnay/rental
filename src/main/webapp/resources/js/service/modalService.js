@@ -18,8 +18,8 @@
 //				      console.log('Modal dismissed at: ' + new Date());
 //				    });	
 //			}
-		    show: function (message) {
-		        swal(message,"", "success");
+		    show: function (message,func) {
+		        swal(message,func);
 		    },
 		    showSuccess: function (message) {
                 swal(message,"", "success");

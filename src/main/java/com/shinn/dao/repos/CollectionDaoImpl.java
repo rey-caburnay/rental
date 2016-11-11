@@ -23,18 +23,8 @@ public class CollectionDaoImpl extends AbstractDaoImpl<Collection> implements Co
     }
 
     @Override
-    public void saveUpdate(Collection model) throws Exception {
-       executeSaveUpate("", 
-               model.getTxId(), 
-               model.getRenterId(),
-               model.getRoomId(),
-               model.getAptId(),
-               model.getAmountPaid(),
-               model.getBalance(),
-               model.getDeposit(),
-               model.getTxDate(),
-               model.getUserId(),
-               model.getStatus());
+    public int saveUpdate(Collection model) throws Exception {
+       return executeSaveUpate("save-collection", model);
     }
 
   

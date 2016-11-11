@@ -1,13 +1,16 @@
 package com.shinn.ui.model;
 
+import lombok.ToString;
+
 /**
  * cash
  * @author rc185213
  *
  */
+@ToString
 public class Cash {
     
-    private String cashRecieved;
+    private String cashReceived;
     private String amountPaid;
     private String cashChange;
     private String balance;
@@ -15,14 +18,14 @@ public class Cash {
     /**
      * @return the cashRecieved
      */
-    public String getCashRecieved() {
-        return cashRecieved;
+    public String getCashReceived() {
+        return cashReceived;
     }
     /**
      * @param cashRecieved the cashRecieved to set
      */
-    public void setCashRecieved(String cashRecieved) {
-        this.cashRecieved = cashRecieved;
+    public void setCashReceived(String cashReceived) {
+        this.cashReceived = cashReceived;
     }
     /**
      * @return the amountPaid
@@ -71,14 +74,5 @@ public class Cash {
      */
     public void setDeposit(String deposit) {
         this.deposit = deposit;
-    }
-    /* (non-Javadoc)
-     * @see java.lang.Object#toString()
-     */
-    @Override
-    public String toString() {
-        return "Payment [cashRecieved=" + cashRecieved + ", amountPaid=" + amountPaid
-                + ", cashChange=" + cashChange + ", balance=" + balance + ", deposit=" + deposit
-                + "]";
     }
 }

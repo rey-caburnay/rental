@@ -24,22 +24,12 @@ public class RoomDaoImpl extends AbstractDaoImpl<Room> implements RoomDao{
         return getListResult("");
     }
 
-    public void saveUpdate(Room model) throws Exception {
+    public int saveUpdate(Room model) throws Exception {
         String sqlStment = "save-room";
         if (model.getId() != null && model.getId() > 0) {
             sqlStment = "update-room";
         }
-        executeSaveUpate(sqlStment, 
-                model.getId(),
-                model.getAptId(),
-                model.getFloor(),
-                model.getRoomNo(),
-                model.getRoomType(),
-                model.getSize(),
-                model.getOccupied(),
-                model.getTelNo(),
-                model.getRate(),
-                model.getStatus());
+        return executeSaveUpate(sqlStment, model);
     }
 
     @Override

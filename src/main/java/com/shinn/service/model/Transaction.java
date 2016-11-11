@@ -28,6 +28,7 @@ public class Transaction implements Serializable{
 	private Integer updtCnt;
 	private Date updateDate;
 	private Room room;
+	private Double amountPaid;
 	private boolean isFullPaid;
 	private Expense electric;
 	private Expense water;
@@ -297,5 +298,18 @@ public class Transaction implements Serializable{
     public void setWater(Expense water) {
         this.water = water;
     }
+    /**
+     * @return the amountPaid
+     */
+    public Double getAmountPaid() {
+        return amountPaid;
+    }
+    /**
+     * @param amountPaid the amountPaid to set
+     */
+    public void setAmountPaid(Double amountPaid) {
+        this.amountPaid = amountPaid;
+    }
+    
 
 }

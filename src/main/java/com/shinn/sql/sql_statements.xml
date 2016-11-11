@@ -38,67 +38,64 @@
     VALUES(?,?,?,?,?,?,?,?,?,?);
   </entry>
   <entry key="save-transaction">
-    INSERT INTO realmaster.tx_rental
-    (id,
-    aptId,
-    roomId,
-    dueDate,
-    txDate,
-    startDate,
-    endDate,
-    deposit,
-    renterId,
-    balance,
-    txType,
-    provider,
-    amount,
-    status,
-    userId,
-    updatedDate,
-    updtCnt)
+    INSERT INTO `realmaster`.`tx_rental`
+      (`id`,
+      `aptId`,
+      `roomId`,
+      `dueDate`,
+      `txDate`,
+      `startDate`,
+      `endDate`,
+      `deposit`,
+      `renterId`,
+      `balance`,
+      `txType`,
+      `provider`,
+      `amount`,
+      `status`,
+      `userId`,
+      `updatedDate`,
+      `updtCnt`)
     VALUES
-    (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);
+      (:id, 
+      :aptId, 
+      :roomId, 
+      :dueDate, 
+      :txDate, 
+      :startDate, 
+      :endDate, 
+      :deposit, 
+      :renterId,
+      :balance, 
+      :txType, 
+      :provider, 
+      :amount, 
+      :status, 
+      :userId, 
+      :updateDate, 
+      :updtCnt);
   </entry>
   <entry key="update-transaction">
-    SET
-    @aptId = ?,
-    @roomId = ?,
-    @dueDate = ?,
-    @txDate = ?,
-    @startDate = ?,
-    @endDate = ?,
-    @deposit = ?,
-    @renterId = ?,
-    @balance = ?,
-    @txType = ?,
-    @provider = ?,
-    @amount = ?,
-    @status = ?,
-    @userId = ?,
-    @updatedDate = ?,
-    @updtCnt = ?;
-
-    UPDATE realmaster.tx_rental SET
-    aptId = @aptId,
-    roomId = @roomId,
-    dueDate =
-    @dueDate,
-    txDate = @txDate,
-    startDate = @startDate,
-    endDate = @endDate,
-    deposit = @deposit,
-    renterId = @renterId,
-    balance = @balance,
-    txType =
-    @txType,
-    provider = @provider,
-    amount = @amount,
-    status = @status,
-    userId = @userId,
-    updatedDate = @updatedDate,
-    updtCnt = @updtCnt
+    UPDATE `realmaster`.`tx_rental` SET
+    `id` = :id,
+    `aptId` = :aptId,
+    `roomId` = :roomId,
+    `dueDate` = :dueDate,
+    `txDate` = :txDate,
+    `startDate` = :startDate,
+    `endDate` = :endDate,
+    `deposit` = :deposit,
+    `renterId` = :renterId,
+    `balance` = :balance,
+    `txType` = :txType,
+    `provider` = :provider,
+    `amount` = :amount,
+    `status` = :status,
+    `userId` = :userId,
+    `updatedDate` = :updateDate,
+    `updtCnt` = :updtCnt
     WHERE
-    aptId = @aptId AND roomId = @roomId
+    `id`= :id AND `aptId` = :aptId AND `roomId` = :roomId;
   </entry>
   <entry key="get-apartments">
     SELECT id,
@@ -253,31 +250,60 @@
   </entry>
   <entry key="save-collection">
     INSERT INTO realmaster.tx_collections
-    (txId,
-    renterId,
-    roomId,
-    aptId,
-    amountPaid,
-    balance,
-    deposit,
-    txDate,
-    userId,
-    status)
+      (`renterId`,
+      `amountPaid`,
+      `balance`,
+      `deposit`,
+      `change`,
+      `cashReceived`,
+      `txDate`,
+      `userId`,
+      `status`)
     VALUES
-    (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+      (:renterId, 
+      :amountPaid, 
+      :balance, 
+      :deposit, 
+      :change, 
+      :cashReceived, 
+      :txDate, 
+      :userId, 
+      :status);
+  </entry>
+    <entry key="save-collection-details">
+    INSERT INTO realmaster.tx_collections_details
+      (`collectionId`,
+      `aptId`,
+      `roomId`,
+      `txId`,
+      `amountPaid`,
+      `balance`,
+      `deposit`,
+      `txDate`,
+      `status`)
+    VALUES
+      (:collectionId,
+      :aptId,
+      :roomId,
+      :txId,
+      :amountPaid,
+      :balance,
+      :deposit,
+      :txDate,
+      :status)
   </entry>
   <entry key="save-room">
     INSERT INTO realmaster.mst_room
-   (id,
-    aptId,
-    floor,
-    roomNo,
-    roomType,
-    size,
-    occupied,
-    telNo,
-    rate,
-    status)
+   (`id`,
+    `aptId`,
+    `floor`,
+    `roomNo`,
+    `roomType`,
+    `size`,
+    `occupied`,
+    `telNo`,
+    `rate`,
+    `status`)
     VALUES
     (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
   </entry>
@@ -294,16 +320,16 @@
         @status = ?;
         
     UPDATE realmaster.mst_room SET
-      id = @id
-      aptId = @aptId,
-      floor = @floor,
-      roomNo = @roomNo,
-      roomType = @roomType,
-      size = @size,
-      occupied = @occupied,
-      telNo = @telNo,
-      rate = @rate,
-      status = @status
+      `id` = @id
+      `aptId` = @aptId,
+      `floor` = @floor,
+      `roomNo` = @roomNo,
+      `roomType` = @roomType,
+      `size` = @size,
+      `occupied` = @occupied,
+      `telNo` = @telNo,
+      `rate` = @rate,
+      `status` = @status
     WHERE id = @id
   </entry>
   <entry key="get-sms-by-id">
@@ -331,18 +357,18 @@
     @deleted = ?;
 
     UPDATE realmaster.mst_room SET
-    id = @id
-    message = @message,
-    sender = @sender,
-    recipient = @recipient,
-    sendDate = @sendDate,
-    receivedDate = @receivedDate,
-    messageType = @messageType,
-    requestId = @requestId,
-    shortcode = @shortcode,
-    timestamp = @timestamp,
-    status = @status,
-    deleted = @deleted
+    `id` = @id
+    `message` = @message,
+    `sender` = @sender,
+    `recipient` = @recipient,
+    `sendDate` = @sendDate,
+    `receivedDate` = @receivedDate,
+    `messageType` = @messageType,
+    `requestId` = @requestId,
+    `shortcode` = @shortcode,
+    `timestamp` = @timestamp,
+    `status` = @status,
+    `deleted` = @deleted
     WHERE id = @id
   </entry>
   <entry key="save-sms">

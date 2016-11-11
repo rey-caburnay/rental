@@ -88,7 +88,7 @@ public class TxController {
         if(resp.getResponseStatus().equals(ResultStatus.RESULT_OK)){
             return new ResponseEntity<Response<CollectionForm>>(resp, HttpStatus.OK);
         }
-        return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        return new ResponseEntity(resp, HttpStatus.BAD_REQUEST);
     }
 
 

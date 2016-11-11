@@ -15,8 +15,6 @@ public interface TransactionService {
     
     public Response<RenterInfo> getRentersInfo(Integer renterId);
     
-    public Response<Collection> createCollection(Collection collection);
-    
     public Response<CollectionForm> createCollection(CollectionForm collection);
 
 }

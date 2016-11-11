@@ -1,6 +1,8 @@
 package com.shinn.dao.repos;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
@@ -26,29 +28,13 @@ public class RentalDaoImpl extends AbstractDaoImpl<Transaction> implements Renta
         return null;
     }
 
-    public void saveUpdate(Transaction model) throws Exception {
+    public int saveUpdate(Transaction model) throws Exception {
         String sqlStment = "save-transaction";
         if (model.getId() != null && model.getId() > 0) {
             sqlStment = "update-transaction";
         } 
-        executeSaveUpate(sqlStment,
-                model.getId(),
-                model.getAptId(),
-                model.getRoomId(),
-                model.getDueDate(),
-                model.getTxDate(),
-                model.getStartDate(),
-                model.getEndDate(),
-                model.getDeposit(),
-                model.getRenterId(),
-                model.getBalance(),
-                model.getTxType(),
-                model.getProvider(),
-                model.getAmount(),
-                model.getStatus(),
-                model.getUserId(),
-                model.getUpdateDate(),
-                model.getUpdtCnt());
+        return executeSaveUpate(sqlStment, model);
+                
     }
     /**
      * get transaction /membership by renter's id

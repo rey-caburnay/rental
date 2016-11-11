@@ -2,10 +2,10 @@
     'use strict';
 
     var injectParams = [ '$scope','$filter', 'transactionService', 'adminService',
-            'modalService' ];
+            'modalService', '$location'];
 
     var CollectionController = function ($scope, $filter, transactionService,
-            adminService, modalService) {
+            adminService, modalService, $location) {
         var vm = this,
         collection = {}, //model to map to services
         paymentTypes = ["cash", "check", "online"],
@@ -40,8 +40,8 @@
             vm.model.amount = 0;
             vm.model.cash = {
                     amtpaid : '',
-                    cashchanged : '',
-                    cashreceived : ''
+                    cashchange : '',
+                    cashReceived : ''
             }
         }
         vm.initModel();
@@ -57,18 +57,14 @@
         };
         vm.setRenter = function (renter) {
             vm.initModel();
+            vm.model.renterId = renter.id;
             vm.model.mobileno = renter.mobileNo;
             vm.model.telno = renter.telno;
-            vm.model.lastName = renter.lastName;
-            vm.model.firstName = renter.firstName;
+            vm.model.lastname = renter.lastName;
+            vm.model.firstname = renter.firstName;
             vm.model.address = renter.address;
             vm.model.transactions = renter.transactions;
-            computeRooms(renter.transactions);
-//            getRoomsByRenter(renter.id);
         }
-//        vm.popup = function (model) {
-//            showModal(model);
-//        }
         vm.computeAmount = function () {
             var diff = vm.model.amount - vm.model.roomRate;
             vm.model.cashReceived = vm.model.amount;
@@ -144,68 +140,61 @@
             validateCash();
         }
         
-        $scope.$watchCollection('vm.model.cash',
+        $scope.$watch(function(scope) {
+            return {cash: scope.vm.model.cash, items: scope.vm.model.transactions};
+        },
         function (newValue, oldValue) {
             vm.model.cash.baldep = 0;
             vm.model.cash.cashreceivederror = false;
             vm.model.fullPaidError = false;
-            if (vm.model.cash.amtpaid > vm.model.cash.cashreceived) {
+            if (vm.model.cash.amountPaid > (vm.model.cash.cashReceived || 0)) {
                 vm.model.cash.cashreceivederror = true;
                 vm.model.cashrecivedNote  = 'Cash Received is smaller than the Amount paid';    
             }
-            vm.model.cash.cashchanged = vm.model.cash.cashreceived - vm.model.cash.amtpaid;
-            if(vm.model.cash.cashchanged < 0) {
-                vm.model.cash.cashchanged = 0;
-            }
-            if (vm.model.cash.amtpaid > vm.model.total && !vm.model.cash.cashreceivederror) {
-                vm.model.cash.depoist = vm.model.amtpaid - vm.model.total;
-                vm.model.cash.baldep = vm.model.cash.deposit;
-            } else if (vm.model.cash.amtpaid < vm.model.total && !vm.model.cash.cashreceivederror) {
-                vm.model.cash.balance = vm.model.total - vm.model.cash.amtpaid;
-                vm.model.cash.baldep = vm.model.cash.amtpaid - vm.model.total;
+            vm.model.cash.cashChange = vm.model.cash.cashReceived - vm.model.cash.amountPaid;
+            if(vm.model.cash.cashChange < 0) {
+                vm.model.cash.cashChange = 0;
             }
             validateCash();
-            
-            
-        })
+        }, true)
         
         function validateCash() {
-            var total = 0;
+            var total = 0,
+            hasPaid = false;
             vm.model.fullPaidError = false;
+            vm.model.cash.amountPaid = 0;
+            vm.model.cash.balance = 0;
+            vm.model.cash.deposit = 0;
             if(vm.model.transactions) {
+                //search if there is input in amount paid
                 for(var i = 0; i < vm.model.transactions.length; i++) {
                     //search full paid items
-                    if(vm.model.transactions[i].isFullPaid) {
-                        total = total + vm.model.transactions[i].amount;
+                    console.log("amount paid :" + vm.model.transactions[i].amountPaid)
+                    if(vm.model.transactions[i].amountPaid && vm.model.transactions[i].amountPaid > 0) {
+                        hasPaid = true;
+                        vm.model.cash.amountPaid = vm.model.cash.amountPaid + vm.model.transactions[i].amountPaid;
                     }
+                    if(vm.model.transactions[i].amountPaid && vm.model.transactions[i].amountPaid >= vm.model.transactions[i].amount) {
+                        vm.model.transactions[i].isFullPaid = true;
+                        vm.model.cash.deposit +=  vm.model.transactions[i].amountPaid - vm.model.transactions[i].amount;
+                        vm.model.transactions[i].deposit = vm.model.transactions[i].amountPaid - vm.model.transactions[i].amount;
+                        vm.model.transactions[i].balance = 0;
+                        
+                    } else {
+                        vm.model.transactions[i].isFullPaid = false;
+                        vm.model.cash.balance += vm.model.transactions[i].amount - vm.model.transactions[i].amountPaid;
+                        vm.model.transactions[i].balance = vm.model.transactions[i].amount - vm.model.transactions[i].amountPaid;
+                        vm.model.transactions[i].deposit = 0;
+                    }
+                    console.log("amount paid :" + vm.model.transactions[i].amountPaid + "deposit: " +  vm.model.transactions[i].balance + "balance :" + vm.model.transactions[i].balance)
                 }
-                if (total > vm.model.cash.amtpaid) {
-                    //error
-                    if ((vm.model.cash.baldep + vm.model.total) != 0) {
-                        vm.model.fullPaidError = true;
-                    }
+                //possible partial payments
+                if (!hasPaid) {
+                    vm.model.fullPaidError = true;
                 }
             }
         }
-
         
-        /* private functions and functions to communicate with server */
-        function computeRooms(transactions) {
-            vm.initModel();
-            for (var i = 0; i < transactions.length; i++) {
-                vm.model.total = (vm.model.total || 0) + (transactions[i].amount || 0);
-                vm.model.deposit = (vm.model.deposit || 0) + (transactions[i].deposit || 0);
-                vm.model.balance = (vm.model.balance || 0) + (transactions[i].balance || 0);
-                transactions[i].isFullPaid = true;
-                vm.model.transactions.isFullPaid = true;
-            }
-            
-            vm.model.total = vm.model.total - vm.model.deposit;
-            vm.model.deposit = vm.model.deposit;
-            if (vm.model.deposit < 1 && vm.model.balance > 1) {
-                vm.model.deposit = vm.model.balance;
-            } 
-        }
         function getRenters() {
             var renter = '';
             return adminService.getRenters().then(function(response) {
@@ -216,10 +205,10 @@
                             (renter.firstName || '') + " " + (renter.initial || '')
                     }
                 }
-
                 return response.result;
             })
         }
+        
         function getRoomsByRenter(renterId) {
             return transactionService.getRoomsByRenter(renterId)
                 .then(function(response) {
@@ -231,17 +220,7 @@
                     return  vm.model.rooms;
                 });
         }
-//        function showModal(result) {
-//            var msg = 'Successfully Registered';
-//            if (result.responseStatus != 'OK') {
-//                msg = 'Failed to Register';
-//            }
-//            var options = {
-//                header : msg,
-//                service : result.result
-//            };
-//            modalService.show(options);
-//        }
+
         function getApartment() {
             return adminService.getApartment(aptId).then(
                 function(response) {
@@ -258,34 +237,27 @@
                     return vm.rooms;
                 });
         }
+        
         function submit() {
-            collection.txDate = ''; // server will handle this
-            collection.status = ''; // server will handle this
-            collection.cash = {};
-            collection.credit = {};
             if(vm.model.cash.cashreceivederror || vm.model.fullPaidError) {
                 vm.popup.showError("Please fix/adjust inputs to continue the transaction.")
                 return;
             } 
-            if (vm.payment.cash) {
-                collection.cash.cashReceived = vm.model.cash.cashreceived || 0;
-                collection.cash.amountPaid = vm.model.cash.amtpaid || 0;
-                collection.cash.change = vm.model.cash.change || 0;
-                collection.cash.balance = vm.model.cash.balance || 0;
-                collection.cash.deposit = vm.model.cash.deposit || 0;
-            } else  if (vm.payment.credit) {
-                //TODO
-            } else if (vm.payment.check) {
-                //TODO
-            } else  if (vm.payment.paypal) {
-                //TODO
-            }
-            collection.transactions = vm.model.transactions;
-            collection.userId = 1;
-            transactionService.saveCollection(collection)
+            vm.model.userId = 1;
+            transactionService.saveCollection(vm.model)
                 .then(function(response){
                     console.log("status return :" + response);
-                    vm.popup(response);
+                    if (response.responseStatus === "ERROR") {
+                        vm.popup.showError("There is something wrong in processing your request: " + response.errorMsg);
+                    } else {
+                        var options = {
+                            title: "Thank You",
+                            text: "Transaction successfully processed",
+                            type: "success",
+                        }
+                        vm.popup.show(options, function () {$location.path('/home');});
+                    }
+                    
              });
         }
 

@@ -1,16 +1,73 @@
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
+import org.slf4j.LoggerFactory;
+
+import com.shinn.dao.factory.AbstractDaoImpl;
+import com.shinn.dao.factory.NamedParameterPreparedStatement;
+import com.shinn.service.model.Transaction;
 import com.shinn.util.DateUtil;
 import com.shinn.util.RentStatus;
 import com.shinn.util.StringUtil;
 
 public class BasicTest {
+    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(BasicTest.class);
+    
     public static void main(String args[]) {
         
+        BasicTest test = new BasicTest();
+        test.getMethodTest();
+    }
+    
+    public void getMethodTest() {
+        Map<String, List<Integer>> indexMap = new HashMap<>();
+        
+        String sql = " UPDATE `realmaster`.`tx_rental` SET `id` = :id, `aptId` = :aptId, " +
+                        "`roomId` = :roomId, `dueDate` = :dueDate, `txDate` = :txDate," +
+                        "`startDate` = :startDate, `endDate` = :endDate, `deposit` = :deposit," +
+                        "`renterId` = :renterId, `balance` = :balance, `txType` = :txType, " +
+                        "`provider` = :provider, `amount` = :amount, `status` = :status `userId` = :userId" +
+                        "`updatedDate` = :updateDate,  `updtCnt` = :updtCnt" + 
+                        " WHERE `id`= @`id` AND `aptId` = @`aptId` AND `roomId` = @`roomId`;";
+        
+        Transaction tx = new Transaction();
+        tx.setId(1);
+        tx.setAptId(1);
+        tx.setRoomId(1);
+        tx.setDueDate(new Date());
+//        T type = tx.getClass();
+        try {
+            
+            String parsedSql = NamedParameterParser.parse(sql, indexMap);
+            
+            
+            for (PropertyDescriptor pd : Introspector.getBeanInfo(tx.getClass()).getPropertyDescriptors()) {
+//                logger.info("method name: " +pd.getReadMethod().invoke(tx));
+//                System.out.println("method name: " +pd.getReadMethod().invoke(tx));
+                if (pd.getReadMethod() != null && !"class".equals(pd.getName()))
+                    if (indexMap.containsKey(pd.getName())) {
+                        logger.info("method name in indexMap: " + pd.getName() + "value : "+pd.getReadMethod().invoke(tx));
+                        System.out.println("method name in indexMap: " + pd.getName() + "value : "+pd.getReadMethod().invoke(tx));
+                    }
+                    
+              }
+        } catch (Exception e) {
+            logger.info(e.getCause() +" " + e);
+
+        }
+    }
+    
+    public void dateTest() {
         Date d = Calendar.getInstance().getTime();
         Date e = Calendar.getInstance().getTime();
         String t = "";

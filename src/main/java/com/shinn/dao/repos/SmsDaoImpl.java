@@ -26,23 +26,12 @@ public class SmsDaoImpl extends AbstractDaoImpl<Sms> implements SmsDao {
     }
 
     @Override
-    public void saveUpdate(Sms model) throws Exception {
+    public int saveUpdate(Sms model) throws Exception {
         String sqlStment = "save-sms";
         if (model.getId() != null && model.getId() > 0) {
             sqlStment = "update-sms";
         }
-        executeSaveUpate(sqlStment, 
-                model.getId(),
-                model.getMessage(),
-                model.getSender(),
-                model.getRecipient(),
-                model.getSendDate(),
-                model.getReceivedDate(),
-                model.getMessageType(),
-                model.getRequestId(),
-                model.getShortcode(),
-                model.getTimestamp(),
-                model.getStatus(),
-                model.getDeleted());
+        //TODO update sql query to name parameters
+        return executeSaveUpate(sqlStment, model);
     }
 }

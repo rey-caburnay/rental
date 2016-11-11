@@ -30,6 +30,7 @@ public class CollectionForm implements Serializable {
     private String additionalInfo;
     private String paymentType;
     private String userId;
+    private Date collectionDate;
     private List<Transaction> transactions;
     private Cash cash;
     private Credit credit;
@@ -213,5 +214,16 @@ public class CollectionForm implements Serializable {
     public void setCredit(Credit credit) {
         this.credit = credit;
     }
-
+    /**
+     * @return the collectionDate
+     */
+    public Date getCollectionDate() {
+        return collectionDate;
+    }
+    /**
+     * @param collectionDate the collectionDate to set
+     */
+    public void setCollectionDate(Date collectionDate) {
+        this.collectionDate = collectionDate;
+    }
 }

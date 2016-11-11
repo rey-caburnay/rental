@@ -1,6 +1,7 @@
 package com.shinn.dao.factory;
 
 import java.beans.IntrospectionException;
+import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.io.Serializable;
 import java.lang.reflect.Field;
@@ -12,7 +13,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Savepoint;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.sql.DataSource;
 
@@ -26,7 +29,7 @@ public abstract class AbstractDaoImpl<T extends Serializable> {
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(AbstractDaoImpl.class);
 
     @Autowired
-    private Connection connection;
+    private static Connection connection;
 
     @Autowired
     private DataSource dataSource;
@@ -36,6 +39,10 @@ public abstract class AbstractDaoImpl<T extends Serializable> {
 
     Class<T> clzz;
     PreparedStatement pStmnt = null;
+    
+//    NamedParameterStatement namedParameterStmnt = null;
+    
+    NamedParameterPreparedStatement namedParameterStmnt = null;
 
     SQLStatement sqlStatement = SQLStatement.getInstance();
 
@@ -228,6 +235,13 @@ public abstract class AbstractDaoImpl<T extends Serializable> {
             preparedStatement.setObject(i + 1, values[i]);
         }
     }
+    
+    public static void setValues(final NamedParameterPreparedStatement preparedStatement, final Object... values)
+            throws SQLException {
+        for (int i = 0; i < values.length; i++) {
+//            preparedStatement.setObject(i + 1, values[i]);
+        }
+    }
 
     /**
      *
@@ -239,12 +253,7 @@ public abstract class AbstractDaoImpl<T extends Serializable> {
     public ResultSet query(String propertyName, Object... parameters) throws Exception {
         ResultSet result = null;
         try {
-            if(connection.isClosed()) {
-                connection = null;
-                connection = dataSource.getConnection();
-                connection.setAutoCommit(false);
-            }
-
+            this.verifyConnection();
             pStmnt = connection.prepareStatement(sqlStatement.getProperty(propertyName));
             this.setValues(pStmnt, parameters);
             result = pStmnt.executeQuery();
@@ -344,17 +353,49 @@ public abstract class AbstractDaoImpl<T extends Serializable> {
      * @return
      * @throws Exception
      */
-    public void executeSaveUpate(String sqlStmnt, Object... parameters) throws Exception {
-        try {
-            pStmnt = connection.prepareStatement(sqlStatement.getProperty(sqlStmnt));
-            this.setValues(pStmnt, parameters);
-            pStmnt.executeUpdate();
-        }catch (Exception e) {
-            logger.debug(e.getMessage());
-            throw new Exception ("Failed to saved: " + e.getMessage());
-        }
-
-    }
+//    public int executeSaveUpate(String sqlStmnt, Object... parameters) throws Exception {
+//        try {
+//            this.verifyConnection();
+//            pStmnt = connection.prepareStatement(sqlStatement.getProperty(sqlStmnt), PreparedStatement.RETURN_GENERATED_KEYS);
+//            this.setValues(pStmnt, parameters);
+//            pStmnt.executeUpdate();
+//            ResultSet rs = pStmnt.getGeneratedKeys();
+//            if(rs.next()) {
+//                return rs.getInt(1);
+//            }
+//        }catch (Exception e) {
+//            logger.debug(e.getMessage());
+//            throw new Exception ("Failed to saved: " + e.getMessage());
+//        }
+//        return 0; 
+//
+//    }
+    /**
+     * 
+     * @param sqlStmnt
+     * @param parameters
+     * @return
+     * @throws Exception
+     */
+//    public int executeSaveUpate(String sqlStmnt, Map<String, Object> parameters) throws Exception {
+//        try {
+//            this.verifyConnection();
+//            namedParameterStmnt = NamedParameterPreparedStatement.prepare(connection, sqlStatement.getProperty(sqlStmnt), PreparedStatement.RETURN_GENERATED_KEYS);
+//            for (Map.Entry<String, Object> entry : parameters.entrySet()) {
+//                namedParameterStmnt.setObject(entry.getKey(), entry.getValue());     
+//            }
+//            namedParameterStmnt.executeUpdate();
+//            ResultSet rs = namedParameterStmnt.getGeneratedKeys();
+//            if(rs.next()) {
+//                return rs.getInt(1);
+//            }
+//        }catch (Exception e) {
+//            logger.debug(e.getMessage());
+//            throw new Exception ("Failed to saved: " + e.getMessage());
+//        }
+//        return 0; 
+//
+//    }
 
     /**
      * get the current auto increment key
@@ -378,6 +419,7 @@ public abstract class AbstractDaoImpl<T extends Serializable> {
      */
     public final void commit() {
         try {
+            this.verifyConnection();
             this.connection.commit();
         }catch(Exception e) {
             logger.error("error commit:" + e.getMessage());
@@ -387,16 +429,100 @@ public abstract class AbstractDaoImpl<T extends Serializable> {
     /**
      * roll back the transaction
      */
-    public final void rollback() {
-        if (null == this.connection) {
-            return;
-        }
-
+    public final void rollback(Savepoint savePoint) {
         try {
-            this.connection.rollback();
-        } catch (SQLException e) {
-            logger.error("SQLException:" + " Error on calling Rollback", e);
+            if (null == this.connection) {
+                return;
+            }
+            this.connection.rollback(savePoint);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
         }
     }
+    
+    public final void rollback() {
+        try {
+            if (null == this.connection) {
+                return;
+            }
+            this.connection.rollback();
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        }
+    }
+    
+    public void setSavePoint(String name) {
+        try {
+            if (name == null) {
+                connection.setSavepoint();
+            } else {
+                connection.setSavepoint(name);
+            }
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        }
+    }
+    /**
+     * 
+     * @return
+     */
+    private void verifyConnection() {
+        try {
+            if(connection == null || connection.isClosed()) {
+                connection = null;
+                connection = dataSource.getConnection();
+                connection.setAutoCommit(false);
+            }
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+//        return connection;
+    }
 
+    public int executeSaveUpate(String sqlStmnt, Object type) throws SQLException {
+        Map<String, List<Integer>> indexMap = new HashMap<>();
+        int generatedKey = 0;
+        boolean isNew = false;
+        try {
+            String sql = NamedParameterParser.parse( sqlStatement.getProperty(sqlStmnt), indexMap);
+            if (sql.contains("INSERT")) {
+                isNew = true;
+            }
+            this.verifyConnection();
+            if (isNew) {
+                namedParameterStmnt = NamedParameterPreparedStatement.prepare(connection, sqlStatement.getProperty(sqlStmnt), PreparedStatement.RETURN_GENERATED_KEYS);
+
+            } else {
+                namedParameterStmnt = NamedParameterPreparedStatement.prepare(connection, sqlStatement.getProperty(sqlStmnt));
+            }
+            
+            for (PropertyDescriptor pd : Introspector.getBeanInfo(type.getClass()).getPropertyDescriptors()) {
+                if (pd.getReadMethod() != null && !"class".equals(pd.getName()))
+                    if (indexMap.containsKey(pd.getName())) {
+                        try {
+                            namedParameterStmnt.setObject(pd.getName(), pd.getReadMethod().invoke(type));
+                        } catch (Exception e) {
+                            logger.debug(e.getMessage() + "property name :" + pd.getName());
+                        }
+                    }
+              }
+            int rows = namedParameterStmnt.executeUpdate();
+            if (isNew) {
+                ResultSet rs = namedParameterStmnt.getGeneratedKeys();
+                if(rs.next()) {
+                    generatedKey = rs.getInt(1);
+                } 
+            } else {
+                generatedKey = rows;
+            }
+           
+        } catch (Exception e) {
+            logger.info(e.getMessage());
+            generatedKey = 0;
+            throw (SQLException) e.getCause();
+            
+        }
+        return generatedKey;
+    }
 }

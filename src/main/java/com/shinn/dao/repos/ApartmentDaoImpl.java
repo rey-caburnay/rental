@@ -22,16 +22,8 @@ public class ApartmentDaoImpl extends AbstractDaoImpl<Apartment> implements Apar
 		return getListResult("get-apartments");
 	}
 
-    public void saveUpdate(Apartment model) throws Exception {
-        executeSaveUpate("save-apartment",
-                model.getName(),
-                model.getPersonInCharge(),
-                model.getAptType(),
-                model.getMobileNo(),
-                model.getTelNo(),
-                model.getAddress1(),
-                model.getAddress2(),
-                model.getStatus());
+    public int saveUpdate(Apartment model) throws Exception {
+        return executeSaveUpate("save-apartment", model);
     }
 
  

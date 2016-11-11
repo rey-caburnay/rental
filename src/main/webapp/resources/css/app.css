@@ -100,7 +100,8 @@ body, .form-control{
 }
 
 .cart-top-msg {
-    left: 30%;
+    left: 50%;
+    top:25px;
     position:relative;
     color:red;
 }
@@ -187,6 +188,7 @@ label.cart-item-full {
     top: 40px;
     left: 70%;
     width: 150px;
+    z-index:1;
 }
 label.cart-item-full input {
     

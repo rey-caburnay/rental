@@ -1,6 +1,7 @@
 package com.shinn.dao.factory;
 
 import java.io.Serializable;
+import java.sql.Savepoint;
 import java.util.List;
 
 public interface GenericDao<T> {
@@ -22,7 +23,8 @@ public interface GenericDao<T> {
 	 * @param model
 	 * @throws Exception
 	 */
-	public void saveUpdate(T model) throws Exception;
+	public int saveUpdate(T model) throws Exception;
+	
 	
 	/**
 	 * 
@@ -34,6 +36,9 @@ public interface GenericDao<T> {
 	public void commit();
 	
 	public void rollback();
+	public void rollback(Savepoint savePoint);
+	
+	public void setSavePoint(String name) throws Exception;
 	
 	
 

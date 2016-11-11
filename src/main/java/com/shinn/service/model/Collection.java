@@ -13,12 +13,6 @@ public class Collection implements Serializable {
     private Double deposit;
     private Double change;
     private Double cashReceived;
-    
- // put on details
-    private Integer aptId; 
-    private Integer roomId;
-    private Integer txId;
-    
     private Date txDate;
     private Integer userId;
     private String status;
@@ -36,18 +30,6 @@ public class Collection implements Serializable {
         this.id = id;
     }
     /**
-     * @return the txId
-     */
-    public Integer getTxId() {
-        return txId;
-    }
-    /**
-     * @param txId the txId to set
-     */
-    public void setTxId(Integer txId) {
-        this.txId = txId;
-    }
-    /**
      * @return the renterId
      */
     public Integer getRenterId() {
@@ -58,18 +40,6 @@ public class Collection implements Serializable {
      */
     public void setRenterId(Integer renterId) {
         this.renterId = renterId;
-    }
-    /**
-     * @return the roomId
-     */
-    public Integer getRoomId() {
-        return roomId;
-    }
-    /**
-     * @param roomId the roomId to set
-     */
-    public void setRoomId(Integer roomId) {
-        this.roomId = roomId;
     }
     /**
      * @return the amountPaid
@@ -108,6 +78,30 @@ public class Collection implements Serializable {
         this.deposit = deposit;
     }
     /**
+     * @return the change
+     */
+    public Double getChange() {
+        return change;
+    }
+    /**
+     * @param change the change to set
+     */
+    public void setChange(Double change) {
+        this.change = change;
+    }
+    /**
+     * @return the cashReceived
+     */
+    public Double getCashReceived() {
+        return cashReceived;
+    }
+    /**
+     * @param cashReceived the cashReceived to set
+     */
+    public void setCashReceived(Double cashReceived) {
+        this.cashReceived = cashReceived;
+    }
+    /**
      * @return the txDate
      */
     public Date getTxDate() {
@@ -132,44 +126,6 @@ public class Collection implements Serializable {
         this.userId = userId;
     }
     /**
-     * @return the change
-     */
-    public Double getChange() {
-        return change;
-    }
-    /**
-     * @param change the change to set
-     */
-    public void setChange(Double change) {
-        this.change = change;
-    }
-    /**
-     * @return the cashReceived
-     */
-    public Double getCashReceived() {
-        return cashReceived;
-    }
-    /**
-     * @param cashReceived the cashReceived to set
-     */
-    public void setCashReceived(Double cashReceived) {
-        this.cashReceived = cashReceived;
-    }
-    
-    /**
-     * @return the aptId
-     */
-    public Integer getAptId() {
-        return aptId;
-    }
-    /**
-     * @param aptId the aptId to set
-     */
-    public void setAptId(Integer aptId) {
-        this.aptId = aptId;
-    }
-    
-    /**
      * @return the status
      */
     public String getStatus() {
@@ -192,16 +148,5 @@ public class Collection implements Serializable {
      */
     public void setTransactions(List<Transaction> transactions) {
         this.transactions = transactions;
-    }
-    /* (non-Javadoc)
-     * @see java.lang.Object#toString()
-     */
-    @Override
-    public String toString() {
-        return "Collection [id=" + id + ", txId=" + txId + ", aptId=" + aptId + ", renterId="
-                + renterId + ", roomId=" + roomId + ", amountPaid=" + amountPaid + ", balance="
-                + balance + ", deposit=" + deposit + ", txDate=" + txDate + ", userId=" + userId
-                + ", change=" + change + ", cashReceived=" + cashReceived + ", status=" + status
-                + ", transactions=" + transactions + "]";
     }
 }

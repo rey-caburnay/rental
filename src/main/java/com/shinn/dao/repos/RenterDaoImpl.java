@@ -29,20 +29,9 @@ public class RenterDaoImpl extends AbstractDaoImpl<Renter> implements RenterDao 
     }
 
     @Override
-    public void saveUpdate(Renter model) throws Exception {
-        executeSaveUpate("save-renter",
-            model.getFirstName(),
-            model.getLastName(),
-            model.getInitial(),
-            model.getEmail(),
-            model.getMobileNo(),
-            model.getTelno(),
-            model.getAddress(),
-            model.getIdPresented(),
-            model.getEmergencyContact(),
-            model.getStatus()
-            );
-
+    public int saveUpdate(Renter model) throws Exception {
+        //TODO update sql query to name parameters
+        return executeSaveUpate("save-renter", model);
     }
 
     @Override

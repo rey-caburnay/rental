@@ -53,9 +53,9 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao{
         return false;
     }
 
-    public void saveUpdate(User model) throws Exception {
+    public int saveUpdate(User model) throws Exception {
         // TODO Auto-generated method stub
-        
+        return 0;
     }
 
    

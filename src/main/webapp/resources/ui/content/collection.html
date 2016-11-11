@@ -10,7 +10,7 @@
             class="icon-prepend fa fa-user"></i> <input type="text"
             autocomplete="off"
             name="lname" placeholder="Last Name"
-            ng-model="vm.model.lastName"
+            ng-model="vm.model.lastname"
             ng-model-options="vm.modelOptions"
             placeholder="Lastname Firstname Initial"
             uib-typeahead="renter as renter.name for renter in vm.renters"
@@ -25,7 +25,7 @@
         <section class="col col-6">
           <label class="input"> <i
             class="icon-prepend fa fa-user"></i> <input type="text"
-            data-ng-model="vm.model.firstName" 
+            data-ng-model="vm.model.firstname" 
             name="fname" placeholder="First Name">
           </label>
         </section>
@@ -34,13 +34,13 @@
         <section class="col col-6">
           <label class="input"> <i
             class="icon-prepend fa fa-envelope"></i> <input type="email"
-            name="email" placeholder="E-mail">
+            name="email" placeholder="E-mail" data-ng-model="vm.model.email">
           </label>
         </section>
         <section class="col col-6">
           <label class="input"> <i
             class="icon-prepend fa fa-phone"></i> <input type="tel"
-            data-ng-model="vm.model.telno"
+            data-ng-model="vm.model.mobileno"
             name="phone" placeholder="Phone">
           </label>
         </section>
@@ -53,7 +53,7 @@
       </section>
       <section>
         <label class="textarea"> <textarea rows="3" name="info"
-              data-ng-model="vm.model.note"
+              data-ng-model="vm.model.additionalInfo"
             placeholder="Additional info"></textarea>
         </label>
       </section>
@@ -75,18 +75,17 @@
             
               <div class="grid-row">
               <div class="cart">
-<!--                 <div class="cart-top"> -->
-<!--                   <h3 class="cart-top-title">Rooms</h3> -->
-<!--                   <div class="cart-top-msg" data-ng-class="{'hide':!vm.model.fullPaidError}">Please uncheck PIF for rooms that is not fully paid!</div> -->
-<!--                   <div class="cart-top-info" data-ng-bind-html="vm.model.roomCount"> Acquired</div> -->
-<!--                 </div> -->
+                <div class="cart-top" data-ng-class="{'hide':!vm.model.fullPaidError}">
+                  <h3 class="cart-top-title"><div class="cart-top-msg" >Please input the amount paid of each room(s)!</div></h3>
+                </div>
                 <ul>
                   <li class="cart-item" data-ng-repeat="tx in vm.model.transactions">
                     <span class="cart-item-pic">
                       <img src="resources/images/blank.jpg">
                     </span>
                     <label class="cart-item-due">Due Date:<span class="cart-item-due" data-ng-bind-html="tx.dueDate"></span></label>
-                    <label class="cart-item-full input"><input type="text"  name="amountPaid" placeholder="Amount Paid" data-ng-model="tx.amtPaid"></label>
+                    <label class="cart-item-full input"><input type="number"  data-ng-class="{'state-error':tx.amtPaid <= 0}" 
+                      name="amountPaid" placeholder="Amount Paid" data-ng-model="tx.amountPaid"></label>
                     <span class="cart-item-name" data-ng-bind-html="tx.aptName + ' ' + tx.room.roomType + ' Room#' + tx.room.roomNo"></span> 
                     <span class="cart-item-desc" data-ng-bind-html="tx.room.description"></span> 
                     <span class="cart-item-price" data-ng-bind-html="tx.amount"></span> 
@@ -95,7 +94,7 @@
                 </ul>
                 <div class="cart-bottom">
                   <div class='deposit'>
-                    <label data-ng-bind-html="vm.label.deposit"></label><span class="cart-item-deposit" data-ng-bind-html="vm.model.deposit"></span>
+                    <label data-ng-bind-html="vm.label.deposit"></label><span class="cart-item-deposit" data-ng-bind-html="vm.model.expenses"></span>
                   </div>
                   <div class='total'> 
                     <label data-ng-bind-html="vm.label.total"></label><span class="cart-item-total" data-ng-bind-html="vm.model.total"></span>
@@ -125,20 +124,20 @@
                     <section class="col col-3">
                       <label class="input"> 
                         <input type="number" name="previousReading"   autocomplete="off"
-                          id="previousReading" placeholder="Previous Reading" data-ng-model="tx.electric.previousReading">
+                          id="previousReading" placeholder="Previous Reading" data-ng-model="tx.water.previousReading">
                       </label>
                       <div class="note">Water</div>
                     </section>
                     <section class="col col-3">
                       <label class="input"> <input type="text" name="currentReading" autocomplete="off"
-                        id="currentReading" placeholder="Current Reading" data-ng-model="tx.electric.currentReading">
+                        id="currentReading" placeholder="Current Reading" data-ng-model="tx.water.currentReading">
                       </label>
                       <div class="note">Water</div>
                     </section>
                   </div>
                   
-                  <span class="cart-expense-price-electric" data-ng-bind-html="tx.amount"></span> 
-                  <span class="cart-expense-price-water" data-ng-bind-html="tx.amount"></span>
+                  <span class="cart-expense-price-electric" data-ng-bind-html="tx.electric.amount"></span> 
+                  <span class="cart-expense-price-water" data-ng-bind-html="tx.water.amount"></span>
                 </li>
               </ul>
                 <div class="cart-bottom">
@@ -177,29 +176,36 @@
       </section>
       <div class="cash-form" data-ng-class="{'hide': !vm.payment.cash}">
        <div class="row">
-          <section class="col col-4">
+          <section class="col col-3">
             <label class="input" data-ng-class="{'state-error': vm.model.cash.cashreceivederror}"> 
             <input type="number" name="cash"   autocomplete="off"
-              id="cash" placeholder="Cash Recieved" data-ng-model="vm.model.cash.cashreceived" required>
+              id="cash" placeholder="Cash Recieved" data-ng-model="vm.model.cash.cashReceived" required>
             </label>
             <div class="note note-error" data-ng-class="{'hide' : !vm.model.cash.cashreceivederror}" data-ng-bind-html="vm.model.cashrecivedNote"></div>
           </section>
-           <section class="col col-4">
+           <section class="col col-3">
             <label class="input"> <input type="number" name="amtpaid" autocomplete="off"
-              id="amtpaid" placeholder="Amount Paid" data-ng-model="vm.model.cash.amtpaid" required>
+              id="amtpaid" placeholder="Amount Paid" data-ng-model="vm.model.cash.amountPaid" required>
             </label>
+            <div class="note">Amount Paid</div>
           </section>
           <section class="col col-2">
             <label class="input"> <input type="number" name="cashchange"
-              id="cashchange" placeholder="Cash Change" readonly data-ng-model="vm.model.cash.cashchanged">
+              id="cashchange" placeholder="Cash Change" readonly data-ng-model="vm.model.cash.cashChange">
             </label>
             <div class="note">Cash Change</div>
           </section>
           <section class="col col-2">
-            <label class="input"> <input type="number" name="cashchange"
-              id="cashchange" placeholder="Cash Change" readonly data-ng-model="vm.model.cash.baldep">
+            <label class="input"> <input type="number" name="deposit"
+              id="deposit" placeholder="Deposit" readonly data-ng-model="vm.model.cash.deposit">
             </label>
-            <div class="note">Balanace(-) / Deposit (+) </div>
+            <div class="note">Deposit</div>
+          </section>
+          <section class="col col-2">
+            <label class="input"> <input type="number" name="balance"
+              id="balance" placeholder="Balance" readonly data-ng-model="vm.model.cash.balance">
+            </label>
+            <div class="note">Balance </div>
           </section>
         </div>
       </div> 
