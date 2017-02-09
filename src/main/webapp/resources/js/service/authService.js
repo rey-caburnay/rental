@@ -1,8 +1,8 @@
 ﻿(function () {
 
-    var injectParams = ['$http', '$rootScope'];
+    var injectParams = ['$http', '$rootScope', '$window'];
 
-    var authFactory = function ($http, $rootScope) {
+    var authFactory = function ($http, $rootScope, $window) {
         var serviceBase = '/api/dataservice/',
             factory = {
                 loginPath: '/login',

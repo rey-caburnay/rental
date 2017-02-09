@@ -12,7 +12,7 @@ angular.module('rental').config(['$routeProvider', function ($routeProvider) {
   var viewBase = 'resources/ui/content/';
   $routeProvider
     // Home
-    .when("/", {
+    .when("/home", {
     	templateUrl: viewBase + "home.html",
     	controller: "TransactionController",
     	controllerAs:"vm"
@@ -27,7 +27,11 @@ angular.module('rental').config(['$routeProvider', function ($routeProvider) {
         controller: "CollectionController",
         controllerAs: "vm"
      })
-    //.when("#/faq", {templateUrl: "/faq", controller: "UserController"})
+    .when("/login", {templateUrl: viewBase + "login.html", 
+        controller: "LoginController",
+        controllerAs: "vm"
+    })
+    
 //    .when("/pricing", {templateUrl: "/pricing", controller: "PageCtrl"})
 //    .when("/services", {templateUrl: "/services", controller: "PageCtrl"})
 //    .when("/contact", {templateUrl: "/contact", controller: "PageCtrl"})
@@ -35,7 +39,7 @@ angular.module('rental').config(['$routeProvider', function ($routeProvider) {
     //.when("/blog", {templateUrl: "/blog", controller: "BlogCtrl"})
 //    .when("/blog/post", {templateUrl: "/content/blog_item", controller: "BlogCtrl"})
     // else 404
-    .otherwise({ redirectTo: '/' });
+    .otherwise({ redirectTo: '/login' });
 }]);
 
 
@@ -45,13 +49,13 @@ angular.module('rental').run(['$rootScope', '$location',
         //Client-side security. Server-side framework MUST add it's
         //own security as well since client-based security is easily hacked
         $rootScope.$on("$routeChangeStart", function (event, next, current) {
-//            if (next && next.$$route && next.$$route.secure) {
-//                if (!authService.user.isAuthenticated) {
-//                    $rootScope.$evalAsync(function () {
-//                        authService.redirectToLogin();
-//                    });
-//                }
-//            }
+            if (next && next.$$route && next.$$route.secure) {
+                if (!authService.user.isAuthenticated) {
+                    $rootScope.$evalAsync(function () {
+                        authService.redirectToLogin();
+                    });
+                }
+            }
         });
 
 }]);
