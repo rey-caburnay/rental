@@ -1,8 +1,22 @@
+/**
+ * Modal service using the sweetalert2 library
+ */
+
 (function() {
 	'use strict'
-	var injectParams = ['$uibModal','$location'];
-	var ModalService = function ($uibModal,$location) {
-		return {
+	var injectParams = ['$uibModal','$location','$window'];
+	var ModalService = function ($uibModal,$location, $window) {
+	    var options = {};
+
+	    //options.title = 'Are you sure?',
+        //options.text = "You won't be able to revert this!",
+        //options.type  = 'warning',
+        //options.showCancelButton = true,
+        //options.confirmButtonColor = '#3085d6',
+        //options.cancelButtonColor = '#d33',
+        //options.confirmButtonText = 'Yes, delete it!'
+          
+        return {
 //			show: function (model,size) {
 //				var options = {};
 //				options.animation = true;
@@ -18,6 +32,18 @@
 //				      console.log('Modal dismissed at: ' + new Date());
 //				    });	
 //			}
+		    showAndRedirect: function (message, location) {
+		      //  options.templateUrl = "resources/ui/" + location +".html";
+		        options.title = message;
+//		        options.onClose = function () {
+//		            $location.path("/"+location);
+//		        }
+		        swal(options).then(function () {
+//		            $location.path("/"+location);
+		            $window.location.href = '#/' + location;
+		        })
+		        
+		    },
 		    show: function (message,func) {
 		        swal(message,func);
 		    },
@@ -53,21 +79,21 @@
 
 // Please note that $uibModalInstance represents a modal window (instance) dependency.
 // It is not the same as the $uibModal service used above.
-(function() {
-	
-	var ModalInstanceCtrl = function ($uibModalInstance, model) {
-		var vm = this;
-		vm.model = model;
-		vm.header = model.header;
-		vm.ok = function () {
-			  $uibModalInstance.close('');
-		};
-
-		vm.cancel = function () {
-		  $uibModalInstance.dismiss('cancel');
-		};
-	}
-	ModalInstanceCtrl.$inject = ['$uibModalInstance', 'model'];
-	angular.module('rental').controller('ModalInstanceCtrl',ModalInstanceCtrl);
-})();
+//(function() {
+//	
+//	var ModalInstanceCtrl = function ($uibModalInstance, model) {
+//		var vm = this;
+//		vm.model = model;
+//		vm.header = model.header;
+//		vm.ok = function () {
+//			  $uibModalInstance.close('');
+//		};
+//
+//		vm.cancel = function () {
+//		  $uibModalInstance.dismiss('cancel');
+//		};
+//	}
+//	ModalInstanceCtrl.$inject = ['$uibModalInstance', 'model'];
+//	angular.module('rental').controller('ModalInstanceCtrl', ModalInstanceCtrl);
+//})();
 

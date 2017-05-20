@@ -73,6 +73,7 @@
     <!-- controllers -->
     <script src="<c:url value='/resources/js/controller/user_controller.js' />"></script>
     <script src="<c:url value='/resources/js/controller/transaction.js' />"></script>
+    <script src="<c:url value='/resources/js/controller/registration.js' />"></script>
     <script src="<c:url value='/resources/js/controller/collection.js' />"></script>
   </body>
 </html>

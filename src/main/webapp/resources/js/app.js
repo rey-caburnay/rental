@@ -18,7 +18,12 @@ angular.module('rental').config(['$routeProvider', function ($routeProvider) {
     	controllerAs:"vm"
     })
     .when("/reg", {
-    	templateUrl: viewBase + "transaction.html",
+    	templateUrl: viewBase + "registration.html",
+    	controller: "RegistrationController",
+    	controllerAs: "vm"
+    })
+     .when("/rent", {
+    	templateUrl: viewBase + "rent.html",
     	controller: "TransactionController",
     	controllerAs: "vm"
     })

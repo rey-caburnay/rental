@@ -33,9 +33,9 @@ public class TransactionServiceTest {
     @Test
     public void createCollection() {
         Collection collection = new Collection();
-        collection.setTxId(1);
-        collection.setAptId(1);
-        collection.setRoomId(1);
+//        collection.setTxId(1);
+//        collection.setAptId(1);
+//        collection.setRoomId(1);
         collection.setAmountPaid(2000d);
         collection.setBalance(0d);
         collection.setDeposit(0d);
