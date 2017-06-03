@@ -18,11 +18,11 @@
           class="glyphicon glyphicon-refresh"></i>
         </label>
       </section>
-      <div class="row">
+      <div class="row" data-ng-class="{'hide': !vm.showRoomInput}">
         <section class="col col-5">
           <label class="select" for="rentFor"> <select
             id="selectbasic" name="rentFor"
-            ng-model="vm.model.apartment"
+            data-ng-model="vm.model.apartment"
             data-ng-options="apt as apt.name for apt in vm.apartments track by apt.id"
             class="form-control"
             data-ng-change="vm.getRooms(vm.model.apartment.id)" required>
@@ -33,8 +33,8 @@
         <section class="col col-5">
           <label class="select"> <select id="selectbasic"
             name="room" data-ng-model="vm.model.room"
-            data-ng-options="rm as rm.label  for rm in vm.rooms track by rm.id"
-            class="form-control" data-ng-required="true">
+            data-ng-options="rm as 'Room#' + rm.roomNo  for rm in vm.rooms track by rm.id"
+            class="form-control" data-ng-change="vm.getRate(vm.model.room)" data-ng-required="true">
               <option value="" disabled>-- choose room --</option>
           </select>
           </label>
@@ -47,7 +47,7 @@
         </section>
 
       </div>
-      <div class="row">
+      <div class="row" data-ng-class="{'hide': !vm.showRoomInput}">
         <section class="col col-5">
           <label class="label">Period From</label> <label class="input">
             <i class="icon-prepend fa fa-calendar"></i> <input
@@ -66,18 +66,19 @@
         </section>
         <section class="col col-2">
           <button type="button" class="btn-acquired"
-            data-ng-click="vm.submit()">Acquire</button>
+            data-ng-click="vm.acquire()">Acquire</button>
         </section>
       </div>
-      <section>
-        <header>Room(s) Acquired</header>
+      <section data-ng-class="{'hide': !vm.model.name}" >
+        <header>Room(s) Acquired <span class="add-item" data-ng-click="vm.showAptEntry()">
+        <i class="fa fa-plus"></i></span></header>
         <table class="table">
           <thead>
             <tr>
               <th>Apartment</th>
               <th>Room</th>
               <th>Due Date</th>
-              <th>Balance</th>
+              <th>Amount</th>
               <th></th>
             </tr>
           </thead>
@@ -86,13 +87,13 @@
               <td></td>
               <td></td>
               <td>Existing Balance</td>
-              <td>$180</td>
+              <td data-ng-bind-html="vm.model.existingBalance"></td>
             </tr>
             <tr>
               <td></td>
               <td></td>
               <td>Total</td>
-              <td>$180</td>
+              <td data-ng-bind-html="vm.model.total"></td>
             </tr>
           </tfoot>
           <tbody>

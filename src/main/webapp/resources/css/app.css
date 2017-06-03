@@ -366,3 +366,9 @@ button.btn-acquired {
 .red {
 	color:#ab1818;
 }
+
+.add-item {
+	position:absolute;
+	padding:5px;
+	color:#4c4c58;
+}

@@ -6,16 +6,15 @@
 
     var RentController = function($scope, $filter, transactionService,
             adminService, modalService, $location) {
-        var vm = this, 
-            collection = {}, // model to map to services
-            paymentTypes = [ "cash", "check", "online" ], 
-            COLLECTION_DAYS = 30;
+        var vm = this, collection = {}, // model to map to services
+        paymentTypes = [ "cash", "check", "online" ], COLLECTION_DAYS = 30;
 
         vm.services = [ adminService, transactionService, modalService ];
         vm.popup = modalService;
         vm._selected;
         vm.model = {}; // model for ui;
         vm.model.total = 0;
+        vm.model.existingBalance = 0;
         vm.model.paymentType = paymentTypes[0];
         vm.label = {
             deposit : "Expenses",
@@ -30,7 +29,10 @@
             master : false
         };
 
+        vm.showRoomInput = false;
         vm.model.rooms = [];
+//        vm.apartments = getApartments();
+        getApartments();
         vm.renters = getRenters();
 
         vm.initModel = function() {
@@ -45,6 +47,9 @@
             }
         }
         vm.initModel();
+        vm.getRooms = function(aptId) {
+            getRooms(aptId);
+        };
         vm.submit = function() {
             submit();
         }
@@ -55,43 +60,14 @@
             },
             getterSetter : true
         };
-        vm.model.transactions = [
-            {amountPaid:0,
-             aptName:'apt1',
-             room:{
-                 description:'description',
-                 roomType:'apt',
-                 roomNo:1
-             }},
-             {amountPaid:0,
-                 aptName:'apt1',
-                 room:{
-                     description:'description',
-                     roomType:'apt',
-                     roomNo:1
-                 }},
-                 {amountPaid:0,
-                     aptName:'apt1',
-                     room:{
-                         description:'description',
-                         roomType:'apt',
-                         roomNo:1
-                     }},
-                     {amountPaid:0,
-                         aptName:'apt1',
-                         room:{
-                             description:'description',
-                             roomType:'apt',
-                             roomNo:1
-                         }},
-                         {amountPaid:0,
-                             aptName:'apt1',
-                             room:{
-                                 description:'description',
-                                 roomType:'apt',
-                                 roomNo:1
-                             }},
-                                    ]
+        
+        /**
+         * flag to show the room entry
+         */
+        vm.showAptEntry = function() {
+            vm.showRoomInput = true;
+        }
+
         vm.setRenter = function(renter) {
             vm.initModel();
             vm.model.renterId = renter.id;
@@ -101,6 +77,10 @@
             vm.model.firstname = renter.firstName;
             vm.model.address = renter.address;
             vm.model.transactions = renter.transactions;
+            if (vm.model.transactions) {
+                vm.showRoomInput = false;
+            }
+            vm.computeTotal();
         }
         vm.computeAmount = function() {
             var diff = vm.model.amount - vm.model.roomRate;
@@ -129,8 +109,8 @@
             vm.model.apartment = room.aptName;
             newCollectionDate.setDate(dueDate.getDate() + COLLECTION_DAYS);
             vm.model.collectionDate = new Date(newCollectionDate);
-            vm.model.total = vm.model.balance - vm.model.deposit
-                    - vm.model.amount;
+//            vm.model.total = vm.model.balance - vm.model.deposit
+//                    - vm.model.amount;
         }
 
         vm.paymentType = function() {
@@ -166,107 +146,123 @@
             if (index > -1) {
                 vm.model.transactions.splice(index, 1);
             }
-            computeRooms(vm.model.transactions);
+            vm.computeTotal();
         }
+        /**
+         * assign room to customer
+         */
+        vm.acquire = function () {
+            var length = 0, tx = {};
+            if (vm.model.transactions) {
+                length = vm.model.transactions.length;    
+            }
+            tx.aptName = vm.model.apartment.aptName;
+            tx.room = vm.model.room;
+            tx.dueDate = vm.endDate;
+            tx.amount = vm.model.room.rate;
+            vm.model.rate = vm.model.room.rate;
+            vm.model.transactions[length + 1] = tx;
+            vm.computeTotal();
+        }
+        /** 
+         * display the rate of the room when 
+         * room combo box is change 
+         */
+        vm.getRate = function (room) {
+            vm.model.rate = room.rate;
+        }
+        
         vm.submit = function() {
-
             submit();
         }
 
-        vm.toggleFullPaid = function($index) {
-            validateCash();
-        }
-
-        $scope
-                .$watch(
-                        function(scope) {
-                            return {
-                                cash : scope.vm.model.cash,
-                                items : scope.vm.model.transactions
-                            };
-                        },
-                        function(newValue, oldValue) {
-                            vm.model.cash.baldep = 0;
-                            vm.model.cash.cashreceivederror = false;
-                            vm.model.fullPaidError = false;
-                            if (vm.model.cash.amountPaid > (vm.model.cash.cashReceived || 0)) {
-                                vm.model.cash.cashreceivederror = true;
-                                vm.model.cashrecivedNote = 'Cash Received is smaller than the Amount paid';
-                            }
-                            vm.model.cash.cashChange = vm.model.cash.cashReceived
-                                    - vm.model.cash.amountPaid;
-                            if (vm.model.cash.cashChange < 0) {
-                                vm.model.cash.cashChange = 0;
-                            }
-                            validateCash();
-                        }, true)
-
-        function validateCash() {
-            var total = 0, hasPaid = false;
-            vm.model.fullPaidError = false;
+        $scope.$watch(
+            function(scope) {
+                return {
+                    cash : scope.vm.model.cash,
+                    items : scope.vm.model.transactions
+                };
+            },
+            function(newValue, oldValue) {
+                vm.model.cash.baldep = 0;
+                vm.model.cash.balance = 0;
+                vm.model.cash.deposit = 0;
+                vm.model.cash.cashreceivederror = false;
+                vm.model.fullPaidError = false;
+                if (vm.model.cash.amountPaid > (vm.model.cash.cashReceived || 0)) {
+                    vm.model.cash.cashreceivederror = true;
+                    vm.model.cashrecivedNote = 'Cash Received is smaller than the Amount paid';
+                }
+                vm.model.cash.cashChange = vm.model.cash.cashReceived
+                        - vm.model.cash.amountPaid;
+                if (vm.model.cash.cashChange < 0) {
+                    vm.model.cash.cashChange = 0;
+                }
+                if (vm.model.cash.amountPaid < vm.model.total) {
+                    vm.model.cash.balance =  vm.model.total - vm.model.cash.amountPaid;
+                }
+                if (vm.model.cash.amountPaid > vm.model.total) {
+                    vm.model.cash.deposit =  vm.model.cash.amountPaid - vm.model.total;
+                }
+                
+            }, true)
+            
+            vm.computeTotal = function () {
+            var total = 0;
             vm.model.cash.amountPaid = 0;
             vm.model.cash.balance = 0;
             vm.model.cash.deposit = 0;
             if (vm.model.transactions) {
-                // search if there is input in amount paid
+                vm.model.total = vm.model.total + vm.model.existingBalance;
                 for (var i = 0; i < vm.model.transactions.length; i++) {
-                    // search full paid items
-                    console.log("amount paid :"
-                            + vm.model.transactions[i].amountPaid)
-                    if (vm.model.transactions[i].amountPaid
-                            && vm.model.transactions[i].amountPaid > 0) {
-                        hasPaid = true;
-                        vm.model.cash.amountPaid = vm.model.cash.amountPaid
-                                + vm.model.transactions[i].amountPaid;
-                    }
-                    if (vm.model.transactions[i].amountPaid
-                            && vm.model.transactions[i].amountPaid >= vm.model.transactions[i].amount) {
-                        vm.model.transactions[i].isFullPaid = true;
-                        vm.model.cash.deposit += vm.model.transactions[i].amountPaid
-                                - vm.model.transactions[i].amount;
-                        vm.model.transactions[i].deposit = vm.model.transactions[i].amountPaid
-                                - vm.model.transactions[i].amount;
-                        vm.model.transactions[i].balance = 0;
-
-                    } else {
-                        vm.model.transactions[i].isFullPaid = false;
-                        vm.model.cash.balance += vm.model.transactions[i].amount
-                                - vm.model.transactions[i].amountPaid;
-                        vm.model.transactions[i].balance = vm.model.transactions[i].amount
-                                - vm.model.transactions[i].amountPaid;
-                        vm.model.transactions[i].deposit = 0;
-                    }
-                    console.log("amount paid :"
-                            + vm.model.transactions[i].amountPaid + "deposit: "
-                            + vm.model.transactions[i].balance + "balance :"
-                            + vm.model.transactions[i].balance)
-                }
-                // possible partial payments
-                if (!hasPaid) {
-                    vm.model.fullPaidError = true;
+                    vm.model.total = vm.model.total + vm.model.transactions[i].amount;
                 }
             }
+           
         }
 
+
+/*************************** functions that need to interact with services ******************/
+        /**
+         * get all the available renters
+         */    
+ 
         function getRenters() {
             var renter = '';
             return adminService
-                    .getRenters()
-                    .then(
-                            function(response) {
-                                if (response.result.length > 0) {
-                                    for (var i = 0; i < response.result.length; i++) {
-                                        renter = response.result[i];
-                                        response.result[i].name = (renter.lastName || '')
-                                                + " "
-                                                + (renter.firstName || '')
-                                                + " " + (renter.initial || '')
-                                    }
-                                }
-                                return response.result;
-                            })
+                .getRenters()
+                .then(
+                    function(response) {
+                        if (response.result.length > 0) {
+                            for (var i = 0; i < response.result.length; i++) {
+                                renter = response.result[i];
+                                response.result[i].name = (renter.lastName || '')
+                                        + " "
+                                        + (renter.firstName || '')
+                                        + " " + (renter.initial || '')
+                            }
+                        }
+                        return response.result;
+                    })
         }
-
+        
+        /**
+         * get rooms by apartment ID
+         */
+        function getRooms(aptId) {
+            return adminService.getRooms(aptId).then(
+                    function(response) {
+                        vm.rooms=[];
+                        for (var i = 0; i < response.result.length; i++) {
+                            vm.rooms.push(response.result[i]);
+                        }
+                        return vm.rooms;
+                    });
+        }
+        
+        /**
+         * get Rooms by renter id
+         */
         function getRoomsByRenter(renterId) {
             return transactionService.getRoomsByRenter(renterId).then(
                     function(response) {
@@ -278,7 +274,21 @@
                         return vm.model.rooms;
                     });
         }
-
+        
+        /**
+         * fetch all the available apartments
+         */
+        function getApartments() {
+            return adminService.getApartments().then(function(response) {
+                vm.apartments = response.result;
+//                return response.result;
+            });
+        }
+        
+        /**
+         * fetch the list of available apartments
+         * by apartment Id
+         */
         function getApartment() {
             return adminService.getApartment(aptId).then(
                     function(response) {
@@ -296,6 +306,9 @@
                     });
         }
 
+        /**
+         * submit the form
+         */
         function submit() {
             if (vm.model.cash.cashreceivederror || vm.model.fullPaidError) {
                 vm.popup

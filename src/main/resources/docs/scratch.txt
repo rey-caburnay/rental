@@ -1,0 +1,41 @@
+//        vm.model.transactions = [ {
+//            amountPaid : 0,
+//            aptName : 'apt1',
+//            room : {
+//                description : 'description',
+//                roomType : 'apt',
+//                roomNo : 1
+//            }
+//        }, {
+//            amountPaid : 0,
+//            aptName : 'apt1',
+//            room : {
+//                description : 'description',
+//                roomType : 'apt',
+//                roomNo : 1
+//            }
+//        }, {
+//            amountPaid : 0,
+//            aptName : 'apt1',
+//            room : {
+//                description : 'description',
+//                roomType : 'apt',
+//                roomNo : 1
+//            }
+//        }, {
+//            amountPaid : 0,
+//            aptName : 'apt1',
+//            room : {
+//                description : 'description',
+//                roomType : 'apt',
+//                roomNo : 1
+//            }
+//        }, {
+//            amountPaid : 0,
+//            aptName : 'apt1',
+//            room : {
+//                description : 'description',
+//                roomType : 'apt',
+//                roomNo : 1
+//            }
+//        }, ]

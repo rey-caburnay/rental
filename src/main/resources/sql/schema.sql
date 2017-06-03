@@ -184,3 +184,12 @@ CREATE TABLE `tx_sms` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+/*********************** mst_balance ********************/
+CREATE TABLE `mst_balance` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `renterId` int(11) DEFAULT NULL,
+  `amount` double(9,4) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
