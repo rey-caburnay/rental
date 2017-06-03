@@ -9,9 +9,10 @@
      <link href="<c:url value='/resources/css/nav.css' />" rel="stylesheet"></link>
      <link href="<c:url value='/resources/css/main.css' />" rel="stylesheet"></link>
      <link href="<c:url value='/resources/css/sweetalert.css' />" rel="stylesheet"></link>
-     <link href="<c:url value='/resources/css/sky-tabs.css' />" rel="stylesheet"></link>
-     <link href="<c:url value='/resources/css/skyform.css' />" rel="stylesheet"></link>
-     <link href="<c:url value='/resources/css/custom-sky-form.css' />" rel="stylesheet"></link>
+     <link href="<c:url value='/resources/css/simple-tabs.css' />" rel="stylesheet"></link>
+     <link href="<c:url value='/resources/css/simpleform.css' />" rel="stylesheet"></link>
+     <link href="<c:url value='/resources/css/custom-simple-form.css' />" rel="stylesheet"></link>
+     <link href="<c:url value='/resources/css/responstable.css' />" rel="stylesheet"></link>
      <link href="<c:url value='/resources/css/font-awesome.min.css' />" rel="stylesheet"></link>
 
   </head>
@@ -74,6 +75,7 @@
     <script src="<c:url value='/resources/js/controller/user_controller.js' />"></script>
     <script src="<c:url value='/resources/js/controller/transaction.js' />"></script>
     <script src="<c:url value='/resources/js/controller/registration.js' />"></script>
+    <script src="<c:url value='/resources/js/controller/rental.js' />"></script>
     <script src="<c:url value='/resources/js/controller/collection.js' />"></script>
   </body>
 </html>

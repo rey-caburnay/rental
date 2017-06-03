@@ -70,7 +70,7 @@ body, .form-control{
 .cart-top {
   position: relative;
   z-index: 1;
-  height: 35px;
+  height: 50px;
   line-height: 24px;
   padding: 8px 15px;
   font-size: 18px;
@@ -324,6 +324,15 @@ button.btn-u {
     text-shadow:darkblue;
 }
 
+button.btn-acquired {
+	height:30px;
+    width:80px;
+    font-weight:600;
+    text-shadow:darkblue;
+    position:relative;
+    top:32px;
+}
+
 .cart-item-expense {
   position: relative;
   padding: 10px 80px 10px 15px;
@@ -352,4 +361,8 @@ button.btn-u {
 }
 .cart-item-expense .row .note {
   font-size:15px;
+}
+
+.red {
+	color:#ab1818;
 }

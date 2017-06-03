@@ -1,149 +1,302 @@
-<div class="generic-container">
-  <!-- 		<div class="panel panel-default"> -->
-  <div class="panel-heading">
-    <span class="lead">Building Rental</span>
-  </div>
-  <div class="row clearfix">
-    <div
-      class="col-xs-11 col-sm-12 col-md-8 col-lg-9  column col-sm-offset-0 col-md-offset-0 col-lg-offset-1">
-      <form class="form-horizontal" name="regForm">
-        <!-- Form Name -->
-        <!-- Text input-->
-        <div class="form-group">
-          <label class="col-md-3 control-label" for="lastName">Renter's
-            Name</label>
-          <div class="col-md-9"
-            data-ng-class="{'has-error': regForm.lastName.$error.required}">
-            <input id="textinput" name="lastName" type="text"
-              placeholder="Lastname" class="form-control input-md"
-              data-ng-model="vm.model.lastname" required>
-          </div>
+<div class="generic-container" id="collection">
+  <form action="#" id="simple-form" class="simple-form"
+    name="rentalForm">
+    <header>Building Rental Form</header>
+    <fieldset>
+      <section>
+        <label class="input"> <i class="icon-prepend fa fa-user"></i>
+          <input type="text" autocomplete="off" name="lname"
+          placeholder="Last Name" ng-model="vm.model.name"
+          ng-model-options="vm.modelOptions"
+          placeholder="Lastname Firstname Initial"
+          uib-typeahead="renter as renter.name for renter in vm.renters"
+          typeahead-editable="false"
+          typeahead-on-select="vm.setRenter($item)"
+          typeahead-loading="Loadingmembers"
+          typeahead-no-results="noResults" class="form-control" required>
+          <i ng-show="Loadingmembers"
+          class="glyphicon glyphicon-refresh"></i>
+        </label>
+      </section>
+      <div class="row">
+        <section class="col col-5">
+          <label class="select" for="rentFor"> <select
+            id="selectbasic" name="rentFor"
+            ng-model="vm.model.apartment"
+            data-ng-options="apt as apt.name for apt in vm.apartments track by apt.id"
+            class="form-control"
+            data-ng-change="vm.getRooms(vm.model.apartment.id)" required>
+              <option value="">-- choose apartment --</option>
+          </select>
+          </label>
+        </section>
+        <section class="col col-5">
+          <label class="select"> <select id="selectbasic"
+            name="room" data-ng-model="vm.model.room"
+            data-ng-options="rm as rm.label  for rm in vm.rooms track by rm.id"
+            class="form-control" data-ng-required="true">
+              <option value="" disabled>-- choose room --</option>
+          </select>
+          </label>
+        </section>
+        <section class="col col-2">
+          <label class="input"><i
+            class="icon-prepend fa fa-money"></i><input type="text"
+            name="amount" id="amount" placeholder="Rate"
+            data-ng-model="vm.model.rate"> </label>
+        </section>
+
+      </div>
+      <div class="row">
+        <section class="col col-5">
+          <label class="label">Period From</label> <label class="input">
+            <i class="icon-prepend fa fa-calendar"></i> <input
+            id="dateInput" name="rentStart" type="date"
+            placeholder="Period From" class="form-control input-md"
+            data-ng-model="vm.startDate" required>
+          </label>
+        </section>
+        <section class="col col-5">
+          <label class="label">To</label> <label class="input">
+            <i class="icon-prepend fa fa-calendar"></i> <input
+            id="textinput" name="rentTo" type="date"
+            placeholder="Period TO" class="form-control input-md"
+            data-ng-model="vm.endDate">
+          </label>
+        </section>
+        <section class="col col-2">
+          <button type="button" class="btn-acquired"
+            data-ng-click="vm.submit()">Acquire</button>
+        </section>
+      </div>
+      <section>
+        <header>Room(s) Acquired</header>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Apartment</th>
+              <th>Room</th>
+              <th>Due Date</th>
+              <th>Balance</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tfoot>
+            <tr>
+              <td></td>
+              <td></td>
+              <td>Existing Balance</td>
+              <td>$180</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td></td>
+              <td>Total</td>
+              <td>$180</td>
+            </tr>
+          </tfoot>
+          <tbody>
+            <tr data-ng-repeat="tx in vm.model.transactions">
+              <td data-ng-bind-html="tx.aptName"></td>
+              <td data-ng-bind-html="'Room#' + tx.room.roomNo"></td>
+              <td data-ng-bind-html="tx.dueDate"></td>
+              <td data-ng-bind-html="tx.amount"></td>
+              <td data-ng-click="vm.removeItem($index)" class="red"><i
+                class="fa fa-times"></i></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+    </fieldset>
+    <fieldset>
+      <section>
+        <div class="inline-group">
+          <label class="radio"><input type="radio"
+            name="radio-cash" data-ng-checked="vm.payment.cash"
+            value="cash" data-ng-model="vm.model.paymentType"
+            data-ng-change="vm.paymentType()"><i
+            class="rounded-x"></i>Cash</label> <label class="radio"><input
+            type="radio" name="radio-check" value="check"
+            data-ng-checked="vm.payment.check"
+            data-ng-model="vm.model.paymentType"
+            data-ng-change="vm.paymentType()"><i
+            class="rounded-x"></i>Check</label> <label class="radio"><input
+            type="radio" name="radio-credit"
+            data-ng-checked="vm.payment.master" value="master"
+            data-ng-model="vm.model.paymentType"
+            data-ng-change="vm.paymentType()"><i
+            class="rounded-x"></i>Visa</label> <label class="radio"><input
+            type="radio" name="radio-credit" value="visa"
+            data-ng-checked="vm.payment.visa"
+            data-ng-model="vm.model.paymentType"
+            data-ng-change="vm.paymentType()"><i
+            class="rounded-x"></i>MasterCard</label> <label class="radio"><input
+            type="radio" name="radio-paypal" value="paypal"
+            data-ng-checked="vm.payment.paypal"
+            data-ng-model="vm.model.paymentType"
+            data-ng-change="vm.paymentType()"><i
+            class="rounded-x"></i>PayPal</label>
         </div>
-        <fieldset>
-          <!-- Select Basic -->
-          <div class="form-group">
-<!--             <label class="col-md-3 control-label" for="rentType">Rent -->
-<!--               Type</label> -->
-<!--             <div class="col-md-9" -->
-<!--               data-ng-class="{'has-error': regForm.rentType.$error.required}"> -->
-<!--               <select id="selectbasic" name="rentType" -->
-<!--                 data-ng-model="vm.model.txType" -->
-<!--                 data-ng-options="type.label for type in vm.rentType" -->
-<!--                 class="form-control" required> -->
-<!--                 <option value="">-- choose rent type --</option> -->
-<!--               </select> -->
-<!--             </div> -->
-<!--           </div> -->
-          <!-- Multiple Radios (inline) -->
-          <div class="form-group ">
-            <label class="col-md-3 control-label" for="radios">Payment
-              Type</label>
-            <div class="col-md-9"
-              data-ng-class="{'has-error': regForm.radios.$error.required}">
-              <label class="radio-inline" for="radios-0"> <input
-                type="radio" name="radios" id="radios-0" value="cash"
-                checked="checked" data-ng-model="vm.model.paymentType"
-                ng-required="!vm.model.paymentType">Cash
-              </label> <label class="radio-inline" for="radios-1"> <input
-                type="radio" name="radios" id="radios-1" value="check"
-                data-ng-model="vm.model.paymentType"
-                ng-required="!vm.model.paymentType"> Check
-              </label> <label class="radio-inline" for="radios-1"> <input
-                type="radio" name="radios" id="radios-2" value="online"
-                data-ng-model="vm.model.paymentType"
-                ng-required="!vm.model.paymentType"> Online
-              </label>
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="col-md-3 control-label" for="selectbasic">Amount</label>
-            <div class="col-md-6"
-              data-ng-class="{'has-error': regForm.amount.$error.required}">
-              <input id="textinput" name="amount" type="text"
-                placeholder="placeholder" class="form-control input-md"
-                data-ng-model="vm.model.amount" required>
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="col-md-3 control-label" for="rentFor">Rent
-              For</label>
-            <div class="col-md-3"
-              data-ng-class="{'has-error': regForm.rentFor.$error.required}">
-              <select id="selectbasic" name="rentFor"
-                ng-model="vm.model.apartment"
-                data-ng-options="apt as apt.name for apt in vm.apartments track by apt.id"
-                class="form-control"
-                data-ng-change="vm.getRooms(vm.model.apartment.id)"
-                required>
-                <option value="">-- choose apartment --</option>
-              </select>
-            </div>
-            <label class="col-md-3 control-label" for="rentFor">Room</label>
-            <div class="col-md-3"
-              data-ng-class="{'has-error': regForm.room.$error.required}">
-              <select id="selectbasic" name="room"
-                data-ng-model="vm.model.room"
-                data-ng-options="rm as rm.label  for rm in vm.rooms track by rm.id"
-                class="form-control" data-ng-required="true">
-                <option value="">-- choose room --</option>
-              </select>
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="col-md-3 control-label" for="rentStart">Period From
-              </label>
-            <div class="col-md-3"
-              data-ng-class="{'has-error': regForm.rentStart.$error.required}">
-              <input id="dateInput" name="rentStart" type="date"
-                placeholder="MM/dd/yyyy" class="form-control input-md"
-                data-ng-model="vm.startDate" required>
-            </div>
-            <label class="col-md-3 control-label" for="rentStart">To
-              </label>
-            <div class="col-md-3">
-              <input id="textinput" name="rentTo" type="date"
-                placeholder="MM/dd/yyyy" class="form-control input-md"
-                data-ng-model="vm.endDate">
-            </div>
-<!--             <div class="col-md-3"> -->
-<!--               <input id="textinput" name="rentTo" type="date" -->
-<!--                 placeholder="MM/dd/yyyy" class="form-control" -->
-<!--                 data-ng-model="vm.collectionDate"> -->
-<!--             </div> -->
-          </div>
-        </fieldset>
-        <div class="form-group">
-          <label class="col-md-3 control-label" for="selectbasic">Received
-            By</label>
-          <div class="col-md-6">
-            <input id="textinput" name="textinput" type="text"
-              placeholder="placeholder" class="form-control input-md"
-              data-ng-model="vm.model.receivedBy">
-          </div>
+      </section>
+      <div class="cash-form" data-ng-class="{'hide': !vm.payment.cash}">
+        <div class="row">
+          <section class="col col-3">
+            <label class="input"
+              data-ng-class="{'state-error': vm.model.cash.cashreceivederror}">
+              <input type="number" name="cash" autocomplete="off"
+              id="cash" placeholder="Cash Recieved"
+              data-ng-model="vm.model.cash.cashReceived" required>
+            </label>
+            <div class="note note-error"
+              data-ng-class="{'hide' : !vm.model.cash.cashreceivederror}"
+              data-ng-bind-html="vm.model.cashrecivedNote"></div>
+          </section>
+          <section class="col col-3">
+            <label class="input"> <input type="number"
+              name="amtpaid" autocomplete="off" id="amtpaid"
+              placeholder="Amount Paid"
+              data-ng-model="vm.model.cash.amountPaid" required>
+            </label>
+            <div class="note">Amount Paid</div>
+          </section>
+          <section class="col col-2">
+            <label class="input"> <input type="number"
+              name="cashchange" id="cashchange"
+              placeholder="Cash Change" readonly
+              data-ng-model="vm.model.cash.cashChange">
+            </label>
+            <div class="note">Cash Change</div>
+          </section>
+          <section class="col col-2">
+            <label class="input"> <input type="number"
+              name="deposit" id="deposit" placeholder="Deposit" readonly
+              data-ng-model="vm.model.cash.deposit">
+            </label>
+            <div class="note">Deposit</div>
+          </section>
+          <section class="col col-2">
+            <label class="input"> <input type="number"
+              name="balance" id="balance" placeholder="Balance" readonly
+              data-ng-model="vm.model.cash.balance">
+            </label>
+            <div class="note">Balance</div>
+          </section>
         </div>
-        <!-- Textarea -->
-        <div class="form-group">
-          <label class="col-md-3 control-label" for="textarea">Note</label>
-          <div class="col-md-9">
-            <textarea class="form-control" id="textarea" name="textarea"
-              data-ng-model="vm.model.note">default text</textarea>
-          </div>
+      </div>
+      <div class="check-form"
+        data-ng-class="{'hide': !vm.payment.check}">
+        <div class="row">
+          <section class="col col-4">
+            <label class="input"> <input type="text"
+              name="checknumber" id="checknumber"
+              placeholder="Check Number"
+              data-ng-model="vm.model.check.checknumber">
+            </label>
+          </section>
+          <section class="col col-4">
+            <label class="input"> <input type="text" name="amt"
+              id="amt" placeholder="Amount"
+              data-ng-model="vm.model.check.cashreceived">
+            </label>
+          </section>
+          <section class="col col-4">
+            <label class="input"> <input type="text"
+              name="duedate" id="duedate" placeholder="Due Date"
+              data-ng-model="vm.model.check.duedate">
+            </label>
+          </section>
         </div>
-        <!-- Button (Double) -->
-        <div class="form-group">
-          <label class="col-md-3 control-label" for="button1id"></label>
-          <div class="col-md-3">
-            <button id="button1id" name="button1id"
-              class="btn btn-success btn-lg" data-ng-click="vm.submit()">Save</button>
-          </div>
-          <label class="col-md-3 control-label" for="button2id"></label>
-          <div class="col-md-3">
-            <button id="button2id" name="button2id"
-              class="btn btn-danger btn-lg" data-ng-click="save()">Cancel</button>
-          </div>
+        <section>
+          <label class="input"> <input type="text" name="name"
+            id="name" placeholder="Name">
+          </label>
+        </section>
+        <section>
+          <label class="input"> <input type="text"
+            name="amtinwords" id=""
+            amtinwords"" placeholder="Amount in Words"
+            data-ng-model="vm.model.check.amtinwords">
+          </label>
+        </section>
+      </div>
+      <div class="credit-form"
+        data-ng-class="{'hide': !vm.payment.credit}">
+        <section>
+          <label class="input"> <input type="text" name="name"
+            placeholder="Name on card"
+            data-ng-model="vm.model.credit.name">
+          </label>
+        </section>
+        <div class="row">
+          <section class="col col-10">
+            <label class="input"> <input type="text" name="card"
+              id="card" placeholder="Card number"
+              data-ng-model="vm.model.credit.cardnumber">
+            </label>
+          </section>
+          <section class="col col-2">
+            <label class="input"> <input type="text" name="cvv"
+              id="cvv" placeholder="CVV2"
+              data-ng-model="vm.model.credit.ccv">
+            </label>
+          </section>
         </div>
-      </form>
-    </div>
-  </div>
+        <div class="row">
+          <label class="label col col-4">Expiration date</label>
+          <section class="col col-4">
+            <label class="input"> <input type="text"
+              name="month" id="month" placeholder="Month"
+              data-ng-model="vm.model.credit.month">
+            </label>
+          </section>
+          <section class="col col-4">
+            <label class="input"> <input type="text" name="year"
+              id="year" placeholder="Year"
+              data-ng-model="vm.model.credit.year">
+            </label>
+          </section>
+        </div>
+      </div>
+      <div class="paypal-form"
+        data-ng-class="{'hide': !vm.payment.paypal}">
+        <div class="row">
+          <section class="col col-6">
+            <label class="input"> <input type="text"
+              name="email" id="email" placeholder="Email Address"
+              data-ng-model="vm.model.paypal.email">
+            </label>
+          </section>
+          <section class="col col-6">
+            <label class="input"> <input type="password"
+              name="password" id="password" placeholder="Password"
+              data-ng-model="vm.model.paypal.password">
+            </label>
+          </section>
+        </div>
+      </div>
+    </fieldset>
+    <fieldset>
+      <div class="row">
+        <section class="col col-4">
+          <label class="input"> <i
+            class="icon-prepend fa fa-user"></i><input type="text"
+            name="receivedBy" id=""
+            receivedBy"" placeholder="Cash Received By"
+            data-ng-model="vm.model.receivedBy">
+          </label>
+        </section>
+        <section class="col col-8">
+          <label class="input"> <input type="text" name="note"
+            id="note" placeholder="Note" data-ng-model="vm.model.note">
+          </label>
+        </section>
+      </div>
+    </fieldset>
+    <footer>
+      <button type="button" class="btn-u" data-ng-click="vm.submit()">Process</button>
+    </footer>
+  </form>
+  <!-- sky form end -->
 </div>
 <!-- /.container -->

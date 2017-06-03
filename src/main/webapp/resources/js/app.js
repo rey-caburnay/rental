@@ -24,7 +24,7 @@ angular.module('rental').config(['$routeProvider', function ($routeProvider) {
     })
      .when("/rent", {
     	templateUrl: viewBase + "rent.html",
-    	controller: "TransactionController",
+    	controller: "RentController",
     	controllerAs: "vm"
     })
     // Pages
