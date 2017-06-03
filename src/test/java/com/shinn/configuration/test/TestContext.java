@@ -14,8 +14,10 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.core.env.Environment;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.transaction.PlatformTransactionManager;
 
 import com.shinn.service.UserService;
 import com.shinn.service.UserServiceImpl;
@@ -56,6 +58,11 @@ public class TestContext {
     public Connection connection() throws SQLException {
         Connection connection = dataSource().getConnection();
         return connection;
+    }
+    
+    @Bean
+    public PlatformTransactionManager txManager() {
+        return new DataSourceTransactionManager(dataSource());
     }
    
 }

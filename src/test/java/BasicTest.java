@@ -48,7 +48,7 @@ public class BasicTest {
 //        T type = tx.getClass();
         try {
             
-            String parsedSql = NamedParameterParser.parse(sql, indexMap);
+            //String parsedSql = NamedParameterParser.parse(sql, indexMap);
             
             
             for (PropertyDescriptor pd : Introspector.getBeanInfo(tx.getClass()).getPropertyDescriptors()) {

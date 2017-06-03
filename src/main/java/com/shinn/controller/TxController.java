@@ -19,6 +19,7 @@ import com.shinn.dao.factory.AbstractDaoImpl;
 import com.shinn.dao.factory.ResultStatus;
 import com.shinn.service.TransactionService;
 import com.shinn.service.model.Collection;
+import com.shinn.service.model.Renter;
 import com.shinn.service.model.RenterInfo;
 import com.shinn.service.model.Transaction;
 import com.shinn.ui.model.CollectionForm;
@@ -32,6 +33,18 @@ public class TxController {
 
     @Autowired
     TransactionService transactionService;
+
+    @RequestMapping(value = "/register", method = RequestMethod.POST,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Response<Renter>> registration(@RequestBody Renter renter) {
+        logger.debug(renter.toString());
+        Response<Renter> resp = transactionService.registration(renter);
+        logger.debug(resp.toString());
+        if(resp.getResponseStatus().equals(ResultStatus.RESULT_OK)){
+            return new ResponseEntity<Response<Renter>>(resp, HttpStatus.OK);
+        }
+        return new ResponseEntity(HttpStatus.BAD_REQUEST);
+    }
 
     @RequestMapping(value = "/savetx", method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE)

@@ -10,6 +10,18 @@
         var http = $http,
     	defer = $q.defer();
 
+        this.register = function (model) {
+            return http.post('tx/register', model)
+                .then(
+                    function(response){
+                        return response.data;
+                    },
+                    function(errResponse){
+                        console.error('Error while fetching users');
+                        return defer.reject(errResponse);
+                    }
+                );
+        },
         this.saveTx = function (model) {
             return http.post('tx/savetx', model)
                 .then(

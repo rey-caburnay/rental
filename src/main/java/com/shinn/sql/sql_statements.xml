@@ -33,9 +33,42 @@
   </entry>
   <entry key="save-renter">
     INSERT INTO realmaster.mst_renter
-    (firstname,lastname,initial,email,mobileno,telno,address1,idPresentend,
-    emergencyContact,status)
-    VALUES(?,?,?,?,?,?,?,?,?,?);
+    (firstname,
+    lastname,
+    initial,
+    email,
+    mobileno,
+    telno,
+    address1,
+    idPresentend,
+    emergencyContact,
+    status)
+    VALUES
+    (:firstName,
+    :lastName,
+    :initial,
+    :address,
+    :idPresented,
+    :mobileNo,
+    :telno,
+    :email,
+    :emergencyContact,
+    :status);
+  </entry>
+   <entry key="update-renter">
+    Update realmaster.mst_renter
+    SET firstname = :firstName ,
+    lastname = :lastName ,
+    initial = :initial,
+    email = :email,
+    mobileno = :mobileNo,
+    telno = :telno,
+    address1 = :address,
+    idPresentend = :idPresented,
+    emergencyContact = :emergencyContact,
+    status = :status
+    WHERE id = :id
+    
   </entry>
   <entry key="save-transaction">
     INSERT INTO `realmaster`.`tx_rental`

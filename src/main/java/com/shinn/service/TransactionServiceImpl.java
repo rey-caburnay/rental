@@ -188,6 +188,23 @@ public class TransactionServiceImpl implements TransactionService {
         }
         return resp;
     }
+    
+	@Override
+	public Response<Renter> registration(Renter renter) {
+		   Response<Renter> resp = new Response<Renter>();
+	        try {
+	        	renter.setId(renterDao.saveUpdate(renter));
+	        	resp.setModel(renter);
+	        	resp.setResponseStatus(ResultStatus.RESULT_OK);
+	        	renterDao.commit();
+	        } catch(Exception e) {
+	            resp.setResponseStatus(ResultStatus.GENERAL_ERROR);
+	            resp.setErrorMsg(e.getMessage());
+	            renterDao.rollback();
+	        }
+	        return resp;
+	}
+	
     /**
      * 
      * @param form
@@ -259,4 +276,6 @@ public class TransactionServiceImpl implements TransactionService {
         return form;
     }
 */
+
+
 }

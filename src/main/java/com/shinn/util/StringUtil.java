@@ -72,7 +72,11 @@ public class StringUtil {
         }
         return null;
     }
-    
+    /**
+     * check if string is empty or null
+     * @param o
+     * @return
+     */
     public static boolean isNullOrEmpty(Object o) {
         if (o == null || o.toString().equals("") || o.toString().length() < 0) {
             return true;

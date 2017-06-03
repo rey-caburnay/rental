@@ -1,0 +1,149 @@
+<div class="generic-container">
+  <!-- 		<div class="panel panel-default"> -->
+  <div class="panel-heading">
+    <span class="lead">Building Rental</span>
+  </div>
+  <div class="row clearfix">
+    <div
+      class="col-xs-11 col-sm-12 col-md-8 col-lg-9  column col-sm-offset-0 col-md-offset-0 col-lg-offset-1">
+      <form class="form-horizontal" name="regForm">
+        <!-- Form Name -->
+        <!-- Text input-->
+        <div class="form-group">
+          <label class="col-md-3 control-label" for="lastName">Renter's
+            Name</label>
+          <div class="col-md-9"
+            data-ng-class="{'has-error': regForm.lastName.$error.required}">
+            <input id="textinput" name="lastName" type="text"
+              placeholder="Lastname" class="form-control input-md"
+              data-ng-model="vm.model.lastname" required>
+          </div>
+        </div>
+        <fieldset>
+          <!-- Select Basic -->
+          <div class="form-group">
+<!--             <label class="col-md-3 control-label" for="rentType">Rent -->
+<!--               Type</label> -->
+<!--             <div class="col-md-9" -->
+<!--               data-ng-class="{'has-error': regForm.rentType.$error.required}"> -->
+<!--               <select id="selectbasic" name="rentType" -->
+<!--                 data-ng-model="vm.model.txType" -->
+<!--                 data-ng-options="type.label for type in vm.rentType" -->
+<!--                 class="form-control" required> -->
+<!--                 <option value="">-- choose rent type --</option> -->
+<!--               </select> -->
+<!--             </div> -->
+<!--           </div> -->
+          <!-- Multiple Radios (inline) -->
+          <div class="form-group ">
+            <label class="col-md-3 control-label" for="radios">Payment
+              Type</label>
+            <div class="col-md-9"
+              data-ng-class="{'has-error': regForm.radios.$error.required}">
+              <label class="radio-inline" for="radios-0"> <input
+                type="radio" name="radios" id="radios-0" value="cash"
+                checked="checked" data-ng-model="vm.model.paymentType"
+                ng-required="!vm.model.paymentType">Cash
+              </label> <label class="radio-inline" for="radios-1"> <input
+                type="radio" name="radios" id="radios-1" value="check"
+                data-ng-model="vm.model.paymentType"
+                ng-required="!vm.model.paymentType"> Check
+              </label> <label class="radio-inline" for="radios-1"> <input
+                type="radio" name="radios" id="radios-2" value="online"
+                data-ng-model="vm.model.paymentType"
+                ng-required="!vm.model.paymentType"> Online
+              </label>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-md-3 control-label" for="selectbasic">Amount</label>
+            <div class="col-md-6"
+              data-ng-class="{'has-error': regForm.amount.$error.required}">
+              <input id="textinput" name="amount" type="text"
+                placeholder="placeholder" class="form-control input-md"
+                data-ng-model="vm.model.amount" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-md-3 control-label" for="rentFor">Rent
+              For</label>
+            <div class="col-md-3"
+              data-ng-class="{'has-error': regForm.rentFor.$error.required}">
+              <select id="selectbasic" name="rentFor"
+                ng-model="vm.model.apartment"
+                data-ng-options="apt as apt.name for apt in vm.apartments track by apt.id"
+                class="form-control"
+                data-ng-change="vm.getRooms(vm.model.apartment.id)"
+                required>
+                <option value="">-- choose apartment --</option>
+              </select>
+            </div>
+            <label class="col-md-3 control-label" for="rentFor">Room</label>
+            <div class="col-md-3"
+              data-ng-class="{'has-error': regForm.room.$error.required}">
+              <select id="selectbasic" name="room"
+                data-ng-model="vm.model.room"
+                data-ng-options="rm as rm.label  for rm in vm.rooms track by rm.id"
+                class="form-control" data-ng-required="true">
+                <option value="">-- choose room --</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-md-3 control-label" for="rentStart">Period From
+              </label>
+            <div class="col-md-3"
+              data-ng-class="{'has-error': regForm.rentStart.$error.required}">
+              <input id="dateInput" name="rentStart" type="date"
+                placeholder="MM/dd/yyyy" class="form-control input-md"
+                data-ng-model="vm.startDate" required>
+            </div>
+            <label class="col-md-3 control-label" for="rentStart">To
+              </label>
+            <div class="col-md-3">
+              <input id="textinput" name="rentTo" type="date"
+                placeholder="MM/dd/yyyy" class="form-control input-md"
+                data-ng-model="vm.endDate">
+            </div>
+<!--             <div class="col-md-3"> -->
+<!--               <input id="textinput" name="rentTo" type="date" -->
+<!--                 placeholder="MM/dd/yyyy" class="form-control" -->
+<!--                 data-ng-model="vm.collectionDate"> -->
+<!--             </div> -->
+          </div>
+        </fieldset>
+        <div class="form-group">
+          <label class="col-md-3 control-label" for="selectbasic">Received
+            By</label>
+          <div class="col-md-6">
+            <input id="textinput" name="textinput" type="text"
+              placeholder="placeholder" class="form-control input-md"
+              data-ng-model="vm.model.receivedBy">
+          </div>
+        </div>
+        <!-- Textarea -->
+        <div class="form-group">
+          <label class="col-md-3 control-label" for="textarea">Note</label>
+          <div class="col-md-9">
+            <textarea class="form-control" id="textarea" name="textarea"
+              data-ng-model="vm.model.note">default text</textarea>
+          </div>
+        </div>
+        <!-- Button (Double) -->
+        <div class="form-group">
+          <label class="col-md-3 control-label" for="button1id"></label>
+          <div class="col-md-3">
+            <button id="button1id" name="button1id"
+              class="btn btn-success btn-lg" data-ng-click="vm.submit()">Save</button>
+          </div>
+          <label class="col-md-3 control-label" for="button2id"></label>
+          <div class="col-md-3">
+            <button id="button2id" name="button2id"
+              class="btn btn-danger btn-lg" data-ng-click="save()">Cancel</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<!-- /.container -->

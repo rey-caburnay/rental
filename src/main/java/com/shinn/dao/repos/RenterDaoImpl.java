@@ -9,6 +9,7 @@ import com.shinn.dao.factory.AbstractDaoImpl;
 import com.shinn.service.model.Renter;
 import com.shinn.service.model.RenterInfo;
 import com.shinn.service.model.Transaction;
+import com.shinn.util.StringUtil;
 
 @Repository
 public class RenterDaoImpl extends AbstractDaoImpl<Renter> implements RenterDao {
@@ -30,8 +31,13 @@ public class RenterDaoImpl extends AbstractDaoImpl<Renter> implements RenterDao 
 
     @Override
     public int saveUpdate(Renter model) throws Exception {
-        //TODO update sql query to name parameters
-        return executeSaveUpate("save-renter", model);
+    	int result = 0;
+    	if (StringUtil.isNullOrEmpty(model.getId())) {
+    		result = executeSaveUpate("save-renter", model);
+    	} else {
+    		result = executeSaveUpate("update-renter", model);
+    	}
+        return result;
     }
 
     @Override

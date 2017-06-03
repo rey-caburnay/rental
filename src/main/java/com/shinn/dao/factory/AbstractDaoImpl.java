@@ -282,9 +282,7 @@ public abstract class AbstractDaoImpl<T extends Serializable> {
             closeConnectionObjects(connection, pStmnt);
         } catch (Exception e) {
             list = null;
-
         }
-
         return list;
     }
 

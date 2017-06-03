@@ -23,13 +23,17 @@
 
         vm.init = function() {
             vm.renter = {
-                lastname : '',
-                firstname : '',
-                renterMI : '',
-                address : '',
-                mobileno : '',
-                note : '',
-                idpresented : ''
+                lastName: 'caburnay',
+                firstName:'rey',
+                initial: 'c',
+                address: 'cebu city',
+                mobileNo:'01293213',
+                telno:'123123123',
+                paymentType:'cash',
+                amount:5000,
+                idPresented:'gssw #131232',
+                email:'test@email.com',
+                emergencyContact:'emergency',
             }
         }
         vm.submit = function() {
@@ -46,11 +50,11 @@
          * submit data to server
          */
         function submit() {
-            vm.popup(vm.renter);
-            // vm.ts.saveTx(vm.renter).then(function(response){
-            // console.log("status return :" + response);
-            // vm.popup(response);
-            // });
+            //vm.popup(vm.renter);
+             vm.ts.register(vm.renter).then(function(response){
+                 console.log("status return :" + response);
+                 vm.popup(response);
+             });
 
         }
         function showModal(result) {
@@ -62,8 +66,7 @@
                 header : msg,
                 service : result.result
             };
-            modalService.showAndRedirect("Press OK it will redirect", "login")
-
+            modalService.showAndRedirect(msg, "home");
         }
         
         function filltestData() {

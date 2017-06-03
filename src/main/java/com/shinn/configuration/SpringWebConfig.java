@@ -38,6 +38,10 @@ public class SpringWebConfig extends WebMvcConfigurerAdapter {
     @Autowired
     private Environment environment;
 
+    /**
+     * load the web app resources file
+     * @param registry
+     */
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/resources/**").addResourceLocations("/resources/");

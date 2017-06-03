@@ -102,9 +102,11 @@ CREATE TABLE `mst_renter` (
   `idPresentend` varchar(100) DEFAULT NULL,
   `emergencyContact` varchar(100) DEFAULT NULL,
   `status` varchar(20) DEFAULT NULL,
+  `updatedDate` datetime DEFAULT NULL,
+  `registerDate` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `Id_UNIQUE` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 
 /******************** transaction schema *********************/

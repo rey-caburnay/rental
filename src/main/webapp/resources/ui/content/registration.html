@@ -10,9 +10,7 @@
       <form class="form-horizontal" name="regForm">
         <fieldset>
           <!-- Form Name -->
-          <legend>Renter's Info</legend>
-
-          <!-- Text input-->
+             <!-- Text input-->
           <div class="form-group">
 
             <label class="col-md-3 control-label" for="lastName">Renter's
@@ -21,19 +19,19 @@
               data-ng-class="{'has-error': regForm.lastName.$error.required}">
               <input id="textinput" name="lastName" type="text"
                 placeholder="Lastname" class="form-control input-md"
-                data-ng-model="vm.renter.lastname" required>
+                data-ng-model="vm.renter.lastName" required>
             </div>
             <div class="col-md-3"
               data-ng-class="{'has-error': regForm.firstName.$error.required}">
               <input id="textinput" name="firstName" type="text"
                 placeholder="FirstName" class="form-control input-md"
-                data-ng-model="vm.renter.firstname" required>
+                data-ng-model="vm.renter.firstName" required>
             </div>
             <div class="col-md-3"
               data-ng-class="{'has-error': regForm.initial.$error.required}">
               <input id="textinput" name="initial" type="text"
                 placeholder="MI" class="form-control input-md"
-                data-ng-model="vm.renter.renterMI" required>
+                data-ng-model="vm.renter.initial" required>
             </div>
 
           </div>
@@ -52,7 +50,7 @@
               data-ng-class="{'has-error': regForm.mobileno.$error.required}">
               <input id="textinput" name="mobileno" type="text"
                 placeholder="099xxxxxxxx" class="form-control input-md"
-                data-ng-model="vm.renter.mobileno" required>
+                data-ng-model="vm.renter.mobileNo" required>
             </div>
             <label class="col-md-3 control-label" for="telno">telno</label>
             <div class="col-md-3">
@@ -69,19 +67,28 @@
               <input id="textinput" name="idpresented" type="text"
                 placeholder="id name : id #"
                 class="form-control input-md"
-                data-ng-model="vm.renter.idpresented" required>
+                data-ng-model="vm.renter.idPresented" required>
             </div>
           </div>
 
         </fieldset>
 
         <fieldset>
-          <!-- Textarea -->
           <div class="form-group">
-            <label class="col-md-3 control-label" for="textarea">Note</label>
-            <div class="col-md-9">
-              <textarea class="form-control" id="textarea"
-                name="textarea" data-ng-model="vm.renter.note">default text</textarea>
+            <label class="col-md-3 control-label" for="emergencyContact">Emergency Contact</label>
+            <div class="col-md-3">
+              <input id="textinput" name="emergencyContact" type="text"
+                name="textinput" data-ng-model="vm.renter.emergencyContact"
+                class="form-control input-md"
+                placeholder = "contact person in case of emergency">
+            </div>
+            <label class="col-md-3 control-label" for="email">Email Address</label>
+            <div class="col-md-3"
+              data-ng-class="{'has-error': regForm.idpresented.$error.required}">
+              <input id="textinput" name="email" type="text"
+                placeholder="yourname@email.com"
+                class="form-control input-md"
+                data-ng-model="vm.renter.email">
             </div>
           </div>
 
@@ -104,7 +111,6 @@
     </div>
 
   </div>
-
 
 </div>
 <!-- /.container -->
