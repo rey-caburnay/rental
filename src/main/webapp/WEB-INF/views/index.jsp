@@ -62,6 +62,9 @@
     <script src="<c:url value='/resources/js/external/ui-bootstrap-1.3.3.min.js'/>"></script>
     <script src="<c:url value='/resources/js/external/sweetalert.min.js'/>"></script>
     <script src="<c:url value='/resources/js/app.js' />"></script>
+    <!-- utils -->
+    <script src="<c:url value='/resources/js/util/dateUtil.js' />"></script>
+    <script src="<c:url value='/resources/js/util/util.js' />"></script>
     <!-- filters -->
     <script src="<c:url value='/resources/js/filter/filter.js' />"></script>
     <!-- services -->

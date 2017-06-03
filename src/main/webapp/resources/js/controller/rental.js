@@ -2,10 +2,10 @@
     'use strict';
 
     var injectParams = [ '$scope', '$filter', 'transactionService',
-            'adminService', 'modalService', '$location' ];
+            'adminService', 'dateFactory','modalService', '$location' ];
 
     var RentController = function($scope, $filter, transactionService,
-            adminService, modalService, $location) {
+            adminService, dateFactory, modalService, $location) {
         var vm = this, collection = {}, // model to map to services
         paymentTypes = [ "cash", "check", "online" ], COLLECTION_DAYS = 30;
 
@@ -158,7 +158,7 @@
             }
             tx.aptName = vm.model.apartment.aptName;
             tx.room = vm.model.room;
-            tx.dueDate = vm.endDate;
+            tx.dueDate = dateFactory.format(vm.endDate);
             tx.amount = vm.model.room.rate;
             vm.model.rate = vm.model.room.rate;
             vm.model.transactions[length + 1] = tx;
@@ -233,7 +233,7 @@
                 .getRenters()
                 .then(
                     function(response) {
-                        if (response.result.length > 0) {
+                        if (response.result && response.result.length > 0) {
                             for (var i = 0; i < response.result.length; i++) {
                                 renter = response.result[i];
                                 response.result[i].name = (renter.lastName || '')
