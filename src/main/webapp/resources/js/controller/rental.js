@@ -41,18 +41,18 @@
             vm.model.deposit = 0;
             vm.model.amount = 0;
             vm.model.cash = {
-                amtpaid : '',
-                cashchange : '',
+                amountPaid : '',
+                cashChange : '',
                 cashReceived : ''
             }
         }
+        
         vm.initModel();
+        
         vm.getRooms = function(aptId) {
             getRooms(aptId);
         };
-        vm.submit = function() {
-            submit();
-        }
+
         vm.modelOptions = {
             debounce : {
                 "default" : 500,
@@ -152,16 +152,18 @@
          * assign room to customer
          */
         vm.acquire = function () {
-            var length = 0, tx = {};
+            var index = 0, tx = {};
             if (vm.model.transactions) {
-                length = vm.model.transactions.length;    
+                index = vm.model.transactions.length;    
             }
-            tx.aptName = vm.model.apartment.aptName;
+            tx.id = 0;
             tx.room = vm.model.room;
+            tx.startDate = dateFactory.format(vm.startDate);
+            tx.txDate = dateFactory.format(vm.startDate);
             tx.dueDate = dateFactory.format(vm.endDate);
             tx.amount = vm.model.room.rate;
             vm.model.rate = vm.model.room.rate;
-            vm.model.transactions[length + 1] = tx;
+            vm.model.transactions[index] = tx;
             vm.computeTotal();
         }
         /** 
@@ -207,11 +209,12 @@
                 
             }, true)
             
-            vm.computeTotal = function () {
+        vm.computeTotal = function () {
             var total = 0;
             vm.model.cash.amountPaid = 0;
             vm.model.cash.balance = 0;
             vm.model.cash.deposit = 0;
+            vm.model.total = 0;
             if (vm.model.transactions) {
                 vm.model.total = vm.model.total + vm.model.existingBalance;
                 for (var i = 0; i < vm.model.transactions.length; i++) {
@@ -310,33 +313,42 @@
          * submit the form
          */
         function submit() {
-            if (vm.model.cash.cashreceivederror || vm.model.fullPaidError) {
-                vm.popup
-                        .showError("Please fix/adjust inputs to continue the transaction.")
+            if (vm.model.cash.cashreceivederror) {
+                vm.popup.showError("Please fix/adjust inputs to continue the transaction.")
                 return;
             }
-            vm.model.userId = 1;
+            var tx = {
+                renterId: vm.model.renterId,
+                transactions: vm.model.transactions,
+                paymentType: vm.model.paymentType,
+                cash: vm.model.cash,
+                credit: vm.model.credit,
+                paypal: vm.model.paypal,
+                recievedBy: vm.model.receivedBy,
+                note: vm.model.note,
+                userId: 1
+            } 
             transactionService
-                    .saveCollection(vm.model)
+                    .saveCollection(tx)
                     .then(
-                            function(response) {
-                                console.log("status return :" + response);
-                                if (response.responseStatus === "ERROR") {
-                                    vm.popup
-                                            .showError("There is something wrong in processing your request: "
-                                                    + response.errorMsg);
-                                } else {
-                                    var options = {
-                                        title : "Thank You",
-                                        text : "Transaction successfully processed",
-                                        type : "success",
-                                    }
-                                    vm.popup.show(options, function() {
-                                        $location.path('/home');
-                                    });
+                        function(response) {
+                            console.log("status return :" + response);
+                            if (response.responseStatus === "ERROR") {
+                                vm.popup
+                                        .showError("There is something wrong in processing your request: "
+                                                + response.errorMsg);
+                            } else {
+                                var options = {
+                                    title : "Thank You",
+                                    text : "Transaction successfully processed",
+                                    type : "success",
                                 }
+                                vm.popup.show(options, function() {
+                                    $location.path('/home');
+                                });
+                            }
 
-                            });
+                        });
         }
 
     };

@@ -1,5 +1,7 @@
 package com.shinn.ui.model;
 
+import java.io.Serializable;
+
 import lombok.ToString;
 
 /**
@@ -8,13 +10,14 @@ import lombok.ToString;
  *
  */
 @ToString
-public class Cash {
+public class Cash implements Serializable {
     
     private String cashReceived;
     private String amountPaid;
     private String cashChange;
     private String balance;
     private String deposit;
+    
     /**
      * @return the cashRecieved
      */

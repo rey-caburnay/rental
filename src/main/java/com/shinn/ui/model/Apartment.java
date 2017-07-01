@@ -3,6 +3,8 @@ package com.shinn.ui.model;
 import java.io.Serializable;
 import java.util.List;
 
+import com.shinn.service.model.Room;
+
 public class Apartment implements Serializable {
     
     private Integer id;

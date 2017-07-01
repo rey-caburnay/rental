@@ -57,7 +57,7 @@ public class TxController {
         }
         return new ResponseEntity(HttpStatus.BAD_REQUEST);
     }
-
+    
     @RequestMapping(value = "/gettx/{renterid}", method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Response<Transaction>> getTx(@PathVariable String renterid){

@@ -68,7 +68,6 @@
     emergencyContact = :emergencyContact,
     status = :status
     WHERE id = :id
-    
   </entry>
   <entry key="save-transaction">
     INSERT INTO `realmaster`.`tx_rental`
@@ -130,6 +129,12 @@
     WHERE
     `id`= :id AND `aptId` = :aptId AND `roomId` = :roomId;
   </entry>
+  <entry key="get-rental">
+   SELECT id, aptId, roomId, dueDate,txDate, startDate, endDate, deposit,
+   	renterId, balance, txType, provider, amount, status, userId, updatedDate, updtCnt
+   FROM tx_rental WHERE id = ?
+  </entry>
+  
   <entry key="get-apartments">
     SELECT id,
     name,

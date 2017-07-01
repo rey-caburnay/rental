@@ -9,7 +9,6 @@ import com.shinn.dao.factory.AbstractDaoImpl;
 
 public class StringUtil {
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(StringUtil.class);
-    public static final String YYYYMMDD = "yyyy-MM-dd";
     
     /**
      * 
@@ -63,14 +62,14 @@ public class StringUtil {
      */
     public static Double toDouble(String value) {
         if(value == null) {
-            return null;
+            return 0d;
         }
         try {
             return Double.parseDouble(value);
         }catch(Exception e) {
             logger.debug("Error in casting",e);
         }
-        return null;
+        return 0d;
     }
     /**
      * check if string is empty or null

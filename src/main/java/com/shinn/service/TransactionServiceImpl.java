@@ -27,85 +27,84 @@ import com.shinn.service.model.Transaction;
 import com.shinn.ui.model.CollectionForm;
 import com.shinn.ui.model.RegistrationForm;
 import com.shinn.ui.model.Response;
+import com.shinn.ui.model.TransactionDetails;
 import com.shinn.util.DateUtil;
 import com.shinn.util.RentStatus;
 import com.shinn.util.StringUtil;
 
-
 @Service
 public class TransactionServiceImpl implements TransactionService {
-    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(AbstractDaoImpl.class);
-    @Autowired
-    RentalDao rentalDao;
-    @Autowired
-    RenterDao renterDao;
-    @Autowired
-    RenterInfoDao renterInfoDao;
-    @Autowired
-    CollectionDao collectionDao;
-    @Autowired
-    CollectionDetailsDao collectionDetailsDao;
-    @Autowired
-    RoomDao roomDao;
+	private static final org.slf4j.Logger logger = LoggerFactory.getLogger(AbstractDaoImpl.class);
+	@Autowired
+	RentalDao rentalDao;
+	@Autowired
+	RenterDao renterDao;
+	@Autowired
+	RenterInfoDao renterInfoDao;
+	@Autowired
+	CollectionDao collectionDao;
+	@Autowired
+	CollectionDetailsDao collectionDetailsDao;
+	@Autowired
+	RoomDao roomDao;
 
-    /**
-     *
-     */
-    public Response<RegistrationForm> createTx(RegistrationForm reg)  {
-        Response<RegistrationForm> resp = new Response<RegistrationForm>();
-        Transaction tx  = new Transaction();
-        try {
-            Renter renter = renterDao.getRenterByName(reg.getLastname(),
-                    reg.getFirstname(), reg.getRenterMI());
-            /** create new record if null **/
-            if (renter == null || renter.getId() == null) {
-                renter = new Renter();
-                renter.setId(renterDao.getCurrentKey(Renter.TABLE_NAME));
-                renter.setFirstName(reg.getFirstname());
-                renter.setLastName(reg.getLastname());
-                renter.setInitial(reg.getRenterMI());
-                renter.setMobileNo(reg.getMobileno());
-                renter.setIdPresented(reg.getIdPresented());
-                renter.setTelno(reg.getTelno());
-                renter.setAddress(reg.getAddress());
-                renter.setStatus(RentStatus.ACTIVE);
-                renterDao.saveUpdate(renter);
+	/**
+	 *
+	 */
+	public Response<RegistrationForm> createTx(RegistrationForm reg) {
+		Response<RegistrationForm> resp = new Response<RegistrationForm>();
+		Transaction tx = new Transaction();
+		try {
+			Renter renter = renterDao.getRenterByName(reg.getLastname(), reg.getFirstname(), reg.getRenterMI());
+			/** create new record if null **/
+			if (renter == null || renter.getId() == null) {
+				renter = new Renter();
+				renter.setId(renterDao.getCurrentKey(Renter.TABLE_NAME));
+				renter.setFirstName(reg.getFirstname());
+				renter.setLastName(reg.getLastname());
+				renter.setInitial(reg.getRenterMI());
+				renter.setMobileNo(reg.getMobileno());
+				renter.setIdPresented(reg.getIdPresented());
+				renter.setTelno(reg.getTelno());
+				renter.setAddress(reg.getAddress());
+				renter.setStatus(RentStatus.ACTIVE);
+				renterDao.saveUpdate(renter);
 
-            }
-            reg.setRenterId(renter.getId()+"");
-            tx.setId(rentalDao.getCurrentKey(Transaction.TABLE_NAME));
-            tx.setAptId(StringUtil.toInteger(reg.getAptId()));
-            tx.setRoomId(StringUtil.toInteger(reg.getRoomId()));
-            tx.setDueDate(StringUtil.toDate(reg.getDueDate(),StringUtil.YYYYMMDD));
-            tx.setTxDate(new Date());
-            tx.setStartDate(StringUtil.toDate(reg.getStartDate(),StringUtil.YYYYMMDD));
-            tx.setEndDate(StringUtil.toDate(reg.getEndDate(),StringUtil.YYYYMMDD));
-            tx.setDeposit(StringUtil.toDouble(reg.getDeposit()));
-            tx.setRenterId(StringUtil.toInteger(reg.getRenterId()));
-            tx.setBalance(StringUtil.toDouble(reg.getBalance()));
-//            tx.setTxType(reg.getTxType());
-            tx.setProvider(reg.getProvider());
-            tx.setAmount(StringUtil.toDouble(reg.getAmount()));
-            tx.setStatus(RentStatus.ACTIVE);
-            tx.setUserId(1); //TODO required
-            rentalDao.saveUpdate(tx);
-            resp.setResponseStatus(ResultStatus.RESULT_OK);
-            resp.setModel(reg);
-            
-            //TODO update the room details
-            Room room = roomDao.getById(Integer.parseInt(reg.getRoomId()));
-            room.setStatus(RentStatus.OCCUPIED);
-            room.setOccupied(Integer.parseInt(reg.getPersonCount()));
-            roomDao.saveUpdate(room);
+			}
+			reg.setRenterId(renter.getId() + "");
+			tx.setId(rentalDao.getCurrentKey(Transaction.TABLE_NAME));
+			tx.setAptId(StringUtil.toInteger(reg.getAptId()));
+			tx.setRoomId(StringUtil.toInteger(reg.getRoomId()));
+			tx.setDueDate(StringUtil.toDate(reg.getDueDate(), DateUtil.YYYYMMDD_DASH));
+			tx.setTxDate(new Date());
+			tx.setStartDate(StringUtil.toDate(reg.getStartDate(), DateUtil.YYYYMMDD_DASH));
+			tx.setEndDate(StringUtil.toDate(reg.getEndDate(), DateUtil.YYYYMMDD_DASH));
+			tx.setDeposit(StringUtil.toDouble(reg.getDeposit()));
+			tx.setRenterId(StringUtil.toInteger(reg.getRenterId()));
+			tx.setBalance(StringUtil.toDouble(reg.getBalance()));
+			// tx.setTxType(reg.getTxType());
+			tx.setProvider(reg.getProvider());
+			tx.setAmount(StringUtil.toDouble(reg.getAmount()));
+			tx.setStatus(RentStatus.ACTIVE);
+			tx.setUserId(1); // TODO required
+			rentalDao.saveUpdate(tx);
+			resp.setResponseStatus(ResultStatus.RESULT_OK);
+			resp.setModel(reg);
 
-            rentalDao.commit();
-        } catch(Exception e) {
-            resp.setResponseStatus(ResultStatus.GENERAL_ERROR);
-            resp.setErrorMsg(e.getMessage());
-            rentalDao.rollback();
-        }
-        return resp;
-    }
+			// TODO update the room details
+			Room room = roomDao.getById(Integer.parseInt(reg.getRoomId()));
+			room.setStatus(RentStatus.OCCUPIED);
+			room.setOccupied(Integer.parseInt(reg.getPersonCount()));
+			roomDao.saveUpdate(room);
+
+			rentalDao.commit();
+		} catch (Exception e) {
+			resp.setResponseStatus(ResultStatus.GENERAL_ERROR);
+			resp.setErrorMsg(e.getMessage());
+			rentalDao.rollback();
+		}
+		return resp;
+	}
 
 	@Override
 	public Response<Transaction> getTxByRenterId(Integer renterId) {
@@ -113,169 +112,158 @@ public class TransactionServiceImpl implements TransactionService {
 		return null;
 	}
 
-    @Override
-    public Response<RenterInfo> getRentersInfo(Integer renterId) {
-        Response<RenterInfo> resp = new Response<RenterInfo>();
-        List<RenterInfo> renterInfos = renterInfoDao.getRentersInfo(renterId);
-        resp.setResponseStatus(ResultStatus.NO_RESULT);
-        resp.setErrorMsg(ResultStatus.NO_RESULT);
-        if (renterInfos != null && renterInfos.size() > 0) {
-            resp.setResponseStatus(ResultStatus.RESULT_OK);
-            resp.setResult(renterInfos);
-        } 
-        
-        return resp;
-    }
-    @Override
-    public Response<CollectionForm> createCollection(CollectionForm collectionForm) {
-        Response<CollectionForm> resp = new Response<CollectionForm>();
-        try {
-            Collection collection = new Collection();
-            collection.setTxDate(new Date());
-            collection.setStatus(RentStatus.PAID);
-            collection.setRenterId(collectionForm.getRenterId());
-            collection.setUserId(StringUtil.toInteger(collectionForm.getUserId()));
-            collection.setCashReceived(StringUtil.toDouble(collectionForm.getCash().getCashReceived()));
-            collection.setAmountPaid(StringUtil.toDouble(collectionForm.getCash().getAmountPaid()));
-            collection.setDeposit(StringUtil.toDouble(collectionForm.getCash().getDeposit()));
-            collection.setBalance(StringUtil.toDouble(collectionForm.getCash().getBalance()));
-            collection.setChange(StringUtil.toDouble(collectionForm.getCash().getCashChange()));
-            int collectionId = collectionDao.saveUpdate(collection);
-            Iterator<Transaction> itr = collectionForm.getTransactions().iterator();
-            while (itr.hasNext()) {
-                Transaction tx = itr.next();
-                Room room = tx.getRoom();
-                CollectionDetails collectionDetails = new CollectionDetails();
-                collectionDetails.setCollectionId(collectionId);
-                collectionDetails.setAptId(tx.getAptId());
-                collectionDetails.setRoomId(tx.getRoomId());
-                collectionDetails.setTxDate(new Date());
-                collectionDetails.setStatus(RentStatus.PAID);
-                collectionDetails.setTxId(tx.getId());
-                switch (collectionForm.getPaymentType()) {
-                    case "visa":
-                    case "credit":
-                    case "master":
-                        break;
-                    default: //cash
-                         if (!tx.isFullPaid()) {
-                             collection.setStatus(RentStatus.PARTIAL);
-                         } 
-                         collectionDetails.setAmountPaid(tx.getAmountPaid()); //set as full paid
-                         collectionDetails.setBalance(tx.getBalance());
-                         collectionDetails.setDeposit(tx.getDeposit());
-                }
-               collectionDetailsDao.saveUpdate(collectionDetails);
-               //TODO update tx_rental details
-               Double newAmount = (tx.getRoom().getRate() + tx.getBalance()) - tx.getDeposit();
-               if(newAmount < 0) {
-                   newAmount = 0d;
-               }
-               tx.setAmount(newAmount);
-               tx.setDueDate(collectionForm.getCollectionDate());
-               tx.setTxType(collectionForm.getPaymentType());
-               tx.setUserId(StringUtil.toInteger(collectionForm.getUserId()));
-               tx.setUpdateDate(new Date());
-               tx.setUpdtCnt(tx.getUpdtCnt() == null ? 1 : tx.getUpdtCnt() + 1);
-               rentalDao.saveUpdate(tx);
-            }
-            collectionDetailsDao.commit();
-            resp.setResponseStatus(ResultStatus.RESULT_OK);
-        } catch(Exception e) {
-            resp.setResponseStatus(ResultStatus.GENERAL_ERROR);
-            resp.setErrorMsg(e.getMessage());
-            collectionDao.rollback();
-        }
-        return resp;
-    }
-    
+	@Override
+	public Response<RenterInfo> getRentersInfo(Integer renterId) {
+		Response<RenterInfo> resp = new Response<RenterInfo>();
+		List<RenterInfo> renterInfos = renterInfoDao.getRentersInfo(renterId);
+		resp.setResponseStatus(ResultStatus.NO_RESULT);
+		resp.setErrorMsg(ResultStatus.NO_RESULT);
+		if (renterInfos != null && renterInfos.size() > 0) {
+			resp.setResponseStatus(ResultStatus.RESULT_OK);
+			resp.setResult(renterInfos);
+		}
+
+		return resp;
+	}
+
+	@Override
+	public Response<CollectionForm> createCollection(CollectionForm collectionForm) {
+		Response<CollectionForm> resp = new Response<CollectionForm>();
+		try {
+			Double amountPaid = 0d;
+			Double deposit = 0d;
+			Double balance = 0d;
+			Double cashReceived = 0d;
+			Transaction tx = null;
+			Double newAmount = 0d;
+			int updtCnt = 0;
+			Iterator<TransactionDetails> itr = collectionForm.getTransactions().iterator();
+			while (itr.hasNext()) {
+				TransactionDetails txd = itr.next();
+				Room room = txd.getRoom();
+				// create new record in tx_rental if id is 0
+				if (txd.getId() < 1) {
+					tx = new Transaction();
+				} else {
+					tx = rentalDao.getById(txd.getId());
+					updtCnt = tx.getUpdtCnt() + 1;
+				}
+				switch (collectionForm.getPaymentType()) {
+				case "visa":
+				case "credit":
+				case "master":
+					break;
+				default: // cash
+					amountPaid = StringUtil.toDouble(collectionForm.getCash().getAmountPaid());
+					balance = StringUtil.toDouble(collectionForm.getCash().getBalance());
+					deposit = StringUtil.toDouble(collectionForm.getCash().getDeposit());
+					cashReceived = StringUtil.toDouble(collectionForm.getCash().getCashReceived());
+				}
+				newAmount = ((room.getRate() + balance + txd.get()) - deposit) - amountPaid;
+				tx.setRenterId(collectionForm.getRenterId());
+				tx.setRoomId(room.getId());
+				tx.setUserId(StringUtil.toInteger(collectionForm.getUserId()));
+				tx.setDueDate(StringUtil.toDate(txd.getDueDate(), DateUtil.YYYYMMDD_BACKSLASH));
+				tx.setStartDate(StringUtil.toDate(txd.getStartDate(), DateUtil.YYYYMMDD_BACKSLASH));
+				tx.setAmount(newAmount);
+				tx.setBalance(balance);
+				tx.setDeposit(deposit);
+				tx.setDueDate(collectionForm.getCollectionDate());
+				tx.setTxType(collectionForm.getPaymentType());
+				tx.setUserId(StringUtil.toInteger(collectionForm.getUserId()));
+				tx.setUpdateDate(new Date());
+				tx.setTxDate(StringUtil.toDate(txd.getTxDate(),DateUtil.YYYYMMDD_BACKSLASH));
+				tx.setUpdtCnt(updtCnt);
+				tx.setStatus(RentStatus.PAID);
+				if (balance > 0) {
+					tx.setStatus(RentStatus.PARTIAL);
+				} 
+				int txId = rentalDao.saveUpdate(tx);
+				
+				// TODO create record in tx_collections
+				CollectionDetails collection = new CollectionDetails();
+				collection.setTxId(txId);
+				collection.setTxDate(new Date());
+				collection.setRenterId(collectionForm.getRenterId());
+				collection.setUserId(StringUtil.toInteger(collectionForm.getUserId()));
+				collection.setCashReceived(StringUtil.toDouble(collectionForm.getCash().getCashReceived()));
+				collection.setAmountPaid(StringUtil.toDouble(collectionForm.getCash().getAmountPaid()));
+				collection.setDeposit(StringUtil.toDouble(collectionForm.getCash().getDeposit()));
+				collection.setBalance(StringUtil.toDouble(collectionForm.getCash().getBalance()));
+				collection.setCashChange(StringUtil.toDouble(collectionForm.getCash().getCashChange()));
+				int collectionId = collectionDetailsDao.saveUpdate(collection);
+			}
+			collectionDetailsDao.commit();
+			resp.setResponseStatus(ResultStatus.RESULT_OK);
+		} catch (Exception e) {
+			resp.setResponseStatus(ResultStatus.GENERAL_ERROR);
+			resp.setErrorMsg(e.getMessage());
+//			rentalDao.rollback();
+			collectionDetailsDao.rollback();
+		}
+		return resp;
+	}
+
 	@Override
 	public Response<Renter> registration(Renter renter) {
-		   Response<Renter> resp = new Response<Renter>();
-	        try {
-	        	renter.setId(renterDao.saveUpdate(renter));
-	        	resp.setModel(renter);
-	        	resp.setResponseStatus(ResultStatus.RESULT_OK);
-	        	renterDao.commit();
-	        } catch(Exception e) {
-	            resp.setResponseStatus(ResultStatus.GENERAL_ERROR);
-	            resp.setErrorMsg(e.getMessage());
-	            renterDao.rollback();
-	        }
-	        return resp;
+		Response<Renter> resp = new Response<Renter>();
+		try {
+			renter.setId(renterDao.saveUpdate(renter));
+			resp.setModel(renter);
+			resp.setResponseStatus(ResultStatus.RESULT_OK);
+			renterDao.commit();
+		} catch (Exception e) {
+			resp.setResponseStatus(ResultStatus.GENERAL_ERROR);
+			resp.setErrorMsg(e.getMessage());
+			renterDao.rollback();
+		}
+		return resp;
 	}
-	
-    /**
-     * 
-     * @param form
-     * @param transactions
-     * @return
-     */
-    /**
-    private CollectionForm saveCollection(CollectionForm form, List<Transaction> transactions) {
-        try {
-            int roomsRented =  form.getTransactions().size();
-            Double amountPaid = StringUtil.toDouble(form.getCash().getAmountPaid());
-            Double cashReceived = 0d;
-            Double balance = 0d;
-            Double deposit = 0d;
-            Double change = 0d;
-            Iterator<Transaction> itr = transactions.iterator();
-            while (itr.hasNext()) {
-                Transaction tx = itr.next();
-                Room room = tx.getRoom();
-                Collection collection = new Collection();
-                collection.setAptId(tx.getAptId());
-                collection.setRoomId(tx.getRoomId());
-                collection.setTxDate(new Date());
-                collection.setStatus(RentStatus.PAID);
-                collection.setTxId(tx.getId());
-                collection.setUserId(StringUtil.toInteger(form.getUserId()));
-              //if multiple room divide the payments to each room
-                switch (form.getPaymentType()) {
-                    case "visa":
-                    case "credit":
-                    case "master":
-                        break;
-                    case "cash":
-                        break;
-                     default: //cash
-                         if (tx.isFullPaid()) {
-                             amountPaid = amountPaid - tx.getAmount();
-                             collection.setAmountPaid(tx.getAmount()); //set as full paid
-                             collection.setCashReceived(tx.getAmount());
-                             collection.setChange(0d);
-                             collection.setBalance(0d);
-                             collection.setDeposit(0d);
-                         } else {
-                             amountPaid = amountPaid - tx.getAmount();
-                             if (amountPaid > 0 ) {
-                                 
-                             }
-                             collection.setAmountPaid(room.getRate()); //set as full paid
-                             collection.setCashReceived(room.getRate());
-                             collection.setChange(0d);
-                             collection.setBalance(0d);
-                             collection.setDeposit(0d);
-                         }
 
-                         collection.setAmountPaid(StringUtil.toDouble(form.getCash().getAmountPaid()));
-                         collection.setCashReceived(StringUtil.toDouble(form.getCash().getCashRecieved()));
-                         collection.setChange(StringUtil.toDouble(form.getCash().getCashChange()));
-                         collection.setBalance(StringUtil.toDouble(form.getCash().getBalance()));
-                         collection.setDeposit(StringUtil.toDouble(form.getCash().getDeposit()));
-                }
-                collectionDao.saveUpdate(collection);
-            }
-            form.getCash().setAmountPaid(amountPaid+"");
-        } catch(Exception e) {
-            logger.error(e.getMessage());
-//            collectionDao.rollback();
-        }
-        
-        return form;
-    }
-*/
-
+	/**
+	 * 
+	 * @param form
+	 * @param transactions
+	 * @return
+	 */
+	/**
+	 * private CollectionForm saveCollection(CollectionForm form, List
+	 * <Transaction> transactions) { try { int roomsRented =
+	 * form.getTransactions().size(); Double amountPaid =
+	 * StringUtil.toDouble(form.getCash().getAmountPaid()); Double cashReceived
+	 * = 0d; Double balance = 0d; Double deposit = 0d; Double change = 0d;
+	 * Iterator<Transaction> itr = transactions.iterator(); while
+	 * (itr.hasNext()) { Transaction tx = itr.next(); Room room = tx.getRoom();
+	 * Collection collection = new Collection();
+	 * collection.setAptId(tx.getAptId()); collection.setRoomId(tx.getRoomId());
+	 * collection.setTxDate(new Date()); collection.setStatus(RentStatus.PAID);
+	 * collection.setTxId(tx.getId());
+	 * collection.setUserId(StringUtil.toInteger(form.getUserId())); //if
+	 * multiple room divide the payments to each room switch
+	 * (form.getPaymentType()) { case "visa": case "credit": case "master":
+	 * break; case "cash": break; default: //cash if (tx.isFullPaid()) {
+	 * amountPaid = amountPaid - tx.getAmount();
+	 * collection.setAmountPaid(tx.getAmount()); //set as full paid
+	 * collection.setCashReceived(tx.getAmount()); collection.setChange(0d);
+	 * collection.setBalance(0d); collection.setDeposit(0d); } else { amountPaid
+	 * = amountPaid - tx.getAmount(); if (amountPaid > 0 ) {
+	 * 
+	 * } collection.setAmountPaid(room.getRate()); //set as full paid
+	 * collection.setCashReceived(room.getRate()); collection.setChange(0d);
+	 * collection.setBalance(0d); collection.setDeposit(0d); }
+	 * 
+	 * collection.setAmountPaid(StringUtil.toDouble(form.getCash().getAmountPaid
+	 * ())); collection.setCashReceived(StringUtil.toDouble(form.getCash().
+	 * getCashRecieved()));
+	 * collection.setChange(StringUtil.toDouble(form.getCash().getCashChange()))
+	 * ;
+	 * collection.setBalance(StringUtil.toDouble(form.getCash().getBalance()));
+	 * collection.setDeposit(StringUtil.toDouble(form.getCash().getDeposit()));
+	 * } collectionDao.saveUpdate(collection); }
+	 * form.getCash().setAmountPaid(amountPaid+""); } catch(Exception e) {
+	 * logger.error(e.getMessage()); // collectionDao.rollback(); }
+	 * 
+	 * return form; }
+	 */
 
 }

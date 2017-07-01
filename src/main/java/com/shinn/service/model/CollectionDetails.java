@@ -6,9 +6,12 @@ import java.util.Date;
 import lombok.ToString;
 
 @ToString
-public class CollectionDetails implements Serializable{
+public class CollectionDetails implements Serializable {
+	
     private Integer id;
+    private Integer renterId;
     private Integer collectionId;
+    private Integer userId;
     private Integer aptId;
     private Integer roomId;
     private Integer txId;
@@ -17,6 +20,9 @@ public class CollectionDetails implements Serializable{
     private Double deposit;
     private Date txDate;
     private String status;
+    private Double cashReceived;
+    private Double cashChange;
+    
     /**
      * @return the id
      */
@@ -137,4 +143,53 @@ public class CollectionDetails implements Serializable{
     public void setStatus(String status) {
         this.status = status;
     }
+	/**
+	 * @return the renterId
+	 */
+	public Integer getRenterId() {
+		return renterId;
+	}
+	/**
+	 * @param renterId the renterId to set
+	 */
+	public void setRenterId(Integer renterId) {
+		this.renterId = renterId;
+	}
+	/**
+	 * @return the userId
+	 */
+	public Integer getUserId() {
+		return userId;
+	}
+	/**
+	 * @param userId the userId to set
+	 */
+	public void setUserId(Integer userId) {
+		this.userId = userId;
+	}
+	/**
+	 * @return the cashReceived
+	 */
+	public Double getCashReceived() {
+		return cashReceived;
+	}
+	/**
+	 * @param cashReceived the cashReceived to set
+	 */
+	public void setCashReceived(Double cashReceived) {
+		this.cashReceived = cashReceived;
+	}
+	/**
+	 * @return the cashChange
+	 */
+	public Double getCashChange() {
+		return cashChange;
+	}
+	/**
+	 * @param cashChange the cashChange to set
+	 */
+	public void setCashChange(Double cashChange) {
+		this.cashChange = cashChange;
+	}
+
 }

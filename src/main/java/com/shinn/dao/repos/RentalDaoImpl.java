@@ -19,8 +19,7 @@ public class RentalDaoImpl extends AbstractDaoImpl<Transaction> implements Renta
     }
 
     public Transaction getById(Integer id) throws Exception {
-        // TODO Auto-generated method stub
-        return null;
+    	  return getObject("get-rental", id);
     }
 
     public List<Transaction> findAll() throws Exception {
