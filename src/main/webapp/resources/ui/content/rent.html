@@ -3,22 +3,7 @@
     name="rentalForm">
     <header>Building Rental Form</header>
     <fieldset>
-      <section>
-        <label class="input"> <i class="icon-prepend fa fa-user"></i>
-          <input type="text" autocomplete="off" name="lname"
-          placeholder="Last Name" ng-model="vm.model.name"
-          ng-model-options="vm.modelOptions"
-          placeholder="Lastname Firstname Initial"
-          uib-typeahead="renter as renter.name for renter in vm.renters"
-          typeahead-editable="false"
-          typeahead-on-select="vm.setRenter($item)"
-          typeahead-loading="Loadingmembers"
-          typeahead-no-results="noResults" class="form-control" required>
-          <i ng-show="Loadingmembers"
-          class="glyphicon glyphicon-refresh"></i>
-        </label>
-      </section>
-      <div class="row" data-ng-class="{'hide': !vm.showRoomInput}">
+      <div class="row" data-ng-class="{'': !vm.showRoomInput}">
         <section class="col col-5">
           <label class="select" for="rentFor"> <select
             id="selectbasic" name="rentFor"
@@ -34,7 +19,7 @@
           <label class="select"> <select id="selectbasic"
             name="room" data-ng-model="vm.model.room"
             data-ng-options="rm as 'Room#' + rm.roomNo  for rm in vm.rooms track by rm.id"
-            class="form-control" data-ng-change="vm.getRate(vm.model.room)" data-ng-required="true">
+            class="form-control" data-ng-change="vm.getTenant(vm.model.room)" data-ng-required="true">
               <option value="" disabled>-- choose room --</option>
           </select>
           </label>
@@ -45,40 +30,70 @@
             name="amount" id="amount" placeholder="Rate"
             data-ng-model="vm.model.rate"> </label>
         </section>
-
-      </div>
-      <div class="row" data-ng-class="{'hide': !vm.showRoomInput}">
-        <section class="col col-5">
-          <label class="label">Period From</label> <label class="input">
+       </div>
+       <div class="row" data-ng-class="{'hide': !vm.showRoomInput}">
+      <section class="col col-5">
+        <label class="input"> <i class="icon-prepend fa fa-user" data-ng-click="vm.getRenters()"></i>
+          <input type="text" autocomplete="off" name="lname"
+          placeholder="Last Name" ng-model="vm.model.name"
+          ng-model-options="vm.modelOptions"
+          placeholder="Name"
+          uib-typeahead="renter as renter.name for renter in vm.renters"
+          typeahead-editable="false"
+          typeahead-on-select="vm.setRenter($item)"
+          typeahead-loading="Loadingmembers"
+          typeahead-no-results="noResults" class="form-control" required>
+          <i ng-show="Loadingmembers"
+          class="glyphicon glyphicon-refresh"></i>
+        </label>
+      </section>
+      <section class="col col-5">
+			<label class="input">
             <i class="icon-prepend fa fa-calendar"></i> <input
             id="dateInput" name="rentStart" type="date"
-            placeholder="Period From" class="form-control input-md"
+    		class="form-control input-md"
             data-ng-model="vm.startDate" required>
           </label>
-        </section>
-        <section class="col col-5">
-          <label class="label">To</label> <label class="input">
-            <i class="icon-prepend fa fa-calendar"></i> <input
-            id="textinput" name="rentTo" type="date"
-            placeholder="Period TO" class="form-control input-md"
-            data-ng-model="vm.endDate">
-          </label>
-        </section>
-        <section class="col col-2">
+       <div class="note">Start Date</div>
+       </section>
+       <section class="col col-2">
           <button type="button" class="btn-acquired"
             data-ng-click="vm.acquire()">Acquire</button>
         </section>
       </div>
-      <section data-ng-class="{'hide': !vm.model.name}" >
-        <header>Room(s) Acquired <span class="add-item" data-ng-click="vm.showAptEntry()">
+<!--       <div class="row" data-ng-class="{'hide': !vm.showRoomInput}"> -->
+<!--         <section class="col col-5"> -->
+<!--           <label class="label">Period From</label> <label class="input"> -->
+<!--             <i class="icon-prepend fa fa-calendar"></i> <input -->
+<!--             id="dateInput" name="rentStart" type="date" -->
+<!--             placeholder="Period From" class="form-control input-md" -->
+<!--             data-ng-model="vm.startDate" required> -->
+<!--           </label> -->
+<!--         </section> -->
+<!--         <section class="col col-5"> -->
+<!--           <label class="label">To</label> <label class="input"> -->
+<!--             <i class="icon-prepend fa fa-calendar"></i> <input -->
+<!--             id="textinput" name="rentTo" type="date" -->
+<!--             placeholder="Period TO" class="form-control input-md" -->
+<!--             data-ng-model="vm.endDate"> -->
+<!--           </label> -->
+<!--         </section> -->
+<!--         <section class="col col-2"> -->
+<!--           <button type="button" class="btn-acquired" -->
+<!--             data-ng-click="vm.acquire()">Acquire</button> -->
+<!--         </section> -->
+<!--       </div> -->
+      <section data-ng-class="{'hide': !vm.model.tenants}" >
+        <header>Tenant(s)<span class="add-item" data-ng-click="vm.showAptEntry()">
         <i class="fa fa-plus"></i></span></header>
         <table class="table">
           <thead>
             <tr>
-              <th>Apartment</th>
-              <th>Room</th>
+              <th>Name</th>
+              <th>Contact # </th>
               <th>Due Date</th>
               <th>Amount</th>
+              <th>Status</th>
               <th></th>
             </tr>
           </thead>
@@ -86,7 +101,7 @@
             <tr>
               <td></td>
               <td></td>
-              <td>Existing Balance</td>
+              <td>Overdue</td>
               <td data-ng-bind-html="vm.model.existingBalance"></td>
             </tr>
             <tr>
@@ -97,11 +112,12 @@
             </tr>
           </tfoot>
           <tbody>
-            <tr data-ng-repeat="tx in vm.model.transactions">
-              <td data-ng-bind-html="tx.aptName"></td>
-              <td data-ng-bind-html="'Room#' + tx.room.roomNo"></td>
+            <tr data-ng-repeat="tx in vm.model.tenants">
+              <td data-ng-bind-html="tx.firstName +' ' + tx.initial + ' ' + tx.lastName"></td>
+              <td data-ng-bind-html="tx.mobileNumber"></td>
               <td data-ng-bind-html="tx.dueDate"></td>
               <td data-ng-bind-html="tx.amount"></td>
+               <td data-ng-bind-html="tx.status"></td>
               <td data-ng-click="vm.removeItem($index)" class="red"><i
                 class="fa fa-times"></i></td>
             </tr>
@@ -165,21 +181,21 @@
             <label class="input"> <input type="number"
               name="cashchange" id="cashchange"
               placeholder="Cash Change" readonly
-              data-ng-model="vm.model.cash.cashChange">
+              data-ng-model="vm.model.cash.cashChange" required>
             </label>
             <div class="note">Cash Change</div>
           </section>
           <section class="col col-2">
             <label class="input"> <input type="number"
               name="deposit" id="deposit" placeholder="Deposit" readonly
-              data-ng-model="vm.model.cash.deposit">
+              data-ng-model="vm.model.cash.deposit" required>
             </label>
             <div class="note">Deposit</div>
           </section>
           <section class="col col-2">
             <label class="input"> <input type="number"
               name="balance" id="balance" placeholder="Balance" readonly
-              data-ng-model="vm.model.cash.balance">
+              data-ng-model="vm.model.cash.balance" required>
             </label>
             <div class="note">Balance</div>
           </section>

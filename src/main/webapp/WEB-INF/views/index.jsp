@@ -59,9 +59,10 @@
     <script src="<c:url value='/resources/js/external/angular.min.js' />"></script>
     <script src="<c:url value='/resources/js/external/angular-sanitize.js' />"></script>
     <script src="<c:url value='/resources/js/external/angular-route.js' />"></script>
+        <script src="<c:url value='/resources/js/external/angular-resource.min.js' />"></script>
     <script src="<c:url value='/resources/js/external/ui-bootstrap-1.3.3.min.js'/>"></script>
     <script src="<c:url value='/resources/js/external/sweetalert.min.js'/>"></script>
-    <script src="<c:url value='/resources/js/app.js' />"></script>
+   	 <script src="<c:url value='/resources/js/app.js' />"></script>
     <!-- utils -->
     <script src="<c:url value='/resources/js/util/dateUtil.js' />"></script>
     <script src="<c:url value='/resources/js/util/util.js' />"></script>
@@ -72,6 +73,7 @@
     <script src="<c:url value='/resources/js/service/transaction.js' />"></script>
      <script src="<c:url value='/resources/js/service/admin.js' />"></script>
      <script src="<c:url value='/resources/js/service/modalService.js' />"></script>
+      <script src="<c:url value='/resources/js/service/interceptor.js' />"></script>
     <!--  service model -->
     <script src="<c:url value='/resources/js/service/model/transaction.js' />"></script>
     <!-- controllers -->
@@ -80,5 +82,6 @@
     <script src="<c:url value='/resources/js/controller/registration.js' />"></script>
     <script src="<c:url value='/resources/js/controller/rental.js' />"></script>
     <script src="<c:url value='/resources/js/controller/collection.js' />"></script>
+  
   </body>
 </html>

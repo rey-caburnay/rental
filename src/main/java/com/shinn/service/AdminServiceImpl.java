@@ -5,13 +5,17 @@ import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
 
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.databind.deser.std.CollectionDeserializer.CollectionReferringAccumulator;
+import com.shinn.dao.factory.AbstractDaoImpl;
 import com.shinn.dao.factory.ResultStatus;
 import com.shinn.dao.repos.ApartmentDao;
 import com.shinn.dao.repos.RentalDao;
 import com.shinn.dao.repos.RenterDao;
+import com.shinn.dao.repos.RenterInfoDao;
 import com.shinn.dao.repos.RoomDao;
 import com.shinn.service.model.Apartment;
 import com.shinn.service.model.Expense;
@@ -20,6 +24,7 @@ import com.shinn.service.model.RenterInfo;
 import com.shinn.ui.model.Response;
 import com.shinn.util.RentStatus;
 import com.shinn.service.model.Room;
+import com.shinn.service.model.Tenant;
 import com.shinn.service.model.Transaction;
 
 /**
@@ -29,6 +34,8 @@ import com.shinn.service.model.Transaction;
  */
 @Service
 public class AdminServiceImpl implements AdminService {
+  
+  private static final org.slf4j.Logger logger = LoggerFactory.getLogger(AdminServiceImpl.class);
 
     @Autowired
     ApartmentDao apartmentDao;
@@ -38,6 +45,8 @@ public class AdminServiceImpl implements AdminService {
     RenterDao renterDao;
     @Autowired
     RentalDao rentalDao;
+    @Autowired
+    RenterInfoDao renterInfoDao;
     
     /**
      * 
@@ -153,18 +162,35 @@ public class AdminServiceImpl implements AdminService {
 	  Response<Renter> resp = new Response<Renter>();
 	  try {
 	      List<Renter> rentersInfos = renterDao.getRenters();
-	      Iterator<Renter> itr = rentersInfos.iterator();
-	        while(itr.hasNext()) {
-	            Renter renter = itr.next();
-	            List<Transaction> tx = rentalDao.getTransactionByRenterId(renter.getId(), RentStatus.ACTIVE);
-	            Iterator<Transaction> itr2 = tx.iterator();
-	            while(itr2.hasNext()) {
-	                Transaction t = itr2.next();
-	                Room room = roomDao.getById(t.getRoomId());
-	                t.setRoom(room);
-	            }
-	            renter.setTransactions(tx);
-	        }
+//	      Iterator<Renter> itr = rentersInfos.iterator();
+//	        while(itr.hasNext()) {
+//	            Renter renter = itr.next();
+//	            List<Transaction> tx = rentalDao.getTransactionByRenterId(renter.getId(), RentStatus.ACTIVE);
+//	            Iterator<Transaction> itr2 = tx.iterator();
+//	            while(itr2.hasNext()) {
+//	                Transaction t = itr2.next();
+//	                Room room = roomDao.getById(t.getRoomId());
+//	                t.setRoom(room);
+//	            }
+//	            renter.setTransactions(tx);
+//	        }
+	      resp.setResult(rentersInfos);
+	      resp.setResponseStatus(ResultStatus.RESULT_OK);
+	  }catch(Exception e) {
+	      resp.setErrorMsg(e.getMessage());
+	      resp.setResponseStatus(ResultStatus.GENERAL_ERROR);
+	  }
+	  return resp;
+	}
+	
+	/**
+	 * get the list of renters in a room
+	 */
+	@Override
+	public Response<RenterInfo> getTenant(int aptId, int roomId) {
+	  Response<RenterInfo> resp = new Response<RenterInfo>();
+	  try {
+	      List<RenterInfo> rentersInfos = renterInfoDao.getTenants(aptId, roomId);
 	      resp.setResult(rentersInfos);
 	      resp.setResponseStatus(ResultStatus.RESULT_OK);
 	  }catch(Exception e) {

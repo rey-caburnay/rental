@@ -328,7 +328,7 @@ public abstract class AbstractDaoImpl<T extends Serializable> {
                     logger.info("column name:" + columnName);
                     value = result.getObject(columnName);
                 } catch (Exception e) {
-                    logger.debug("column name:"+ columnName);
+                    logger.debug("No column name in RS:"+ columnName);
                 }
                 if (value != null) {
                     PropertyDescriptor propertyDescriptor = new PropertyDescriptor(f.getName(), clzz);

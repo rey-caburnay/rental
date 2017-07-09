@@ -20,5 +20,12 @@ public interface RentalDao extends GenericDao<Transaction>{
 	 * @return
 	 */
 	public List<Transaction> getTransactionByRenterId(Integer renterId, String status);
-
+	
+	/**
+	 * 
+	 * @param aptId
+	 * @param roomId
+	 * @return
+	 */
+	public List<Transaction> getTransactionByApt(Integer aptId, Integer roomId);
 }

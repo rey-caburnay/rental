@@ -52,6 +52,47 @@
             },
 		    showError: function (message) {
 		        swal(message,"", "error");
+		    },
+            spinner: function (timeout) {
+//            	swal({
+//              		  text: 'Processing',
+//              		  imageUrl: '/rentService/resources/images/spinners.gif',
+////            		  imageUrl: '../../images/spinners.gif',
+//            		  imageWidth: 400,
+//            		  imageHeight: 200,
+//            		  animation: true,
+//            		  showCloseButton: false,
+//            		  showCancelButton: false,
+//            		});
+            	swal({
+            		  title: 'Loading',
+            		  text: 'Please wait while fetching your data..',
+            		  imageUrl: '/rentService/resources/images/spinners.gif',
+            		  timer: 10000,
+            		  showCancelButton: false,
+            		  showConfirmButton: false,
+            		  background: '#344557',
+            		  allowOutsideClick: false,
+            		  allowEscapeKey: false,
+            		  allowEnterKey: false
+            		}).then(
+            		  function () {
+            			  if (timeout > 0) {
+            				  swal.close();
+            			  }
+            		  },
+            		  // handling the promise rejection
+            		  function (dismiss) {
+            		    if (timeout > 0) {
+            		      //console.log('I was closed by the timer')
+            		    }
+            		  }
+            		)
+            },
+		    close: function () {
+		    	if (swal.isVisible()) {
+		    		swal.close();
+		    	}
 		    }
 //		    show: function (message) {
 //		        swal(message, "You clicked the button!", "success");

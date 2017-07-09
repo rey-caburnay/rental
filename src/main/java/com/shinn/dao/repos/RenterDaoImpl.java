@@ -54,5 +54,4 @@ public class RenterDaoImpl extends AbstractDaoImpl<Renter> implements RenterDao 
 	    List<Renter> renters = getListResult("get-active-renters");
 		return renters;
 	}
-
 }

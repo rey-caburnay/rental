@@ -24,4 +24,9 @@ public class RenterInfoDaoImpl extends AbstractDaoImpl<RenterInfo> implements Re
         return getListResult("get-renters-info-by-status", status);
     }
 
+    @Override
+    public List<RenterInfo> getTenants(Integer aptId, Integer roomId) {
+       return getListResult("get-renter-by-apt-room", aptId, roomId);
+    }
+
 }

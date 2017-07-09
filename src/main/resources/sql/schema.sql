@@ -42,6 +42,7 @@ CREATE TABLE `mst_room` (
   `telNo` varchar(45) DEFAULT NULL,
   `rate` double(9,4) DEFAULT 0,
   `status`varchar(20) DEFAULT NULL,
+  `shared` varchar(1) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `Id_UNIQUE` (`id`,`aptId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
@@ -81,11 +82,37 @@ CREATE TABLE `mst_electric` (
   `descripton` varchar(50) DEFAULT NULL,
   `curReading` int(11) DEFAULT 0,
   `prevReading` int(11) DEFAULT 0,
-  `provider` varchar(50) DEFAULT NULL,
-  `amount` double(9,4) DEFAULT 0.000,
+  `provider` varchar(10) DEFAULT NULL,
+  `amount` double(9,4) DEFAULT 0.0000,
   `status` varchar(20) DEFAULT NULL,
+  `overdue` double(9,4) DEFAULT 0.0000,
   PRIMARY KEY (`id`),
   UNIQUE KEY `Id_UNIQUE` (`id`,`aptId`,`roomId`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
+/** param for electric ***/
+CREATE TABLE `prm_electric` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `provider` varchar (10) NOT NULL,
+  `generationCharge` double(9,4) DEFAULT 0.0000,
+  `transmissionCharge` double(9,4) DEFAULT 0.0000,
+  `systemLoss` double(9,4) DEFAULT 0.0000,
+  `supplyDistribution` double(9,4) DEFAULT 0.0000,
+  `retailCustomer` double(9,4) DEFAULT 0.0000,
+  `meteringSystem` double(9,4) DEFAULT 0.0000,
+  `lifeLineSubsidy` double(9,4) DEFAULT 0.0000,
+  `localFranchiseTax` double(9,4) DEFAULT 0.0000,
+  `VAT` double(9,4) DEFAULT 0.0000,
+  `generalTransmission` double(9,4) DEFAULT 0.0000,
+  `distribution` double(9,4) DEFAULT 0.0000,
+  `others` double(9,4) DEFAULT 0.0000,
+  `npc` double(9,4) DEFAULT 0.0000,
+  `missionaryElectrification` double(9,4) DEFAULT 0.0000,
+  `environmentalCharge` double(9,4) DEFAULT 0.0000,
+  `fitAllRenewable` double(9,4) DEFAULT 0.0000,
+  `surcharge` double(9,4) DEFAULT 0.0000,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `Id_UNIQUE` (`id`,`provider`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 /**** renter ****/
@@ -124,6 +151,7 @@ CREATE TABLE `tx_rental` (
   `txType` varchar(20) DEFAULT NULL,
   `provider` varchar(50) DEFAULT NULL,
   `amount` double(9,4) DEFAULT 0.000,
+  `paymentStatus` varchar(20) DEFAULT NULL,
   `status` varchar(20) DEFAULT NULL,
   `userId` int(11) not null,
    `updatedDate` date default NULL,

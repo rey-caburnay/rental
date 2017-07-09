@@ -21,5 +21,5 @@ public interface RenterDao extends GenericDao<Renter>{
      * @return
      */
     public List<Renter> getRenters();
-
+    
 }

@@ -18,6 +18,7 @@ import com.shinn.service.model.Apartment;
 import com.shinn.service.model.Renter;
 import com.shinn.service.model.RenterInfo;
 import com.shinn.service.model.Room;
+import com.shinn.service.model.Tenant;
 import com.shinn.ui.model.RegistrationForm;
 import com.shinn.ui.model.Response;
 import com.shinn.util.StringUtil;
@@ -81,6 +82,23 @@ public class MstController {
         logger.debug(resp.toString());
         if(resp.getResponseStatus().equals(ResultStatus.RESULT_OK)){
             return new ResponseEntity<Response<Renter>>(resp, HttpStatus.OK);
+        }
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
+    }
+    
+    
+    /**
+     * get the tenants base on room id
+     * @return
+     */
+    @RequestMapping(value = "/tenants/{aptId}/{roomId}", method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Response<RenterInfo>> getTentant(@PathVariable int aptId, @PathVariable int roomId) {
+        logger.info("aptId" + aptId + "roomId" + roomId);
+        Response<RenterInfo>resp = adminService.getTenant(aptId, roomId);
+        logger.debug(resp.toString());
+        if(resp.getResponseStatus().equals(ResultStatus.RESULT_OK)){
+            return new ResponseEntity<Response<RenterInfo>>(resp, HttpStatus.OK);
         }
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }

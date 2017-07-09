@@ -159,7 +159,7 @@ public class TransactionServiceImpl implements TransactionService {
 					deposit = StringUtil.toDouble(collectionForm.getCash().getDeposit());
 					cashReceived = StringUtil.toDouble(collectionForm.getCash().getCashReceived());
 				}
-				newAmount = ((room.getRate() + balance + txd.get()) - deposit) - amountPaid;
+				newAmount = ((room.getRate() + balance + txd.getAmount()) - deposit) - amountPaid;
 				tx.setRenterId(collectionForm.getRenterId());
 				tx.setRoomId(room.getId());
 				tx.setUserId(StringUtil.toInteger(collectionForm.getUserId()));

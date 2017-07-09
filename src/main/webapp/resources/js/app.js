@@ -1,14 +1,14 @@
 (function (){
 'use strict';
 
-angular.module('rental',['ngRoute','ui.bootstrap','ngSanitize']);
+angular.module('rental',['ngRoute','ui.bootstrap','ngSanitize','ngResource']);
 
 
 /**
  * Configure the Routes
  */
 
-angular.module('rental').config(['$routeProvider', function ($routeProvider) {
+angular.module('rental').config(['$routeProvider','$httpProvider', function ($routeProvider,$httpProvider) {
   var viewBase = 'resources/ui/content/';
   $routeProvider
     // Home
@@ -45,6 +45,30 @@ angular.module('rental').config(['$routeProvider', function ($routeProvider) {
 //    .when("/blog/post", {templateUrl: "/content/blog_item", controller: "BlogCtrl"})
     // else 404
     .otherwise({ redirectTo: '/login' });
+  var spinnerFunction = function spinnerFunction(data, headersGetter) {
+	  swal({
+		  title: 'Loading',
+		  text: 'Please wait while fetching your data..',
+		  imageUrl: '/rentService/resources/images/spinners.gif',
+		  showCancelButton: false,
+		  showConfirmButton: false,
+		  background: '#344557',
+		  allowOutsideClick: true,
+		  allowEscapeKey: false,
+		  allowEnterKey: false
+		}).then(
+      		  function () {
+      			 return data;
+    		  },
+    		  // handling the promise rejection
+    		  function (dismiss) {
+    			return data;
+    		  }
+    		);
+	    return data;
+	  };
+//	  $httpProvider.defaults.transformRequest.push(spinnerFunction);
+	  $httpProvider.interceptors.push('customInterceptor');
 }]);
 
 

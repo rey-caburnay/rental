@@ -8,6 +8,7 @@ import com.shinn.service.model.Renter;
 import com.shinn.service.model.RenterInfo;
 import com.shinn.ui.model.Response;
 import com.shinn.service.model.Room;
+import com.shinn.service.model.Tenant;
 
 public interface AdminService {
     
@@ -23,6 +24,5 @@ public interface AdminService {
     public Response<Expense> getExpense(Integer id) throws Exception;
     
     public Response<Renter> getRenters();
-
-
+    public Response<RenterInfo> getTenant(int aptId, int roomId);
 }

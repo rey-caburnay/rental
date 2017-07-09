@@ -286,6 +286,44 @@
     ON rental.aptId = apt.id
     WHERE rental.renterId = ? AND rental.status = ?
   </entry>
+    <entry key="get-transaction-by-apt-room">
+    SELECT
+    rental.id,
+    rental.aptId,
+    rental.roomId,
+    rental.dueDate,
+    rental.txDate,
+    rental.startDate,
+    rental.endDate,
+    rental.renterId,
+    rental.balance,
+    rental.txType,
+    rental.status,
+    rental.amount
+    FROM realmaster.tx_rental rental
+	WHERE rental.aptId = ? AND rental.roomId = ? AND rental.status = 'active'
+  </entry>
+   <entry key="get-renter-by-apt-room">
+   SELECT
+   a.aptId, 
+   a.roomId, 
+   a.txType as paymentType, 
+   b.id, 
+   b.firstname as firstName, 
+   b.lastname as lastName, 
+   b.initial, 
+   b.mobileno as mobileNumber, 
+   b.email,
+   a.id as txId, 
+   a.duedate as dueDate, 
+   a.deposit, 
+   a.balance, 
+   a.amount, 
+   a.status,
+   a.paymentStatus
+   FROM tx_rental a left join mst_renter b on a.renterId = b.id
+   WHERE a.aptId = ? AND a.roomId = ?
+  </entry>
   <entry key="save-collection">
     INSERT INTO realmaster.tx_collections
       (`renterId`,

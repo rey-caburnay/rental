@@ -33,9 +33,10 @@
         vm.model.rooms = [];
 //        vm.apartments = getApartments();
         getApartments();
-        vm.renters = getRenters();
-
-        vm.initModel = function() {
+        getRenters();
+        vm.renters = [];
+//        showLoading(vm.renters.length || 0)
+         vm.initModel = function() {
             vm.model.total = 0;
             vm.model.balance = 0;
             vm.model.deposit = 0;
@@ -48,7 +49,9 @@
         }
         
         vm.initModel();
-        
+        vm.getRenters = function () {
+        	 getRenters();
+        }
         vm.getRooms = function(aptId) {
             getRooms(aptId);
         };
@@ -69,19 +72,10 @@
         }
 
         vm.setRenter = function(renter) {
-            vm.initModel();
-            vm.model.renterId = renter.id;
-            vm.model.mobileno = renter.mobileNo;
-            vm.model.telno = renter.telno;
-            vm.model.lastname = renter.lastName;
-            vm.model.firstname = renter.firstName;
-            vm.model.address = renter.address;
-            vm.model.transactions = renter.transactions;
-            if (vm.model.transactions) {
-                vm.showRoomInput = false;
-            }
+            vm.renter = renter;
             vm.computeTotal();
         }
+        
         vm.computeAmount = function() {
             var diff = vm.model.amount - vm.model.roomRate;
             vm.model.cashReceived = vm.model.amount;
@@ -143,27 +137,41 @@
             }
         }
         vm.removeItem = function(index) {
-            if (index > -1) {
-                vm.model.transactions.splice(index, 1);
+            if (vm.model.tenants && vm.model.tenants.length > 0 ) {
+               	if(index > -1) {
+            		vm.model.tenants.splice(index, 1);
+            	}
             }
-            vm.computeTotal();
+             vm.computeTotal();
         }
         /**
          * assign room to customer
          */
         vm.acquire = function () {
+        	if(!vm.startDate) {
+        		vm.popup.showError("Please input startDate");
+        		return;
+        	}
             var index = 0, tx = {};
-            if (vm.model.transactions) {
-                index = vm.model.transactions.length;    
+            if (vm.model.tenants) {
+                index = vm.model.tenants.length;    
             }
+            tx.aptId = vm.model.apartment.id
             tx.id = 0;
-            tx.room = vm.model.room;
+            tx.roomId = vm.model.room.id;
+            tx.firstName = vm.renter.firstName;
+            tx.initial = vm.renter.initial;
+            tx.lastName = vm.renter.lastName;
             tx.startDate = dateFactory.format(vm.startDate);
             tx.txDate = dateFactory.format(vm.startDate);
+            //+ 30 days from start date.
+            vm.endDate = dateFactory.add(vm.startDate);
             tx.dueDate = dateFactory.format(vm.endDate);
             tx.amount = vm.model.room.rate;
+            tx.balance = 0;
+            tx.deposit = 0;
             vm.model.rate = vm.model.room.rate;
-            vm.model.transactions[index] = tx;
+            vm.model.tenants[index] = tx;
             vm.computeTotal();
         }
         /** 
@@ -174,6 +182,13 @@
             vm.model.rate = room.rate;
         }
         
+        vm.getTenant = function (room) {
+        	vm.showRoomInput = false;
+        	vm.model.rate = room.rate;
+        	getTenantsByAptRoom(room.aptId, room.id);
+//        	vm.popup.spinner(vm.model.response || 0);
+        	vm.computeTotal();
+        }
         vm.submit = function() {
             submit();
         }
@@ -215,17 +230,25 @@
             vm.model.cash.balance = 0;
             vm.model.cash.deposit = 0;
             vm.model.total = 0;
-            if (vm.model.transactions) {
-                vm.model.total = vm.model.total + vm.model.existingBalance;
-                for (var i = 0; i < vm.model.transactions.length; i++) {
-                    vm.model.total = vm.model.total + vm.model.transactions[i].amount;
+            if(vm.showRoomInput) {
+            	if (vm.model.tenants && vm.model.tenants.length > 0) {
+            		var sharedTotal = vm.model.total / vm.model.tenants
+                    for (var i = 0; i < vm.model.tenants.length; i++) {
+                        vm.model.tenants[i].amount = sharedTotal;
+                    }
                 }
             }
-           
+            if (vm.model.tenants) {
+                vm.model.total = vm.model.total + vm.model.existingBalance;
+                for (var i = 0; i < vm.model.tenants.length; i++) {
+                    vm.model.total = vm.model.total + vm.model.tenants[i].amount;
+                }
+            }
         }
 
 
 /*************************** functions that need to interact with services ******************/
+       
         /**
          * get all the available renters
          */    
@@ -235,18 +258,9 @@
             return adminService
                 .getRenters()
                 .then(
-                    function(response) {
-                        if (response.result && response.result.length > 0) {
-                            for (var i = 0; i < response.result.length; i++) {
-                                renter = response.result[i];
-                                response.result[i].name = (renter.lastName || '')
-                                        + " "
-                                        + (renter.firstName || '')
-                                        + " " + (renter.initial || '')
-                            }
-                        }
-                        return response.result;
-                    })
+                    function(data) {
+                    	processResponse(data);
+                   })
         }
         
         /**
@@ -255,11 +269,7 @@
         function getRooms(aptId) {
             return adminService.getRooms(aptId).then(
                     function(response) {
-                        vm.rooms=[];
-                        for (var i = 0; i < response.result.length; i++) {
-                            vm.rooms.push(response.result[i]);
-                        }
-                        return vm.rooms;
+                    	processResponse(response);
                     });
         }
         
@@ -269,22 +279,27 @@
         function getRoomsByRenter(renterId) {
             return transactionService.getRoomsByRenter(renterId).then(
                     function(response) {
-                        vm.model.rooms = response.result;
-                        if (vm.model.rooms && vm.model.rooms.length > 0) {
-                            vm.model.room = vm.model.rooms[0];
-                            vm.setRoomInfo(vm.model.room);
-                        }
-                        return vm.model.rooms;
+                    	processResponse(response);
                     });
         }
-        
+        /**
+         * get the tenants of the room
+         */
+        function getTenantsByAptRoom(aptId, roomId) {
+	    	 return adminService
+	         .getTenants(aptId, roomId)
+	         .then(
+	             function(response) {
+	            	 processResponse(response);
+	            	
+	             })
+        }
         /**
          * fetch all the available apartments
          */
         function getApartments() {
             return adminService.getApartments().then(function(response) {
-                vm.apartments = response.result;
-//                return response.result;
+                processResponse(response);
             });
         }
         
@@ -295,17 +310,7 @@
         function getApartment() {
             return adminService.getApartment(aptId).then(
                     function(response) {
-                        vm.rooms = [];
-                        var rooms = response.result;
-                        for (var i = 0; i < rooms.length; i++) {
-                            var room = {
-                                id : rooms[i].id,
-                                label : ordinal(rooms[i].floor)
-                                        + ' Floor - Room #' + rooms[i].roomNo
-                            }
-                            vm.rooms.push(room);
-                        }
-                        return vm.rooms;
+                    	processResponse(response);
                     });
         }
 
@@ -313,12 +318,29 @@
          * submit the form
          */
         function submit() {
-            if (vm.model.cash.cashreceivederror) {
-                vm.popup.showError("Please fix/adjust inputs to continue the transaction.")
+            if (!vm.model.apartment || !vm.model.room) {
+           	 	vm.popup.showError("Select an Apartment and the room.");
                 return;
             }
+            if (!vm.model.tenants || vm.model.tenants.length < 1) {
+                vm.popup.showError("Please assign a tenant(s) in the room.");
+                return;
+            }
+            if ((vm.model.cash.cashReceived &&
+            		vm.model.cash.cashReceived < 1) 
+            		|| vm.model.cash.cashReceived == "") {
+            	 vm.popup.showError("Please input the Amount of Cash Received.");
+                 return;
+            }
+            if ((vm.model.cash.amountPaid &&
+                    vm.model.cash.amountPaid < 1) 
+                    || vm.model.cash.amountPaid == "") {
+                 vm.popup.showError("Please input the Amount Paid.");
+                 return;
+            }
+
             var tx = {
-                renterId: vm.model.renterId,
+                renterId: vm.renter.id,
                 transactions: vm.model.transactions,
                 paymentType: vm.model.paymentType,
                 cash: vm.model.cash,
@@ -350,8 +372,67 @@
 
                         });
         }
+        
+        
+        /** test centralize response function **/
+        function processResponse(response) {
+        	swal.closeModal();
+        	var data = response.data;
+        	switch(response.method) {
+        	case 'getRenters':
+        		 var renter = {};
+        		 if (data.result && data.result.length > 0) {
+                     for (var i = 0; i < data.result.length; i++) {
+                         renter = data.result[i];
+                         data.result[i].name = (renter.lastName || '')
+                                 + " "
+                                 + (renter.firstName || '')
+                                 + " " + (renter.initial || '')
+                     }
+                 }
+                 vm.renters = data.result
+        		break;
+        	case 'getRooms':
+        		  vm.rooms=[];
+                  for (var i = 0; i < data.result.length; i++) {
+                      vm.rooms.push(data.result[i]);
+                  }
+                  vm.rooms;
+                  break;
+        	case 'getApartment':
+        		 vm.rooms = [];
+                 var rooms = data.result;
+                 for (var i = 0; i < rooms.length; i++) {
+                     var room = {
+                         id : rooms[i].id,
+                         label : ordinal(rooms[i].floor)
+                                 + ' Floor - Room #' + rooms[i].roomNo
+                     }
+                     vm.rooms.push(room);
+                 }
+                 break;
+        	case 'getRoomsByRenter':
+        		  vm.model.rooms = data.result;
+                  if (vm.model.rooms && vm.model.rooms.length > 0) {
+                      vm.model.room = vm.model.rooms[0];
+                      vm.setRoomInfo(vm.model.room);
+                  }
+                  vm.model.rooms;
+                  break;
+        	case 'getTenants':
+        		vm.model.response = 1;
+                vm.model.tenants = data.result;
+        		break;
+        	case 'getApartments':
+        		vm.apartments = data.result;
+        		break;
+        	}
+        	
+         
+        }
 
     };
+    
 
     RentController.$inject = injectParams;
     angular.module('rental').controller('RentController', RentController);
