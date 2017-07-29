@@ -53,4 +53,10 @@ public class RentalDaoImpl extends AbstractDaoImpl<Transaction> implements Renta
 		  return getListResult("get-transaction-by-apt-room", aptId, roomId);
 	}
 
+  @Override
+  public Transaction getTransactionByAptRoomRenter(Integer aptId, Integer roomId,
+      Integer renterId) {
+    return getObject("get-transaction-by-apt-room-renter", aptId, roomId, renterId);
+  }
+
 }

@@ -332,6 +332,10 @@ button.btn-acquired {
     position:relative;
     top:2px;
 }
+button.btn-right {
+    position:relative;
+    
+}
 
 .cart-item-expense {
   position: relative;

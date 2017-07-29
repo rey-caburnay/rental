@@ -74,46 +74,85 @@ CREATE TABLE `mst_expenses` (
   UNIQUE KEY `Id_UNIQUE` (`id`,`aptId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-/**** electric ***/
+/**** electric account for each property ***/
 CREATE TABLE `mst_electric` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `aptId` int(11) NOT NULL,
   `roomId` int(11) NOT NULL,
-  `descripton` varchar(50) DEFAULT NULL,
-  `curReading` int(11) DEFAULT 0,
-  `prevReading` int(11) DEFAULT 0,
+  `accountNo` varchar(50) DEFAULT NULL,
+  `curReading` int(11) DEFAULT '0',
+  `prevReading` int(11) DEFAULT '0',
+  `diffReading` int(11) DEFAULT 0,
   `provider` varchar(10) DEFAULT NULL,
-  `amount` double(9,4) DEFAULT 0.0000,
+  `amount` double(9,4) DEFAULT '0.0000',
   `status` varchar(20) DEFAULT NULL,
-  `overdue` double(9,4) DEFAULT 0.0000,
+  `overdue` double(9,4) DEFAULT '0.0000',
+  `readingDate` datetime DEFAULT NULL,
+  `dueDate` datetime DEFAULT NULL,
+  `billingNo` int(15) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `Id_UNIQUE` (`id`,`aptId`,`roomId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
+/** create record every billing generation **/
+CREATE TABLE `tx_electrill_bill` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `aptId` int(11) NOT NULL,
+  `roomId` int(11) NOT NULL,
+  `curReading` int(11) DEFAULT '0',
+  `prevReading` int(11) DEFAULT '0',
+  `diffReading` int(11) DEFAULT 0,
+  `provider` varchar(10) DEFAULT NULL,
+  `amount` double(9,4) DEFAULT '0.0000',
+  `overdue` double(9,4) DEFAULT '0.0000',
+  `readingDate` datetime DEFAULT NULL,
+  `dueDate` datetime DEFAULT NULL,
+  `generationDate` datetime DEFAULT NULL,
+  `billingNo` int(15) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `Id_UNIQUE` (`id`,`aptId`,`roomId`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
+/** create record every electric collection generation **/
+CREATE TABLE `tx_electrill_collection` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `billingNo` int(11) DEFAULT NULL,
+  `amount` double(9,4) DEFAULT '0.0000',
+  `status` varchar(20) DEFAULT NULL,
+  `overdue` double(9,4) DEFAULT '0.0000',
+  `collectionDate` datetime DEFAULT NULL,
+  `dueDate` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `Id_UNIQUE` (`id`,`billingNo`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
+
 /** param for electric ***/
 CREATE TABLE `prm_electric` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `provider` varchar (10) NOT NULL,
-  `generationCharge` double(9,4) DEFAULT 0.0000,
-  `transmissionCharge` double(9,4) DEFAULT 0.0000,
-  `systemLoss` double(9,4) DEFAULT 0.0000,
-  `supplyDistribution` double(9,4) DEFAULT 0.0000,
-  `retailCustomer` double(9,4) DEFAULT 0.0000,
-  `meteringSystem` double(9,4) DEFAULT 0.0000,
-  `lifeLineSubsidy` double(9,4) DEFAULT 0.0000,
-  `localFranchiseTax` double(9,4) DEFAULT 0.0000,
-  `VAT` double(9,4) DEFAULT 0.0000,
-  `generalTransmission` double(9,4) DEFAULT 0.0000,
-  `distribution` double(9,4) DEFAULT 0.0000,
-  `others` double(9,4) DEFAULT 0.0000,
-  `npc` double(9,4) DEFAULT 0.0000,
-  `missionaryElectrification` double(9,4) DEFAULT 0.0000,
-  `environmentalCharge` double(9,4) DEFAULT 0.0000,
-  `fitAllRenewable` double(9,4) DEFAULT 0.0000,
-  `surcharge` double(9,4) DEFAULT 0.0000,
+  `provider` varchar(10) NOT NULL,
+  `generationCharge` double(9,4) DEFAULT '0.0000',
+  `transmissionCharge` double(9,4) DEFAULT '0.0000',
+  `systemLoss` double(9,4) DEFAULT '0.0000',
+  `supplyCharge` double(9,4) DEFAULT '0.0000',
+  `retailCustomer` double(9,4) DEFAULT '0.0000',
+  `meteringSystem` double(9,4) DEFAULT '0.0000',
+  `lifeLineSubsidy` double(9,4) DEFAULT '0.0000',
+  `localFranchiseTax` double(9,4) DEFAULT '0.0000',
+  `VAT` double(9,4) DEFAULT '0.0000',
+  `generationTax` double(9,4) DEFAULT '0.0000',
+  `distributionTax` double(9,4) DEFAULT '0.0000',
+  `othersTax` double(9,4) DEFAULT '0.0000',
+  `npc` double(9,4) DEFAULT '0.0000',
+  `missionaryElectrification` double(9,4) DEFAULT '0.0000',
+  `environmentalCharge` double(9,4) DEFAULT '0.0000',
+  `fitAllRenewable` double(9,4) DEFAULT '0.0000',
+  `surcharge` double(9,4) DEFAULT '0.0000',
+  `systemLossTax` double(9,4) DEFAULT NULL,
+  `transmissionTax` double(9,4) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `Id_UNIQUE` (`id`,`provider`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 /**** renter ****/
 CREATE TABLE `mst_renter` (
@@ -176,9 +215,12 @@ CREATE TABLE `tx_collections` (
   `cashReceived` double(9,4) DEFAULT NULL,
   `cashChange` double(9,4) DEFAULT NULL,
   `payment` varchar(45) DEFAULT NULL,
+  `currentRoomRate` double(9,4) DEFAULT NULL,
+  `dueDate` date DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `Id_UNIQUE` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 
 CREATE TABLE `tx_collections_details` (
   `id` int(11) NOT NULL AUTO_INCREMENT,

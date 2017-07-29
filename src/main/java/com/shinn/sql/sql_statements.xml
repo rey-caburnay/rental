@@ -173,7 +173,7 @@
     occupied,
     telNo,
     rate,
-    description,
+    roomDesc as description,
     status
     FROM realmaster.mst_room
     WHERE id = ?
@@ -303,6 +303,23 @@
     FROM realmaster.tx_rental rental
 	WHERE rental.aptId = ? AND rental.roomId = ? AND rental.status = 'active'
   </entry>
+  <entry key="get-transaction-by-apt-room-renter">
+    SELECT
+    rental.id,
+    rental.aptId,
+    rental.roomId,
+    rental.dueDate,
+    rental.txDate,
+    rental.startDate,
+    rental.endDate,
+    rental.renterId,
+    rental.balance,
+    rental.txType,
+    rental.status,
+    rental.amount
+    FROM realmaster.tx_rental rental
+	WHERE rental.aptId = ? AND rental.roomId = ? AND rental.renterId = ? AND rental.status = 'active'
+  </entry>
    <entry key="get-renter-by-apt-room">
    SELECT
    a.aptId, 
@@ -316,6 +333,8 @@
    b.email,
    a.id as txId, 
    a.duedate as dueDate, 
+   a.startDate,
+   a.duedate as endDate,
    a.deposit, 
    a.balance, 
    a.amount, 
@@ -327,20 +346,28 @@
   <entry key="save-collection">
     INSERT INTO realmaster.tx_collections
       (`renterId`,
+      `txId`,
+      `roomId`,
+      `aptId`,
+      `currentRoomRate`,
       `amountPaid`,
       `balance`,
       `deposit`,
-      `change`,
+      `cashChange`,
       `cashReceived`,
       `txDate`,
       `userId`,
       `status`)
     VALUES
       (:renterId, 
+      :txId,
+      :roomId,
+      :aptId,
+      :currentRoomRate,
       :amountPaid, 
       :balance, 
       :deposit, 
-      :change, 
+      :cashChange, 
       :cashReceived, 
       :txDate, 
       :userId, 
@@ -463,5 +490,20 @@
     deleted)
     VALUES
     (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+  </entry>
+  <entry key="electric-findby-apt">
+    SELECT el.id, el.aptId, el.roomId, curReading as currentReading,
+	prevReading as previousReading, provider, accountNo,
+	diffReading, amount, overdue, el.status, readingDate, dueDate,
+	billingNo, generationDate,payment, rm.roomNo as roomNumber, 
+    ap.name as apartmentName, meterNo, lastBillNo as billingNo
+	FROM mst_electric el LEFT JOIN mst_room rm on
+    el.roomId = rm.id
+    LEFT JOIN mst_apartment ap on
+    el.aptId = ap.id
+    WHERE el.aptId = ?
+  </entry>
+    <entry key="electricprovider-by-provider">
+	SELECT * FROM prm_electric WHERE provider = ?
   </entry>
 </properties>

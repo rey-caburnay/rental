@@ -33,6 +33,7 @@ public class RenterInfo implements Serializable {
     private String address;
     private String status;
     private String paymentStatus;
+    private String remarks;
     
     /**
      * @return the id
@@ -274,6 +275,17 @@ public class RenterInfo implements Serializable {
     public void setPaymentStatus(String paymentStatus) {
       this.paymentStatus = paymentStatus;
     }
+    /**
+     * @return the remarks
+     */
+    public String getRemarks() {
+      return remarks;
+    }
+    /**
+     * @param remarks the remarks to set
+     */
+    public void setRemarks(String remarks) {
+      this.remarks = remarks;
+    }
     
-	
 }

@@ -82,6 +82,7 @@
     <script src="<c:url value='/resources/js/controller/registration.js' />"></script>
     <script src="<c:url value='/resources/js/controller/rental.js' />"></script>
     <script src="<c:url value='/resources/js/controller/collection.js' />"></script>
+    <script src="<c:url value='/resources/js/controller/billing.js' />"></script>
   
   </body>
 </html>

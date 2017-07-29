@@ -25,82 +25,83 @@ import com.shinn.util.StringUtil;
 
 
 @RestController
-@RequestMapping(value="/mst")
+@RequestMapping(value = "/mst")
 public class MstController {
-    private static final Logger logger = LoggerFactory.getLogger(MstController.class);
+  private static final Logger logger = LoggerFactory.getLogger(MstController.class);
 
-    @Autowired
-    AdminService adminService;
+  @Autowired
+  AdminService adminService;
 
-    /**
-     *
-     * @return
-     */
-    @RequestMapping(value = "/apartments", method = RequestMethod.GET,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Response<Apartment>> getApartments() {
+  /**
+   *
+   * @return
+   */
+  @RequestMapping(value = "/apartments", method = RequestMethod.GET,
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<Response<Apartment>> getApartments() {
 
-        Response<Apartment>resp = adminService.getApartments();
-        logger.debug(resp.toString());
-        if(resp.getResponseStatus().equals(ResultStatus.RESULT_OK)){
-            return new ResponseEntity<Response<Apartment>>(resp, HttpStatus.OK);
-        }
-        return new ResponseEntity(HttpStatus.NO_CONTENT);
+    Response<Apartment> resp = adminService.getApartments();
+    logger.debug(resp.toString());
+    if (resp.getResponseStatus().equals(ResultStatus.RESULT_OK)) {
+      return new ResponseEntity<Response<Apartment>>(resp, HttpStatus.OK);
     }
+    return new ResponseEntity(HttpStatus.NO_CONTENT);
+  }
 
-    /**
-     *
-     * @return
-     */
-    @RequestMapping(value = "/rooms/{aptid}", method = RequestMethod.GET,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Response<Room>> getRooms(@PathVariable String aptid) {
-        logger.info(aptid);
-        logger.info(adminService.toString());
-        Response<Room> resp = null;
-        ResponseEntity<Response<Room>> responseEntity = new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        try {
-            resp = adminService.getRooms(Integer.parseInt(aptid));
-            logger.debug(resp.toString());
-            if(resp.getResponseStatus().equals(ResultStatus.RESULT_OK)){
-                responseEntity = new ResponseEntity<Response<Room>>(resp, HttpStatus.OK);
-            }
-        } catch (Exception e) {
-            responseEntity = new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
-        }
-        return responseEntity;
+  /**
+   *
+   * @return
+   */
+  @RequestMapping(value = "/rooms/{aptid}", method = RequestMethod.GET,
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<Response<Room>> getRooms(@PathVariable String aptid) {
+    logger.info(aptid);
+    logger.info(adminService.toString());
+    Response<Room> resp = null;
+    ResponseEntity<Response<Room>> responseEntity = new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    try {
+      resp = adminService.getRooms(Integer.parseInt(aptid));
+      logger.debug(resp.toString());
+      if (resp.getResponseStatus().equals(ResultStatus.RESULT_OK)) {
+        responseEntity = new ResponseEntity<Response<Room>>(resp, HttpStatus.OK);
+      }
+    } catch (Exception e) {
+      responseEntity = new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
     }
+    return responseEntity;
+  }
 
-    /**
-     *
-     * @return
-     */
-    @RequestMapping(value = "/renters", method = RequestMethod.GET,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Response<Renter>> getRenters() {
-        Response<Renter>resp = adminService.getRenters();
-        logger.debug(resp.toString());
-        if(resp.getResponseStatus().equals(ResultStatus.RESULT_OK)){
-            return new ResponseEntity<Response<Renter>>(resp, HttpStatus.OK);
-        }
-        return new ResponseEntity(HttpStatus.NO_CONTENT);
+  /**
+   *
+   * @return
+   */
+  @RequestMapping(value = "/renters", method = RequestMethod.GET,
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<Response<Renter>> getRenters() {
+    Response<Renter> resp = adminService.getRenters();
+    logger.debug(resp.toString());
+    if (resp.getResponseStatus().equals(ResultStatus.RESULT_OK)) {
+      return new ResponseEntity<Response<Renter>>(resp, HttpStatus.OK);
     }
-    
-    
-    /**
-     * get the tenants base on room id
-     * @return
-     */
-    @RequestMapping(value = "/tenants/{aptId}/{roomId}", method = RequestMethod.GET,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Response<RenterInfo>> getTentant(@PathVariable int aptId, @PathVariable int roomId) {
-        logger.info("aptId" + aptId + "roomId" + roomId);
-        Response<RenterInfo>resp = adminService.getTenant(aptId, roomId);
-        logger.debug(resp.toString());
-        if(resp.getResponseStatus().equals(ResultStatus.RESULT_OK)){
-            return new ResponseEntity<Response<RenterInfo>>(resp, HttpStatus.OK);
-        }
-        return new ResponseEntity(HttpStatus.NO_CONTENT);
-    }
+    return new ResponseEntity(HttpStatus.NO_CONTENT);
+  }
 
+
+  /**
+   * get the tenants base on room id
+   * 
+   * @return
+   */
+  @RequestMapping(value = "/tenants/{aptId}/{roomId}", method = RequestMethod.GET,
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<Response<RenterInfo>> getTentant(@PathVariable int aptId,
+      @PathVariable int roomId) {
+    logger.info("aptId" + aptId + "roomId" + roomId);
+    Response<RenterInfo> resp = adminService.getTenant(aptId, roomId);
+    logger.debug(resp.toString());
+    if (resp.getResponseStatus().equals(ResultStatus.RESULT_OK)) {
+      return new ResponseEntity<Response<RenterInfo>>(resp, HttpStatus.OK);
+    }
+    return new ResponseEntity(HttpStatus.NO_CONTENT);
+  }
 }

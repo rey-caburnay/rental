@@ -1,0 +1,102 @@
+
+<div id="electric">
+  <form action="#" id="simple-form" class="simple-form"
+    name="electricBilling">
+    <fieldset>
+      <div class="row" data-ng-class="{'': !vm.showRoomInput}">
+        <section class="col col-4">
+          <label class="select" for="rentFor"> <select
+            id="selectbasic" name="rentFor"
+            data-ng-model="vm.model.apartment"
+            data-ng-options="apt as apt.name for apt in vm.apartments track by apt.id"
+            class="form-control"
+            data-ng-change="vm.getBillings(vm.model.apartment.id)"
+            required>
+              <option value="">-- choose apartment --</option>
+          </select>
+          </label>
+        </section>
+        <section class="col col-4">
+          <label class="input"> <i
+            class="icon-prepend fa fa-calendar"></i> <input
+            id="dateInput" name="periodFrom" type="date"
+            class="form-control input-md" data-ng-model="vm.readingDate"
+            required>
+          </label>
+          <div class="note">Reading Date</div>
+        </section>
+        <section class="col col-4">
+          <label class="input"><i
+            class="icon-prepend fa fa-warning"></i><input type="text"
+            name="unpaidBill" id="unpaidBill" placeholder="meter #"
+            data-ng-model="vm.meterNo"> </label>
+        </section>
+      </div>
+      <section>
+        <header>Room(s)</header>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Room#</th>
+              <th>Previous Reading</th>
+              <th>Current Reading</th>
+              <th>Dff Reading</th>
+              <th>Overdue</th>
+              <th>Amount</th>
+              <th>Total</th>
+              <th>Status</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tfoot>
+            <tr>
+              <td></td>
+              <td></td>
+              <td>Overdue</td>
+              <td></td>
+              <td data-ng-bind-html="vm.totalOverdue | cusCurrency"></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td></td>
+              <td></td>
+              <td>Total</td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td data-ng-bind-html="vm.bill.grossAmount | cusCurrency"></td>
+              <td></td>
+            </tr>
+          </tfoot>
+          <tbody>
+            <tr data-ng-repeat="room in vm.rooms">
+              <td data-ng-bind-html="room.roomNumber"></td>
+              <td><input id="dateInput" name="previousReading"
+                type="text" class="form-control input-md"
+                data-ng-model="room.previousReading" required></td>
+              <td><input id="dateInput" name="currentReading"
+                type="text" class="form-control input-md"
+                data-ng-model="room.currentReading" data-ng-class="{'has-error': vm.errors.currentReading}" required></td>
+              <td data-ng-bind-html="room.diffReading" data-ng-class="{'has-error': vm.errors.diffReading}"></td>
+              <td data-ng-bind-html="room.overdue | cusCurrency"></td>
+              <td data-ng-bind-html="room.amount | cusCurrency"></td>
+              <td data-ng-bind-html="room.totalAmount | cusCurrency"></td>
+              <td data-ng-bind-html="room.status"></td>
+              <td data-ng-click="vm.removeItem($index)" class="red"><i
+                class="fa fa-times"></i></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+       <div class="row">
+        <section class="col col-2">
+          <button type="button" class="btn-right"
+            data-ng-click="vm.submit()">Generate</button>
+        </section>
+      </div>
+    </fieldset>
+  </form>
+</div>

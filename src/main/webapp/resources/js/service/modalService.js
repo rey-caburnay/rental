@@ -53,6 +53,9 @@
 		    showError: function (message) {
 		        swal(message,"", "error");
 		    },
+		    showInfo: function (message) {
+		    	swal(message,"","info");
+		    },
             spinner: function (timeout) {
 //            	swal({
 //              		  text: 'Processing',

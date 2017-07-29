@@ -78,7 +78,7 @@ public class TransactionServiceTest {
         collection.setBalance(0d);
         collection.setDeposit(0d);
         collection.setCashReceived(2000d);
-        collection.setChange(500d);
+//        collection.setChange(500d);
         collection.setUserId(1);
 //        Response<Collection> resp = transactionService.createCollection(collection);
 //        Assert.assertNotNull(resp.getModel());

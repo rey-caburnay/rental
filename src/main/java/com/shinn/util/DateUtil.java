@@ -11,6 +11,7 @@ public class DateUtil {
     public static String YYYYMMDD_DASH = "yyyy-MM-dd";
     public static String YYYYMMDD_BACKSLASH = "yyyy/MM/dd";
     public static int THIRTYDAYS = 30;
+    public static int FOURTYFIVEDAYS = 30;
     
     /**
      * 

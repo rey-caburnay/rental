@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.shinn.service.model.CollectionDetails;
+import com.shinn.service.model.RenterInfo;
 import com.shinn.service.model.Transaction;
 
 import lombok.Getter;
@@ -19,12 +20,16 @@ import lombok.ToString;
 @lombok.ToString
 public class CollectionForm implements Serializable {
     
-    
+    private int aptId;
+    private int roomId;
     private int renterId;
     private String paymentType;
     private String userId;
-    private Date collectionDate;
+    private Date txDate;
+    private Date startDate;
+    private Date dueDate;
     private List<TransactionDetails> transactions;
+    private List<RenterInfo> tenants;
     private Cash cash;
     private Credit credit;
     private Paypal paypal;
@@ -140,15 +145,76 @@ public class CollectionForm implements Serializable {
         this.credit = credit;
     }
     /**
-     * @return the collectionDate
+     * @return the tenants
      */
-    public Date getCollectionDate() {
-        return collectionDate;
+    public List<RenterInfo> getTenants() {
+      return tenants;
     }
     /**
-     * @param collectionDate the collectionDate to set
+     * @param tenants the tenants to set
      */
-    public void setCollectionDate(Date collectionDate) {
-        this.collectionDate = collectionDate;
+    public void setTenants(List<RenterInfo> tenants) {
+      this.tenants = tenants;
     }
+    /**
+     * @return the aptId
+     */
+    public int getAptId() {
+      return aptId;
+    }
+    /**
+     * @param aptId the aptId to set
+     */
+    public void setAptId(int aptId) {
+      this.aptId = aptId;
+    }
+    /**
+     * @return the roomId
+     */
+    public int getRoomId() {
+      return roomId;
+    }
+    /**
+     * @param roomId the roomId to set
+     */
+    public void setRoomId(int roomId) {
+      this.roomId = roomId;
+    }
+    /**
+     * @return the txDate
+     */
+    public Date getTxDate() {
+      return txDate;
+    }
+    /**
+     * @param txDate the txDate to set
+     */
+    public void setTxDate(Date txDate) {
+      this.txDate = txDate;
+    }
+    /**
+     * @return the startDate
+     */
+    public Date getStartDate() {
+      return startDate;
+    }
+    /**
+     * @param startDate the startDate to set
+     */
+    public void setStartDate(Date startDate) {
+      this.startDate = startDate;
+    }
+    /**
+     * @return the dueDate
+     */
+    public Date getDueDate() {
+      return dueDate;
+    }
+    /**
+     * @param dueDate the dueDate to set
+     */
+    public void setDueDate(Date dueDate) {
+      this.dueDate = dueDate;
+    }
+    
 }

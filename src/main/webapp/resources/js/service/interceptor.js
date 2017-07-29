@@ -34,6 +34,11 @@
     			  showSpinner();
     		  }
     		  return config;
+    	  },
+    	  response: function (config) {
+    		  if(swal.isVisible())
+    			  swal.closeModal();
+    		  return config;
     	  }
 
       }   

@@ -36,6 +36,11 @@ angular.module('rental').config(['$routeProvider','$httpProvider', function ($ro
         controller: "LoginController",
         controllerAs: "vm"
     })
+    .when("/bill", {
+    	templateUrl: viewBase + "billing.html",
+    	controller: "BillingController",
+    	controllerAs: "vm"
+    })
     
 //    .when("/pricing", {templateUrl: "/pricing", controller: "PageCtrl"})
 //    .when("/services", {templateUrl: "/services", controller: "PageCtrl"})

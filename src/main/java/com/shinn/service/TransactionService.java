@@ -1,13 +1,19 @@
 package com.shinn.service;
 
 import com.shinn.service.model.Collection;
+import com.shinn.service.model.ElectricBill;
 import com.shinn.service.model.Renter;
 import com.shinn.service.model.RenterInfo;
 import com.shinn.service.model.Transaction;
 import com.shinn.ui.model.CollectionForm;
 import com.shinn.ui.model.RegistrationForm;
 import com.shinn.ui.model.Response;
-
+/**
+ * transaction service is responsbile for
+ * all types of transaction manipulations (CREATE,UPDATE,DELETE)
+ * @author rbkshinn
+ *
+ */
 public interface TransactionService {
     /**
      * 
@@ -39,5 +45,6 @@ public interface TransactionService {
      * @return
      */
     public Response<CollectionForm> createCollection(CollectionForm collection);
+
 
 }

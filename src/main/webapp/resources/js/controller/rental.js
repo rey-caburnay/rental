@@ -153,40 +153,47 @@
         		return;
         	}
             var index = 0, tx = {};
-            if (vm.model.tenants) {
-                index = vm.model.tenants.length;    
+            if (vm.checkDuplicate()) {
+            	return;
             }
+            vm.model.rate = vm.model.room.rate;
             tx.aptId = vm.model.apartment.id
-            tx.id = 0;
+            tx.id = vm.renter.id;
             tx.roomId = vm.model.room.id;
             tx.firstName = vm.renter.firstName;
             tx.initial = vm.renter.initial;
             tx.lastName = vm.renter.lastName;
-            tx.startDate = dateFactory.format(vm.startDate);
-            tx.txDate = dateFactory.format(vm.startDate);
+            tx.startDate = vm.startDate;
+            tx.txDate = vm.startDate;
             //+ 30 days from start date.
-            vm.endDate = dateFactory.add(vm.startDate);
-            tx.dueDate = dateFactory.format(vm.endDate);
-            tx.amount = vm.model.room.rate;
+            vm.endDate = dateFactory.add(vm.startDate, 30);
+            tx.dueDate = vm.endDate;
+            tx.amount =  vm.model.rate
             tx.balance = 0;
-            tx.deposit = 0;
-            vm.model.rate = vm.model.room.rate;
-            vm.model.tenants[index] = tx;
+            tx.deposit = 0;	
+            tx.status = 'unpaid';
+            tx.mobileNumber = vm.renter.mobileNo;
+ 
+            vm.model.tenants.push(tx);
             vm.computeTotal();
-        }
-        /** 
-         * display the rate of the room when 
-         * room combo box is change 
-         */
-        vm.getRate = function (room) {
-            vm.model.rate = room.rate;
+
         }
         
+        vm.checkDuplicate = function () {
+        	var isDuplicate = false;
+        	for (var i = 0; i < vm.model.tenants.length; i++) {
+        		if (vm.model.tenants[i].id == vm.renter.id) {
+          			isDuplicate = true;
+          			break;
+        		}
+        	}
+        	return isDuplicate;
+        }
+         
         vm.getTenant = function (room) {
         	vm.showRoomInput = false;
         	vm.model.rate = room.rate;
         	getTenantsByAptRoom(room.aptId, room.id);
-//        	vm.popup.spinner(vm.model.response || 0);
         	vm.computeTotal();
         }
         vm.submit = function() {
@@ -230,19 +237,16 @@
             vm.model.cash.balance = 0;
             vm.model.cash.deposit = 0;
             vm.model.total = 0;
-            if(vm.showRoomInput) {
-            	if (vm.model.tenants && vm.model.tenants.length > 0) {
-            		var sharedTotal = vm.model.total / vm.model.tenants
-                    for (var i = 0; i < vm.model.tenants.length; i++) {
-                        vm.model.tenants[i].amount = sharedTotal;
-                    }
-                }
-            }
+            vm.model.existingBalance = 0;
             if (vm.model.tenants) {
-                vm.model.total = vm.model.total + vm.model.existingBalance;
                 for (var i = 0; i < vm.model.tenants.length; i++) {
                     vm.model.total = vm.model.total + vm.model.tenants[i].amount;
-                }
+                    vm.model.existingBalance += vm.model.tenants[i].balance - vm.model.tenants[i].deposit;
+                 }
+                vm.model.total = vm.model.total + vm.model.existingBalance;
+            }
+            if(vm.model.total < 0) {
+            	vm.model.cash.deposit = Math.abs(vm.model.total);
             }
         }
 
@@ -313,42 +317,56 @@
                     	processResponse(response);
                     });
         }
+        
+        function hasError() {
+        	 if (!vm.model.apartment || !vm.model.room) {
+            	 	vm.popup.showError("Select an Apartment and the room.");
+                 return true;
+             }
+             if (!vm.model.tenants || vm.model.tenants.length < 1) {
+                 vm.popup.showError("Please assign a tenant(s) in the room.");
+                 v
+             }
+             if ((vm.model.cash.cashReceived &&
+             		vm.model.cash.cashReceived < 1 && vm.model.cash.deposit < 0) 
+             		|| vm.model.cash.cashReceived == "") {
+             	 vm.popup.showError("Please input the Amount of Cash Received.");
+             	 return true;
+             }
+             if ((vm.model.cash.amountPaid &&
+                     vm.model.cash.amountPaid < 1) 
+                     || vm.model.cash.amountPaid == "" && vm.model.cash.deposit < 0) {
+                  vm.popup.showError("Please input the Amount Paid.");
+                  return true;
+             }
+             if(vm.model.total < 1) {
+            	 vm.popup.showInfo("Tenant(s) already Paid.");
+            	 return true;
+             }
+             return false;
+        }
 
         /**
          * submit the form
          */
         function submit() {
-            if (!vm.model.apartment || !vm.model.room) {
-           	 	vm.popup.showError("Select an Apartment and the room.");
-                return;
-            }
-            if (!vm.model.tenants || vm.model.tenants.length < 1) {
-                vm.popup.showError("Please assign a tenant(s) in the room.");
-                return;
-            }
-            if ((vm.model.cash.cashReceived &&
-            		vm.model.cash.cashReceived < 1) 
-            		|| vm.model.cash.cashReceived == "") {
-            	 vm.popup.showError("Please input the Amount of Cash Received.");
-                 return;
-            }
-            if ((vm.model.cash.amountPaid &&
-                    vm.model.cash.amountPaid < 1) 
-                    || vm.model.cash.amountPaid == "") {
-                 vm.popup.showError("Please input the Amount Paid.");
-                 return;
-            }
-
+           
+        	if (hasError()) {
+        		return;
+        	}
+            
             var tx = {
-                renterId: vm.renter.id,
-                transactions: vm.model.transactions,
+                tenants: vm.model.tenants,
                 paymentType: vm.model.paymentType,
                 cash: vm.model.cash,
                 credit: vm.model.credit,
                 paypal: vm.model.paypal,
                 recievedBy: vm.model.receivedBy,
                 note: vm.model.note,
-                userId: 1
+                userId: 1,
+                roomId: vm.model.room.id,
+                aptId: vm.model.apartment.id
+                
             } 
             transactionService
                     .saveCollection(tx)
@@ -376,7 +394,6 @@
         
         /** test centralize response function **/
         function processResponse(response) {
-        	swal.closeModal();
         	var data = response.data;
         	switch(response.method) {
         	case 'getRenters':
@@ -422,6 +439,7 @@
         	case 'getTenants':
         		vm.model.response = 1;
                 vm.model.tenants = data.result;
+                vm.computeTotal();
         		break;
         	case 'getApartments':
         		vm.apartments = data.result;

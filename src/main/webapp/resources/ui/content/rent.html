@@ -56,6 +56,10 @@
           </label>
        <div class="note">Start Date</div>
        </section>
+<!--        <section class="col col-2"> -->
+<!--           <input type="checkbox" data-ng-model="vm.sharedRoom"/> -->
+<!--           <div class="note">Shared Room?</div> -->
+<!--         </section> -->
        <section class="col col-2">
           <button type="button" class="btn-acquired"
             data-ng-click="vm.acquire()">Acquire</button>
@@ -93,7 +97,9 @@
               <th>Contact # </th>
               <th>Due Date</th>
               <th>Amount</th>
+              <th>Overdue</th>
               <th>Status</th>
+              <th>Remarks</th>
               <th></th>
             </tr>
           </thead>
@@ -102,22 +108,30 @@
               <td></td>
               <td></td>
               <td>Overdue</td>
-              <td data-ng-bind-html="vm.model.existingBalance"></td>
+              <td></td>
+              <td data-ng-bind-html="vm.model.existingBalance || 0.00"></td>
+              <td></td>
+              <td></td>
             </tr>
             <tr>
               <td></td>
               <td></td>
               <td>Total</td>
-              <td data-ng-bind-html="vm.model.total"></td>
+              <td data-ng-bind-html="vm.model.total || 0.00" colspan="2"></td>
+              <td></td>
+              <td></td>
+              <td></td>
             </tr>
           </tfoot>
           <tbody>
-            <tr data-ng-repeat="tx in vm.model.tenants">
-              <td data-ng-bind-html="tx.firstName +' ' + tx.initial + ' ' + tx.lastName"></td>
-              <td data-ng-bind-html="tx.mobileNumber"></td>
-              <td data-ng-bind-html="tx.dueDate"></td>
-              <td data-ng-bind-html="tx.amount"></td>
-               <td data-ng-bind-html="tx.status"></td>
+            <tr data-ng-repeat="tenant in vm.model.tenants">
+              <td data-ng-bind-html="tenant.firstName +' ' + tenant.initial + ' ' + tenant.lastName"></td>
+              <td data-ng-bind-html="tenant.mobileNumber"></td>
+              <td data-ng-bind-html="tenant.dueDate | MMddYYYY"></td>
+              <td data-ng-bind-html="tenant.amount || 0"></td>
+               <td data-ng-bind-html="tenant.balance - tenant.deposit || 0"></td>
+               <td data-ng-bind-html="tenant.paymentStatus"></td>
+                 <td data-ng-bind-html="tenant.remarks"></td>
               <td data-ng-click="vm.removeItem($index)" class="red"><i
                 class="fa fa-times"></i></td>
             </tr>

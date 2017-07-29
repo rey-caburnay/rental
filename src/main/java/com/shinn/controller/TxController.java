@@ -15,8 +15,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.shinn.chikka.ChikkaService;
+import com.shinn.chikka.model.ChikkaMessage;
 import com.shinn.dao.factory.AbstractDaoImpl;
 import com.shinn.dao.factory.ResultStatus;
+import com.shinn.mail.MailService;
+import com.shinn.mail.MailServiceImpl;
 import com.shinn.service.TransactionService;
 import com.shinn.service.model.Collection;
 import com.shinn.service.model.Renter;
@@ -25,6 +29,7 @@ import com.shinn.service.model.Transaction;
 import com.shinn.ui.model.CollectionForm;
 import com.shinn.ui.model.RegistrationForm;
 import com.shinn.ui.model.Response;
+import com.shinn.util.RentStatus;
 
 @RestController
 @RequestMapping(value="/tx")
@@ -33,6 +38,10 @@ public class TxController {
 
     @Autowired
     TransactionService transactionService;
+    @Autowired
+    ChikkaService chikkaService;
+    @Autowired
+    MailService mailService;
 
     @RequestMapping(value = "/register", method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE)
@@ -99,7 +108,13 @@ public class TxController {
         Response<CollectionForm> resp = transactionService.createCollection(collectionForm);
         logger.debug(resp.toString());
         if(resp.getResponseStatus().equals(ResultStatus.RESULT_OK)){
-            return new ResponseEntity<Response<CollectionForm>>(resp, HttpStatus.OK);
+          ChikkaMessage sms = new ChikkaMessage();
+          sms.setMessage(RentStatus.RECEIPT_RENT_MESSAGE);
+          chikkaService.sendMessage(sms);
+          
+          //Send Email if there is an email Address
+          mailService.sendMail(resp.getModel().getTenants());
+          return new ResponseEntity<Response<CollectionForm>>(resp, HttpStatus.OK);
         }
         return new ResponseEntity(resp, HttpStatus.BAD_REQUEST);
     }

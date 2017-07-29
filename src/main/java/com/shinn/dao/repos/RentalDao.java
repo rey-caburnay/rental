@@ -28,4 +28,6 @@ public interface RentalDao extends GenericDao<Transaction>{
 	 * @return
 	 */
 	public List<Transaction> getTransactionByApt(Integer aptId, Integer roomId);
+	
+	public Transaction getTransactionByAptRoomRenter(Integer aptId, Integer roomId, Integer renterId);
 }

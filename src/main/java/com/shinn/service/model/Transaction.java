@@ -24,6 +24,7 @@ public class Transaction implements Serializable{
 	private String txType;
 	private String provider;
 	private String status;
+	private String paymentStatus;
 	private Integer userId;
 	private Integer updtCnt;
 	private Date updateDate;
@@ -309,6 +310,18 @@ public class Transaction implements Serializable{
      */
     public void setAmountPaid(Double amountPaid) {
         this.amountPaid = amountPaid;
+    }
+    /**
+     * @return the paymentStatus
+     */
+    public String getPaymentStatus() {
+      return paymentStatus;
+    }
+    /**
+     * @param paymentStatus the paymentStatus to set
+     */
+    public void setPaymentStatus(String paymentStatus) {
+      this.paymentStatus = paymentStatus;
     }
     
 

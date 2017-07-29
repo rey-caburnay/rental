@@ -327,18 +327,23 @@ public abstract class AbstractDaoImpl<T extends Serializable> {
                     columnName = f.getName();
                     logger.info("column name:" + columnName);
                     value = result.getObject(columnName);
+                    if (value != null) {
+                      PropertyDescriptor propertyDescriptor = new PropertyDescriptor(f.getName(), clzz);
+                      Method method = propertyDescriptor.getWriteMethod();
+                      logger.info(method.toString());
+                      logger.info(instance.toString());
+                      logger.info(value.toString());
+                      method.invoke(instance, value);
+                  }
                 } catch (Exception e) {
-                    logger.debug("No column name in RS:"+ columnName);
+                    logger.info("No column name in RS:"+ columnName);
                 }
-                if (value != null) {
-                    PropertyDescriptor propertyDescriptor = new PropertyDescriptor(f.getName(), clzz);
-                    Method method = propertyDescriptor.getWriteMethod();
-                    method.invoke(instance, value);
-                }
+
             }
             return instance;
 
         } catch (Exception e) {
+          e.printStackTrace();
             logger.info(e.getCause() +" " + columnName);
             return null;
         }

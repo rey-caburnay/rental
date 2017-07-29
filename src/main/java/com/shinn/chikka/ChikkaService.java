@@ -3,6 +3,8 @@ package com.shinn.chikka;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
 
 import javax.security.auth.callback.ChoiceCallback;
 import org.slf4j.LoggerFactory;
@@ -24,6 +26,7 @@ import com.shinn.chikka.model.ChikkaResponse;
 import com.shinn.controller.NotificationController;
 import com.shinn.dao.factory.ResultStatus;
 import com.shinn.dao.repos.SmsDao;
+import com.shinn.service.model.RenterInfo;
 import com.shinn.service.model.Sms;
 import com.shinn.ui.model.Response;
 import com.shinn.util.StringUtil;
@@ -118,4 +121,27 @@ public class ChikkaService implements Chikka {
        resp.setModel(sms);
        return resp;
    }
+
+  @Override
+  public Response<ChikkaResponse> sendMessages(List<RenterInfo> tenants) {
+    Response<ChikkaResponse> resp = new Response<>();
+    ChikkaMessage sms = new ChikkaMessage();
+    if(StringUtil.isNullOrEmpty(tenants)) {
+      resp.setErrorMsg("No Tenants available");
+      resp.setResponseStatus("Not sent");
+    } else {
+      Iterator<RenterInfo> itr = tenants.iterator();
+      while(itr.hasNext()) {
+        RenterInfo tenant = itr.next();
+        if(!StringUtil.isNullOrEmpty(tenant.getMobileNumber())){
+          sms.setMobileNumber(tenant.getMobileNumber());
+//          sms.setMessageId(messageId);
+//          sms.setMessageType(messageType);
+//          sms.setShortcode(shortcode);
+        }
+          
+      }
+    }
+    return null;
+  }
 }

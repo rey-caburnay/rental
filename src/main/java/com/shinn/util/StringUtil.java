@@ -2,6 +2,9 @@ package com.shinn.util;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.slf4j.LoggerFactory;
 
@@ -81,6 +84,26 @@ public class StringUtil {
             return true;
         }
         return false;
+    }
+ 
+    /**
+     * replace the string with curly braces with specified value.
+     * @param template
+     * @param placeHolder
+     * @return
+     */
+    public static String placeHolder(String template, HashMap<Integer, String> placeHolder) {
+      String generatedString = "";
+      Pattern p = Pattern.compile("(\\{\\d+\\})");
+      Matcher m = p.matcher(template);
+      while (m.find()) {
+          System.out.println(m.group());
+          String val1 = m.group().replace("{", "").replace("}", "");
+          System.out.println(val1);
+          template = (template.replace(m.group(), placeHolder.get(Integer.parseInt(val1))));
+          System.out.println(template);
+      }
+      return template;
     }
 
 }
