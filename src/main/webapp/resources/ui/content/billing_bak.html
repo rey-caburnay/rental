@@ -9,11 +9,11 @@
   <div class="tab-content clearfix">
     <div id="properties" class="tab-pane fade in"  data-ng-class="{'active': vm.isPropertyBilling}"
       data-ng-click="vm.setActivePage('property')">
-      <div data-ng-include="'resources/ui/content/properties.html'"></div>
+      <div data-ng-include="'resources/ui/content/billing/properties.html'"></div>
     </div>
     <div id="electric" class="tab-pane fade in" data-ng-class="{'active': vm.isElectricBilling}"
     data-ng-click="vm.setActivePage('electric')">
-      <div data-ng-include="'resources/ui/content/electric.html'"></div>
+      <div data-ng-include="'resources/ui/content/billing/electric.html'"></div>
     </div>
     <div id="water" class="tab-pane fade" data-ng-class="{'active': vm.isWaterBilling}"
      data-ng-click="vm.setActivePage('water')">

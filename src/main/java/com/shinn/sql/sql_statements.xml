@@ -136,16 +136,10 @@
   </entry>
   
   <entry key="get-apartments">
-    SELECT id,
-    name,
-    personIncharge,
-    aptType,
-    mobileNo,
-    telNo,
-    address1,
-    address2,
-    status
-    FROM realmaster.mst_apartment;
+    SELECT * FROM realmaster.mst_apartment;
+  </entry>
+  <entry key="get-apartment">
+    SELECT * FROM realmaster.mst_apartment WHERE id = ?;
   </entry>
   <entry key="get-rooms">
     SELECT
@@ -492,8 +486,8 @@
     (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
   </entry>
   <entry key="electric-findby-apt">
-    SELECT el.id, el.aptId, el.roomId, curReading as currentReading,
-	prevReading as previousReading, provider, accountNo,
+    SELECT el.id, el.aptId, el.roomId, el.currentReading,
+	el.previousReading, provider, accountNo,
 	diffReading, amount, overdue, el.status, readingDate, dueDate,
 	billingNo, generationDate,payment, rm.roomNo as roomNumber, 
     ap.name as apartmentName, meterNo, lastBillNo as billingNo
@@ -506,4 +500,100 @@
     <entry key="electricprovider-by-provider">
 	SELECT * FROM prm_electric WHERE provider = ?
   </entry>
+  <entry key="save-billing">
+  INSERT INTO `realmaster`.`tx_billing`
+  (`id`,
+  `aptId`,
+  `roomId`,
+  `currentReading`,
+  `previousReading`,
+  `diffReading`,
+  `provider`,
+  `amount`,
+  `overdue`,
+  `readingDate`,
+  `dueDate`,
+  `generationDate`,
+  `billingNo`,
+  `billType`)
+  VALUES
+      (:id, 
+      :aptId,
+      :roomId,
+      :currentReading,
+      :previousReading,
+      :diffReading,
+      :provider, 
+      :amount, 
+      :overdue, 
+      :readingDate, 
+      :dueDate, 
+      :generationDate, 
+      :billingNo, 
+      :billType);
+  </entry>
+   <entry key="save-electricbill">
+  INSERT INTO `realmaster`.`tx_billing`
+  (`id`,
+  `aptId`,
+  `roomId`,
+  `currentReading`,
+  `previousReading`,
+  `diffReading`,
+  `provider`,
+  `amount`,
+  `overdue`,
+  `readingDate`,
+  `dueDate`,
+  `generationDate`,
+  `billingNo`,
+  `lastBillNo`,
+  `billType`)
+  VALUES
+      (:id, 
+      :aptId,
+      :roomId,
+      :currentReading,
+      :previousReading,
+      :diffReading,
+      :provider, 
+      :amount, 
+      :overdue, 
+      :readingDate, 
+      :dueDate, 
+      :generationDate, 
+      :billingNo,
+      :lastBillNo, 
+      :billType);
+  </entry>
+  <entry key="update-electricbill">
+  UPDATE `realmaster`.`mst_electric`
+    SET
+    `id` = :id,
+    `aptId` = :aptId,
+    `roomId` = :roomId,
+    `accountNo` = :accountNo,
+    `currentReading` = :currentReading,
+    `previousReading` = :previousReading,
+    `provider` = :provider,
+    `amount` = :amount,
+    `status` = :status,
+    `overdue` = :overdue,
+    `readingDate` = :readingDate,
+    `dueDate` = :dueDate,
+    `diffReading` = :diffReading,
+    `billingNo` = :billingNo,
+    `generationDate` = :generationDate,
+    `payment` = :payment,
+    `meterNo` = :meterNo,
+    `lastBillNo` = :lastBillNo
+    WHERE `id` = :id;
+  </entry>
+  <entry key="billing-findby-generatedDate"">
+    SELECT * FROM realmaster.tx_billing;
+  </entry>
+  <entry key="billing-finby-latest">
+    SELECT * from realmaster.tx_billing order by generationDate desc limit 1;
+  </entry>
+  
 </properties>

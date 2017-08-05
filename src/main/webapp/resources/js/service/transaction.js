@@ -13,52 +13,22 @@
     this.register = function(model) {
       var url = 'tx/register';
       return request(REQUEST_POST, url, model,'register');
-//      return http.post('tx/register', model).then(function(response) {
-//        return response.data;
-//      }, function(errResponse) {
-//        console.error('Error while fetching users');
-//        return defer.reject(errResponse);
-//      });
     }
     this.saveTx = function(model) {
       var url = 'tx/savetx';
       return request(REQUEST_POST, url, model,'saveTx');
-//      return http.post('tx/savetx', model).then(function(response) {
-//        return response.data;
-//      }, function(errResponse) {
-//        console.error('Error while fetching users');
-//        return defer.reject(errResponse);
-//      });
     }
     this.getRoomsByRenter = function(renterId) {
       var url = 'tx/getrooms/' + renterId;
       return request(REQUEST_GET, url, null,'getRoomsByRenter');
-//      return http.get('tx/getrooms/' + renterId).then(function(response) {
-//        return response.data;
-//      }, function(errResponse) {
-//        console.error('Error while fetching rooms');
-//        return defer.reject(errResponse);
-//      });
     }
     this.saveCollection = function(model) {
       var url = 'tx/collections';
       return request(REQUEST_POST, url, model,'saveCollection');
-//      return http.post('tx/collections', model).then(function(response) {
-//        return response.data;
-//      }, function(errResponse) {
-//        console.error('Error while fetching users');
-//        return errResponse.data;
-//      });
     }
     this.generateBillings = function(model) {
       var url = 'bill/generate';
       return request(REQUEST_POST, url, model,'generateBillings');
-//      return http.post('tx/collections', model).then(function(response) {
-//        return response.data;
-//      }, function(errResponse) {
-//        console.error('Error while fetching users');
-//        return errResponse.data;
-//      });
     }
     return this;
     

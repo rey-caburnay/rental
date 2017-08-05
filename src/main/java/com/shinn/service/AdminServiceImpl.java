@@ -239,10 +239,10 @@ public class AdminServiceImpl implements AdminService {
     Response<ElectricBill> resp = new Response<ElectricBill>();
     try {
       List<ElectricBill> electricBills =  electricBillDao.getElectricBillByApt(aptId);
-      Iterator<ElectricBill> itr = electricBills.iterator();
-      while (itr.hasNext()) {
-        ElectricBill electricBill = itr.next();
-        electricBill.setElectricProvider(electricProviderDao.getProvider(electricBill.getProvider()));
+      Apartment apartment = apartmentDao.getById(aptId);
+      ElectricProvider electricProvider = electricProviderDao.getProvider(apartment.getElectricProvider());
+      for (ElectricBill bill : electricBills) {
+        bill.setElectricProvider(electricProvider);
       }
       resp.setResult(electricBills);
       resp.setResponseStatus(ResultStatus.RESULT_OK);

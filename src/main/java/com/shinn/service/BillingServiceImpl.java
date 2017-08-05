@@ -26,27 +26,84 @@ import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.shinn.dao.factory.ResultStatus;
+import com.shinn.dao.repos.BillingDao;
 import com.shinn.dao.repos.ElectricBillDao;
 import com.shinn.dao.repos.ElectricProviderDao;
+import com.shinn.service.model.Billing;
 import com.shinn.service.model.ElectricBill;
 import com.shinn.service.model.ElectricProvider;
 import com.shinn.ui.model.BillingForm;
 import com.shinn.ui.model.Response;
+import com.shinn.util.DateUtil;
 import com.shinn.util.PdfUtil;
+import com.shinn.util.StringUtil;
 
 @Service
 public class BillingServiceImpl implements BillingService {
   private static final org.slf4j.Logger logger = LoggerFactory.getLogger(BillingServiceImpl.class);
   private static String FILE = "C:/Users/rbkshinn/FirstPdf.pdf";
   private static Integer NUMBER_OF_ROWS = 3;
+  private static final String ELECTRIC_BILL = "electric";
+  private static final Integer MINIMUM_DAYS_TO_GENERATE = 20;
   
   @Autowired
   ElectricBillDao electricBillDao;
   @Autowired
   ElectricProviderDao electricProviderDao;
+  @Autowired
+  BillingDao billingDao;
 
-  public void generateBilling(BillingForm billingForm) {
+  /**
+   * 
+   */
+  @Override
+  public Response<BillingForm> generateBillings(BillingForm billingForm) throws Exception {
+    Response<BillingForm> resp = new Response();    
+    
+    //TODO save bill;
+    //save billings 
+    Billing billing = null;
+    int numberOfDays = 0;
+    for (ElectricBill electricBill : billingForm.getRooms()) {
+      //create only 1 billing within a month
+//      billingDao.get
+      billing = billingDao.getLatestBilling(electricBill.getAptId(), electricBill.getRoomId());
+      if (billing != null) {
+        numberOfDays = DateUtil.daysBetween(billing.getGenerationDate(), DateUtil.getCurrentDate());
+      }
+      
+      if (billing ==  null || numberOfDays >= MINIMUM_DAYS_TO_GENERATE) {
+        billing = new Billing();
+        billing.setAmount(electricBill.getAmount());
+        billing.setOverdue(electricBill.getOverdue());
+        billing.setAptId(electricBill.getAptId());
+        billing.setRoomId(electricBill.getRoomId());
+        billing.setBillType(ELECTRIC_BILL);
+        billing.setCurrentReading(electricBill.getCurrentReading());
+        billing.setPreviousReading(electricBill.getPreviousReading());
+        billing.setDueDate(electricBill.getDueDate());
+        billing.setGenerationDate(DateUtil.getCurrentDate());
+        billing.setReadingDate(billingForm.getReadingDate());
+        Long dateTime = DateUtil.getCurrentDate().getTime();
+        String billingNo = String.valueOf(dateTime) + String.valueOf(electricBill.getAptId()) + String.valueOf(electricBill.getRoomId());
+        billing.setBillingNo(billingNo);
+        billingDao.saveUpdate(billing);
+        electricBill.setLastBillNo(billingNo);
+        electricBill.setBillingNo(billingNo);
+        electricBillDao.saveUpdate(electricBill);
+      }
+      
+    }
+    billingDao.commit();
+    resp.setModel(billingForm);
+    return resp;
+  }
   
+  /**
+   * return pdf file location;
+   */
+  public String createPdf(BillingForm billingForm) {
+    String generatedFile = FILE;
     try {
       Document document = PdfUtil.createDocument(FILE);
       for (ElectricBill electricBill : billingForm.getRooms()) {
@@ -58,7 +115,9 @@ public class BillingServiceImpl implements BillingService {
       // TODO Auto-generated catch block
       e.printStackTrace();
     }     
+    return generatedFile;
   }
+  
   
   /**
    * format a bill to a pdf table
@@ -69,7 +128,7 @@ public class BillingServiceImpl implements BillingService {
   public PdfPTable createElectricBill(ElectricBill bill, ElectricProvider provider) {
     PdfPTable table = new PdfPTable(NUMBER_OF_ROWS);
 
-    String customerInfo = "Billing #:"+ bill.getBillingNo() + "Room #: " +bill.getRoomId() + "\t" + "Meter #: " + bill.getMeterNo();
+    String customerInfo = "Billing #:"+ bill.getLastBillNo() + "Room #: " +bill.getRoomId() + "\t" + "Meter #: " + bill.getMeterNo();
     table.addCell(PdfUtil.createCell(customerInfo, Element.ALIGN_CENTER, Rectangle.NO_BORDER, NUMBER_OF_ROWS));
     //Rate
     table.addCell(PdfUtil.createCell("RATE",Element.ALIGN_LEFT, Rectangle.NO_BORDER, NUMBER_OF_ROWS));
@@ -221,6 +280,8 @@ public class BillingServiceImpl implements BillingService {
     return resp;
    
   }
+
+
 
 
 }

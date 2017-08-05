@@ -40,6 +40,8 @@ public interface GenericDao<T> {
 	
 	public void setSavePoint(String name) throws Exception;
 	
+//	public Transaction
+	
 	
 
 }

@@ -14,8 +14,8 @@ import com.itextpdf.text.pdf.PdfWriter;
 
 public class PdfUtil {
   
-  public static Font DEFAULT_FONT = new Font(Font.FontFamily.HELVETICA, 8, Font.NORMAL);
-  public static Font DEFAULT_FONT_BOLD = new Font(Font.FontFamily.HELVETICA, 8, Font.BOLD);
+  public static final Font DEFAULT_FONT = new Font(Font.FontFamily.HELVETICA, 8, Font.NORMAL);
+  public static final Font DEFAULT_FONT_BOLD = new Font(Font.FontFamily.HELVETICA, 8, Font.BOLD);
   
   /**
    * create an open Document

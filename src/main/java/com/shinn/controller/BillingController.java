@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.shinn.dao.factory.ResultStatus;
+import com.shinn.dao.repos.BillingDao;
 import com.shinn.service.AdminService;
 import com.shinn.service.BillingService;
 import com.shinn.service.model.ElectricBill;
@@ -74,14 +75,50 @@ public class BillingController {
       produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Response<BillingForm>> generateBilling(@RequestBody BillingForm billingForm) {
     logger.info(billingForm.toString());
-    billingService.generateBilling(billingForm);
+   
+
     Response<BillingForm> resp = new Response<BillingForm>();
-//    resp.setResult(electricBills);
-    resp.setResponseStatus(ResultStatus.RESULT_OK);
-//    logger.debug(resp.toString());
-    if (resp.getResponseStatus().equals(ResultStatus.RESULT_OK)) {
-      return new ResponseEntity<Response<BillingForm>>(resp, HttpStatus.OK);
+    try {
+      resp = billingService.generateBillings(billingForm);
+      String pdfLocation = billingService.createPdf(billingForm);
+      resp.setResponseStatus(ResultStatus.RESULT_OK);
+//      if (resp.getResponseStatus().equals(ResultStatus.RESULT_OK)) {
+        return new ResponseEntity<Response<BillingForm>>(resp, HttpStatus.OK);
+//      }
+    } catch (Exception e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+      resp.setResponseStatus(ResultStatus.GENERAL_ERROR);
+      return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
     }
-    return new ResponseEntity(HttpStatus.NO_CONTENT);
   }
+//  @RequestMapping(value = "/form/pdf", produces = "application/pdf")
+//  public ResponseEntity<byte[]> showPdf(DomainModel domain, ModelMap model) {
+//      createPdf(domain, model);
+//
+//      Path path = Paths.get(PATH_FILE);
+//      byte[] pdfContents = null;
+//      try {
+//          pdfContents = Files.readAllBytes(path);
+//      } catch (IOException e) {
+//          e.printStackTrace();
+//      }
+//
+//      HttpHeaders headers = new HttpHeaders();
+//      headers.setContentType(MediaType.parseMediaType("application/pdf"));
+//      String filename = NAME_PDF;
+//      headers.setContentDispositionFormData(filename, filename);
+//      headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
+//      ResponseEntity<byte[]> response = new ResponseEntity<byte[]>(
+//              pdfContents, headers, HttpStatus.OK);
+//      return response;
+//  httpServletResponse.setHeader("Content-Disposition", "inline");
+//  HttpHeaders headers = new HttpHeaders();
+//  headers.add("content-disposition", "attachment; filename=" + fileName)
+//  ResponseEntity<byte[]> response = new ResponseEntity<byte[]>(
+//              pdfContents, headers, HttpStatus.OK);
+
+
+//  }
+  
 }

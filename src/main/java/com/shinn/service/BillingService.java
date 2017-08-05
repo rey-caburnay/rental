@@ -7,6 +7,7 @@ import com.shinn.ui.model.Response;
 public interface BillingService {
   
   public Response<ElectricBill> getElectricBills(Integer aptId);
-  public void generateBilling(BillingForm billingForm);
+  public String createPdf(BillingForm billingForm);
+  public Response<BillingForm> generateBillings(BillingForm billingForm) throws Exception;
 
 }

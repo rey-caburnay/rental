@@ -42,6 +42,8 @@
     };
     // set the default active tab
     vm.isElectricBilling = true;
+    
+    /** set the tab pages ***/
     vm.setActivePage = function(tab) {
       vm.isPropertyBilling = false;
       vm.isElectricBilling = false;
@@ -60,9 +62,11 @@
       }
     };
     
-    vm.getBillings = function(aptId) {
+    /** retrieve the billings of the apartment **/
+    vm.getBillings = function(apt) {
       var type = 'electric';
-      getBillings(aptId, type);
+      vm.meterNo = apt.electricAccount;
+      getBillings(apt.id, type);
     };
     
     vm.modelOptions = {
@@ -209,6 +213,9 @@
     }
     function hasError() {
       var hasError = false;
+      if (!vm.readingDate) {
+        return true;
+      }
       for (var prop in vm.errors) {
         if (vm.errors[prop] == true) {
            hasError = true;
@@ -263,7 +270,7 @@
     
     /** test centralize response function * */
     function processResponse(response) {
-      swal.closeModal();
+      console.log(response);
       var data = response.data;
       switch (response.method) {
       case 'getBillings':

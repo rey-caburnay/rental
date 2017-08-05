@@ -28,7 +28,7 @@ angular.module('rental').config(['$routeProvider','$httpProvider', function ($ro
     	controllerAs: "vm"
     })
     // Pages
-    .when("/collection", {templateUrl: viewBase + "collection.html",
+    .when("/collection", {templateUrl: viewBase + "/collection/collection.html",
         controller: "CollectionController",
         controllerAs: "vm"
      })
@@ -37,11 +37,11 @@ angular.module('rental').config(['$routeProvider','$httpProvider', function ($ro
         controllerAs: "vm"
     })
     .when("/bill", {
-    	templateUrl: viewBase + "billing.html",
+    	templateUrl: viewBase + "/billing/billing.html",
     	controller: "BillingController",
     	controllerAs: "vm"
     })
-    
+   
 //    .when("/pricing", {templateUrl: "/pricing", controller: "PageCtrl"})
 //    .when("/services", {templateUrl: "/services", controller: "PageCtrl"})
 //    .when("/contact", {templateUrl: "/contact", controller: "PageCtrl"})

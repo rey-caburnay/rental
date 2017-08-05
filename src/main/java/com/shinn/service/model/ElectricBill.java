@@ -28,11 +28,13 @@ public class ElectricBill implements Serializable {
   private Double amount;
   private String status;
   private Double overdue;
-  private Integer billingNo;
+  private String lastBillNo;
+  private String billingNo;
   private String meterNo;
   private Date dueDate;
   private Double payment;
   private Double surcharge;
+  private Date readingDate;
   
   /** non db fields **/
   private Date generationDate;

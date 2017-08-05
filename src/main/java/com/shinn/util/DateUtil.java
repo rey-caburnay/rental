@@ -86,4 +86,8 @@ public class DateUtil {
         }
         return month;
     }
+    
+    public static Date getCurrentDate() {
+      return new Date();
+    }
 }

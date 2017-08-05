@@ -10,7 +10,7 @@
             data-ng-model="vm.model.apartment"
             data-ng-options="apt as apt.name for apt in vm.apartments track by apt.id"
             class="form-control"
-            data-ng-change="vm.getBillings(vm.model.apartment.id)"
+            data-ng-change="vm.getBillings(vm.model.apartment)"
             required>
               <option value="">-- choose apartment --</option>
           </select>
