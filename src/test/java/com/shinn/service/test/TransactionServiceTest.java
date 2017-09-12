@@ -36,7 +36,7 @@ public class TransactionServiceTest {
     }
     
     @Test 
-    @Ignore
+//    @Ignore
     public void registration() {
     	Renter renter = new Renter();
     	renter.setFirstName("dean");

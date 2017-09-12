@@ -8,5 +8,7 @@ import com.shinn.service.model.ElectricBill;
 public interface ElectricBillDao extends GenericDao<ElectricBill> {
 
   public List<ElectricBill> getElectricBillByApt(Integer aptId);
+  
+  public ElectricBill getByAptRoom(Integer aptId, Integer roomId);
 
 }

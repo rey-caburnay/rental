@@ -1,5 +1,5 @@
-
 <div id="electric">
+<canvas id="the-canvas" class="hide"></canvas>
   <form action="#" id="simple-form" class="simple-form"
     name="electricBilling">
     <fieldset>
@@ -38,18 +38,20 @@
           <thead>
             <tr>
               <th>Room#</th>
+              <th>LastReading</th>
               <th>Previous Reading</th>
               <th>Current Reading</th>
               <th>Dff Reading</th>
               <th>Overdue</th>
               <th>Amount</th>
               <th>Total</th>
-              <th>Status</th>
+<!--               <th>Status</th> -->
               <th></th>
             </tr>
           </thead>
           <tfoot>
             <tr>
+              <td></td>
               <td></td>
               <td></td>
               <td>Overdue</td>
@@ -58,22 +60,24 @@
               <td></td>
               <td></td>
               <td></td>
-              <td></td>
+<!--               <td></td> -->
             </tr>
             <tr>
+              <td></td>
               <td></td>
               <td></td>
               <td>Total</td>
               <td></td>
               <td></td>
               <td></td>
-              <td data-ng-bind-html="vm.bill.grossAmount | cusCurrency"></td>
-              <td></td>
+              <td data-ng-bind-html="vm.totalAmount | cusCurrency"></td>
+<!--               <td></td> -->
             </tr>
           </tfoot>
           <tbody>
             <tr data-ng-repeat="room in vm.rooms">
               <td data-ng-bind-html="room.roomNumber"></td>
+               <td data-ng-bind-html="room.readingDate | MMddYYYY"></td>
               <td><input id="dateInput" name="previousReading"
                 type="text" class="form-control input-md"
                 data-ng-model="room.previousReading" required></td>
@@ -83,8 +87,8 @@
               <td data-ng-bind-html="room.diffReading" data-ng-class="{'has-error': vm.errors.diffReading}"></td>
               <td data-ng-bind-html="room.overdue | cusCurrency"></td>
               <td data-ng-bind-html="room.amount | cusCurrency"></td>
-              <td data-ng-bind-html="room.totalAmount | cusCurrency"></td>
-              <td data-ng-bind-html="room.status"></td>
+              <td data-ng-bind-html="(room.amount + room.overdue)| cusCurrency"></td>
+<!--               <td data-ng-bind-html="room.status"></td> -->
               <td data-ng-click="vm.removeItem($index)" class="red"><i
                 class="fa fa-times"></i></td>
             </tr>
@@ -97,6 +101,7 @@
             data-ng-click="vm.submit()">Generate</button>
         </section>
       </div>
+      
     </fieldset>
   </form>
 </div>

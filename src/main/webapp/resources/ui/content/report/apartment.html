@@ -1,0 +1,48 @@
+
+<div id="tenant">
+   <form action="#" id="simple-form" class="simple-form"
+    name="rentalForm">
+    <fieldset>
+      <div class="row" data-ng-class="{'': !vm.showRoomInput}">
+        <section class="col col-6">
+          <label class="select" for="rentFor"> <select
+            id="selectbasic" name="rentFor"
+            data-ng-model="vm.apartment"
+            data-ng-options="apt as apt.name for apt in vm.apartments track by apt.id"
+            class="form-control"
+            data-ng-change="vm.getRooms(vm.apartment.id)" required>
+              <option value="">-- all apartment --</option>
+          </select>
+          </label>
+        </section>
+       </div>
+      <section>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Room #</th>
+              <th>Room Name</th>
+              <th>Room Type</th>
+              <th>Rate</th>
+              <th>Room</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr data-ng-repeat="room in vm.rooms">
+              <td data-ng-bind-html="room.roomNo"></td>
+              <td data-ng-bind-html="room.roomDesc"></td>
+              <td data-ng-bind-html="room.roomType"></td>
+              <td data-ng-bind-html="room.rate"></td>
+              <td data-ng-bind-html="room.status"></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+    </fieldset>
+     <footer>
+      <button type="button" class="btn-u" data-ng-click="vm.submit()">Print</button>
+    </footer>
+  </form>
+  <!-- sky form end -->
+</div>

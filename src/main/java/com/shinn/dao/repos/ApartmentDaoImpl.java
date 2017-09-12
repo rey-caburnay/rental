@@ -26,5 +26,10 @@ public class ApartmentDaoImpl extends AbstractDaoImpl<Apartment> implements Apar
         return executeSaveUpate("save-apartment", model);
     }
 
+    @Override
+    public List<Apartment> getVacant() {
+      return getListResult("get-apartments-vacant");
+    }
+
  
 }

@@ -12,24 +12,45 @@
     
     this.register = function(model) {
       var url = 'tx/register';
-      return request(REQUEST_POST, url, model,'register');
+      return request(REQUEST_POST, url, model, 'register');
     }
     this.saveTx = function(model) {
       var url = 'tx/savetx';
-      return request(REQUEST_POST, url, model,'saveTx');
+      return request(REQUEST_POST, url, model, 'saveTx');
     }
     this.getRoomsByRenter = function(renterId) {
       var url = 'tx/getrooms/' + renterId;
-      return request(REQUEST_GET, url, null,'getRoomsByRenter');
+      return request(REQUEST_GET, url, null, 'getRoomsByRenter');
     }
     this.saveCollection = function(model) {
       var url = 'tx/collections';
-      return request(REQUEST_POST, url, model,'saveCollection');
+      return request(REQUEST_POST, url, model, 'saveCollection');
+    }
+    this.electricCollection = function(model) {
+      var url = 'collection/electric';
+      return request(REQUEST_POST, url, model, 'electricCollection');
     }
     this.generateBillings = function(model) {
       var url = 'bill/generate';
-      return request(REQUEST_POST, url, model,'generateBillings');
+      return request(REQUEST_POST, url, model, 'generateBillings');
     }
+    this.getPdf = function(form) {
+      var url = 'bill/pdf';
+      return $http.post(url, form, {responseType:'arraybuffer'}).then(function(response) {
+        
+        return {
+          method : 'getPdf',
+          data : response.data
+        }
+
+      }, function(errResponse) {
+        
+        console.error('Error while fetching users');
+        defer.reject(errResponse);
+      });
+
+    }
+
     return this;
     
     function request(type, url, parameters, context) {
@@ -92,8 +113,7 @@
  * deleteUser: function(id){ return
  * $http.delete('http://localhost:8080/Spring4MVCAngularJSExample/user/'+id)
  * .then( function(response){ return response.data; }, function(errResponse){
- * console.error('Error while deleting user'); return $q.reject(errResponse); } ); }
- *  };
+ * console.error('Error while deleting user'); return $q.reject(errResponse); } ); } };
  * 
  * }]);
  */

@@ -11,6 +11,7 @@ import com.shinn.service.model.RenterInfo;
 import com.shinn.ui.model.Response;
 import com.shinn.service.model.Room;
 import com.shinn.service.model.Tenant;
+import com.shinn.service.model.User;
 
 /**
  * AdminService is for Retrieval of data and other maintenance creation
@@ -19,6 +20,14 @@ import com.shinn.service.model.Tenant;
  *
  */
 public interface AdminService {
+  
+  /**
+   * 
+   * @param user
+   * @return
+   * @throws Exception
+   */
+  public Response<User> login(String username, String password);
   /**
    * 
    * @param apt
@@ -40,6 +49,11 @@ public interface AdminService {
   public Response<Apartment> getApartments();
   /**
    * 
+   * @return
+   */
+  public Response<Apartment> getVacantApartment();
+  /**
+   * 
    * @param room
    * @return
    * @throws Exception
@@ -52,6 +66,13 @@ public interface AdminService {
    * @throws Exception
    */
   public Response<Room> getRoom(Integer id) throws Exception;
+  /**
+   * 
+   * @param id
+   * @return
+   * @throws Exception
+   */
+  public Response<Room> getVacantRoom(Integer id) throws Exception;
   /**
    * 
    * @param aptId

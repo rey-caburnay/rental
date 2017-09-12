@@ -22,4 +22,9 @@ public interface RenterDao extends GenericDao<Renter>{
      */
     public List<Renter> getRenters();
     
+    public List<Renter> getRentersByApartment(Integer aptId);
+    
+    public Renter getOccupancy(Integer aptId, Integer roomId);
+    
+    
 }

@@ -3,7 +3,7 @@
     var injectParams = ['$http', '$rootScope', '$window'];
 
     var authFactory = function ($http, $rootScope, $window) {
-        var serviceBase = '/api/dataservice/',
+        var serviceBase = '/mst',
             factory = {
                 loginPath: '/login',
                 user: {
@@ -13,7 +13,7 @@
             };
 
         factory.login = function (email, password) {
-            return $http.post(serviceBase + 'login', { userLogin: { userName: email, password: password } }).then(
+            return $http.post(serviceBase + '/login', { userLogin: { username: email, password: password } }).then(
                 function (results) {
                     var loggedIn = results.data.status;;
                     changeAuth(loggedIn);

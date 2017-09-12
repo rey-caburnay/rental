@@ -1,0 +1,28 @@
+<div class="" id="collection">
+  <h3>Reports</h3>
+  <ul class="nav nav-pills nav-justified">
+  <li class ="active"><a data-toggle="tab" href="#renters" target="_self">Tenants</a></li>
+    <li><a data-toggle="tab" href="#properties" target="_self">Apartments</a></li>
+    <li><a data-toggle="tab" href="#electric" target="_self">Electric</a></li>
+    <li><a data-toggle="tab" href="#water" target="_self">Water</a></li>
+  </ul>
+
+  <div class="tab-content clearfix">
+   <div id="renters" class="tab-pane fade in"  data-ng-class="{'active': vm.isTenant}"
+      data-ng-click="vm.setActivePage('tenant')">
+      <div data-ng-include="'resources/ui/content/report/tenant.html'"></div>
+    </div>
+    <div id="properties" class="tab-pane fade in"  data-ng-class="{'active': vm.isProperty}"
+      data-ng-click="vm.setActivePage('property')">
+      <div data-ng-include="'resources/ui/content/report/apartment.html'"></div>
+    </div>
+    <div id="electric" class="tab-pane fade in" data-ng-class="{'active': vm.isElectric}"
+    data-ng-click="vm.setActivePage('electric')">
+      <div data-ng-include="'resources/ui/content/report/electric.html'"></div>
+    </div>
+    <div id="water" class="tab-pane fade" data-ng-class="{'active': vm.isWater}"
+     data-ng-click="vm.setActivePage('water')">
+      <div data-ng-include=""></div>
+    </div>
+  </div>
+</div> 

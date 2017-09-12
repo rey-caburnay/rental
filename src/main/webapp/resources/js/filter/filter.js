@@ -137,6 +137,9 @@
 		// Create the return function
 		// set the required parameter name to **number**
 		return function(date) {
+		  if(!date) {
+		    return "";
+		  }
 			var newDate = new Date();
 			if (date && date instanceof Date) {
 				newDate = date;
@@ -148,14 +151,15 @@
 		}
 	});
 	// filter for date format yyyy-MM-dd
-	angular.module('rental').filter('yyyy-MM-dd', function() {
+	angular.module('rental').filter('yyyyMMdd', function() {
 		// Create the return function
 		// set the required parameter name to **number**
+	  var newDate = new Date();
 		return function(date) {
-			if(!date || !date instanceof Date) {
-				date = new Date();
-			}
-			return (date.getFullYear() + "-" + date.getMonth() + 1) + "-" + date.getDate();
+			if(date && date instanceof Date) {
+				newDate = new Date(date);
+			} 
+			return (newDate.getFullYear() + "-" + newDate.getMonth() + 1) + "-" + newDate.getDate();
 		}
 	});
 
@@ -167,7 +171,7 @@
 	    return function(amount, currencySymbol) {
 	    
 	      if (!currencySymbol) {
-	        currencySymbol = 'Php ';
+	        currencySymbol = '';
 	      }
 	      return currencyFilter(amount,currencySymbol);
 //	      var sep = value.indexOf(formats.DECIMAL_SEP);

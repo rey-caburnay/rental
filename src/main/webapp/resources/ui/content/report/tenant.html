@@ -1,0 +1,51 @@
+
+<div id="tenant">
+   <form action="#" id="simple-form" class="simple-form"
+    name="rentalForm">
+    <fieldset>
+      <div class="row" data-ng-class="{'': !vm.showRoomInput}">
+        <section class="col col-6">
+          <label class="select" for="rentFor"> <select
+            id="selectbasic" name="rentFor"
+            data-ng-model="vm.apartment"
+            data-ng-options="apt as apt.name for apt in vm.apartments track by apt.id"
+            class="form-control"
+            data-ng-change="vm.getRenters(vm.apartment.id)" required>
+              <option value="">-- all apartment --</option>
+          </select>
+          </label>
+        </section>
+       </div>
+      <section>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Contact No. </th>
+              <th>Apartment</th>
+              <th>Room</th>
+              <th>Last Payment</th>
+              <th>Payment Date</th>
+<!--               <th>Status</th> -->
+            </tr>
+          </thead>
+          <tbody>
+            <tr data-ng-repeat="renter in vm.renters">
+              <td data-ng-bind-html="vm.getName(renter)"></td>
+              <td data-ng-bind-html="renter.mobileno"></td>
+              <td data-ng-bind-html="renter.apartmentName"></td>
+              <td data-ng-bind-html="renter.roomName"></td>
+              <td data-ng-bind-html="renter.lastPayment | cusCurrency"></td>
+              <td data-ng-bind-html="renter.lastPaymentDate | MMddYYYY"></td>
+<!--               <td data-ng-bind-html="renter.status"></td> -->
+            </tr>
+          </tbody>
+        </table>
+      </section>
+    </fieldset>
+     <footer>
+      <button type="button" class="btn-u" data-ng-click="vm.submit()">Print</button>
+    </footer>
+  </form>
+  <!-- sky form end -->
+</div>

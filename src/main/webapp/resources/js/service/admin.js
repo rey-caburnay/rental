@@ -14,14 +14,37 @@
         var url = 'mst/apartments';
         return request(REQUEST_GET, url, null,'getApartments');
       },
+      getVacantApartments : function () {
+        var url = 'mst/vacantapartments';
+        return request(REQUEST_GET, url, null,'getVacantApartments');
+      },
       getRooms : function(aptId) {
         var url = 'mst/rooms/' + aptId;
         return request(REQUEST_GET, url, null,'getRooms');
+      },
+      getRoomsReport : function(aptId) {
+        var url = 'report/rooms';
+        if (aptId) {
+          url = 'report/rooms/' + aptId;
+        }
+        return request(REQUEST_GET, url, null,'getRoomsReport');
+      },
+      getVacantRooms : function(aptId) {
+        var url = 'mst/vacantrooms/' + aptId;
+        return request(REQUEST_GET, url, null,'getVacantRooms');
       },
       getRenters : function() {
         var url = 'mst/renters';
         return request(REQUEST_GET, url, null,'getRenters');
       },
+      getRentersReport : function(aptId) {
+        var url = 'report/tenant';
+        if (aptId) {
+          url = 'report/tenant/' + aptId;
+        }
+        return request(REQUEST_GET, url, null,'getRentersReport');
+      },
+
       getTenants : function(aptId, roomId) {
         var url = 'mst/tenants/' + aptId + '/' + roomId;
         return request(REQUEST_GET, url, null,'getTenants');
@@ -40,6 +63,22 @@
         }
          return request(REQUEST_GET, url+aptId, null,'getBillings');
 
+      },
+      getBilling : function (aptId, roomId, type) {
+        var url = 'bill/';
+        switch (type) {
+        case 'water':
+          url = 'bill/water/';
+          break;
+        case 'property':
+          url = 'bill/property/';
+          break;
+        default:
+          url = 'bill/electric/';
+        }
+        var params = aptId + "/" + roomId;
+         return request(REQUEST_GET, url + params, null,'getBilling');
+
       }
     }; // end of return statement
     /**
@@ -55,7 +94,7 @@
           }
         }, function(errResponse) {
           
-          console.error('Error while fetching users');
+          console.error('Error while fetching' + context);
           defer.reject(errResponse);
         });
       } else {

@@ -1,7 +1,7 @@
 (function (){
 'use strict';
 
-angular.module('rental',['ngRoute','ui.bootstrap','ngSanitize','ngResource']);
+angular.module('rental',['ngRoute','ui.bootstrap','ngSanitize','ngResource','pdfjsViewer']);
 
 
 /**
@@ -14,7 +14,7 @@ angular.module('rental').config(['$routeProvider','$httpProvider', function ($ro
     // Home
     .when("/home", {
     	templateUrl: viewBase + "home.html",
-    	controller: "TransactionController",
+    	controller: "",
     	controllerAs:"vm"
     })
     .when("/reg", {
@@ -41,6 +41,11 @@ angular.module('rental').config(['$routeProvider','$httpProvider', function ($ro
     	controller: "BillingController",
     	controllerAs: "vm"
     })
+    .when("/reports", {
+      templateUrl: viewBase + "/report/report.html",
+      controller: "ReportController",
+      controllerAs: "vm"
+    })
    
 //    .when("/pricing", {templateUrl: "/pricing", controller: "PageCtrl"})
 //    .when("/services", {templateUrl: "/services", controller: "PageCtrl"})
@@ -49,7 +54,7 @@ angular.module('rental').config(['$routeProvider','$httpProvider', function ($ro
     //.when("/blog", {templateUrl: "/blog", controller: "BlogCtrl"})
 //    .when("/blog/post", {templateUrl: "/content/blog_item", controller: "BlogCtrl"})
     // else 404
-    .otherwise({ redirectTo: '/login' });
+    .otherwise({ redirectTo: '/home' });
   var spinnerFunction = function spinnerFunction(data, headersGetter) {
 	  swal({
 		  title: 'Loading',

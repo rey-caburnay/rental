@@ -41,4 +41,9 @@ public class ElectricBillDaoImpl extends AbstractDaoImpl<ElectricBill> implement
     return getListResult("electric-findby-apt", aptId);
   }
 
+  @Override
+  public ElectricBill getByAptRoom(Integer aptId, Integer roomId) {
+    return getObject("electricbill-findby-apt-room", aptId, roomId);
+  }
+
 }

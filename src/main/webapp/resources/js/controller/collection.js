@@ -23,8 +23,11 @@
       deposit : "Expenses",
       total : "Total"
     }
-    vm.bill = {};
-    vm.bill.tax = {};
+    vm.cash = {
+        amountPaid : '',
+        cashChange : '',
+        cashReceived : ''
+    }
     vm.payment = {
       cash : true,
       credit : false,
@@ -39,6 +42,7 @@
     getApartments();
     // set the default active tab
     vm.isElectricCollection = true;
+    vm.collectionType = 'electric';
     
     /** set the tab pages ***/
     vm.setActivePage = function(tab) {
@@ -48,17 +52,19 @@
       switch (tab) {
       case 'property':
         vm.isPropertyCollection = true;
+        vm.collectionType = 'property';
         break;
       case 'water':
         vm.isWaterCollection = true;
+        vm.collectionType = 'water';
         break;
       default:
         vm.isElectricCollection = true;
+        vm.collectionType = 'electric';
         break;
       
       }
     };
-    
     
     vm.modelOptions = {
       debounce : {
@@ -73,12 +79,50 @@
     };
     
     vm.getBilling = function (room) {
-      getBilling(room);
+      getBilling(room.aptId, room.id, vm.collectionType);
     }
    
     vm.submit = function() {
       submit();
     }
+
+    $scope
+        .$watch(
+            function(scope) {
+              return {
+                cash : scope.vm.cash,
+//                items : scope.vm.transactions
+              };
+            },
+            function(newValue, oldValue) {
+              vm.cash.baldep = 0;
+              vm.cash.balance = 0;
+              vm.cash.deposit = 0;
+              vm.cash.cashreceivederror = false;
+            if (vm.cash.amountPaid > (vm.cash.cashReceived || 0)) {
+                vm.cash.cashreceivederror = true;
+                vm.model.cashrecivedNote = 'Cash Received is smaller than the Amount paid';
+            }
+            vm.cash.cashChange = vm.cash.cashReceived
+                    - vm.cash.amountPaid;
+            if (vm.cash.cashChange < 0) {
+                vm.cash.cashChange = 0;
+            }
+    
+            if (vm.cash.amountPaid < vm.total) {
+                vm.cash.balance =  vm.total - vm.cash.amountPaid;
+//                vm.cash.balance = vm.cash.balance.toFixed(2);
+            }
+            if (vm.cash.amountPaid > vm.total) {
+                vm.cash.deposit =  vm.cash.amountPaid - vm.total;
+//                vm.cash.deposit = vm.cash.deposit.toFixed(2);
+            }
+            if (vm.cash.deposit < 1) {
+              vm.cash.deposit = 0;
+            }
+            
+        }, true)
+
 
     /**
      * ************************* functions that need to interact with services
@@ -112,8 +156,14 @@
       });
     }
     
-    function getBilling() {
-      return 
+    function getBilling(aptId, roomId, type) {
+      return adminService.getBilling(aptId, roomId, type).then(function (response) {
+        processResponse(response);
+      });
+    }
+    function hasError() {
+      return !vm.cash.cashReceived || !vm.cash.amountPaid || (vm.cash.amountPaid < 0);
+//      return false;
     }
     /**
      * submit the form
@@ -129,15 +179,13 @@
       var tx = {
         userId : 1,
         aptId : vm.model.apartment.id,
-        rooms : vm.rooms,
-        totalAmount:0,
-        totalOverdue:0,
-        readingDate:vm.readingDate,
-        accountNumber: vm.meterNo,
-        electricProvider: vm.electricProvider
+        roomId : vm.model.room.roomId,
+        cash: vm.cash,
+        billing: vm.billing,
+       
       }
       transactionService
-          .generateBillings(tx)
+          .electricCollection(tx)
           .then(
               function(response) {
                 console.log("status return :" + response);
@@ -175,7 +223,13 @@
       case 'getRooms':
         vm.rooms= data.result;
         break;
- 
+      case 'getBilling':
+        vm.billing = data.model;
+        if (data.model) {
+//          vm.billing = data.model;
+          vm.total = vm.billing.amount + vm.billing.overdue;
+        }
+        break;
       }
       
     }

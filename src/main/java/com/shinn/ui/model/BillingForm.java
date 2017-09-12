@@ -24,4 +24,6 @@ public class BillingForm implements Serializable {
   private Date readingDate;
   private String accountNumber;
   private ElectricProvider electricProvider;
+  private String billingNo;
+  private byte[] pdf;
 }

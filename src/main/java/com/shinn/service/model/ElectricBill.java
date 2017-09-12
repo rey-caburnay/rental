@@ -1,6 +1,7 @@
 package com.shinn.service.model;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 import com.shinn.ui.model.Bill;
@@ -35,6 +36,7 @@ public class ElectricBill implements Serializable {
   private Double payment;
   private Double surcharge;
   private Date readingDate;
+  private Double totalAmount;
   
   /** non db fields **/
   private Date generationDate;

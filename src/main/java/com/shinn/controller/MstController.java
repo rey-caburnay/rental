@@ -19,6 +19,7 @@ import com.shinn.service.model.Renter;
 import com.shinn.service.model.RenterInfo;
 import com.shinn.service.model.Room;
 import com.shinn.service.model.Tenant;
+import com.shinn.service.model.User;
 import com.shinn.ui.model.RegistrationForm;
 import com.shinn.ui.model.Response;
 import com.shinn.util.StringUtil;
@@ -32,6 +33,23 @@ public class MstController {
   @Autowired
   AdminService adminService;
 
+
+  /**
+   * get the tenants base on room id
+   * 
+   * @return
+   */
+  @RequestMapping(value = "/login", method = RequestMethod.POST,
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<Response<User>> login(@RequestBody User user) {
+    Response<User> resp = adminService.login(user.getUsername(), user.getPassword());
+    logger.debug(resp.toString());
+    if (resp.getResponseStatus().equals(ResultStatus.RESULT_OK)) {
+      return new ResponseEntity<Response<User>>(resp, HttpStatus.OK);
+    }
+    return new ResponseEntity(HttpStatus.NO_CONTENT);
+  }
+  
   /**
    *
    * @return
@@ -41,6 +59,18 @@ public class MstController {
   public ResponseEntity<Response<Apartment>> getApartments() {
 
     Response<Apartment> resp = adminService.getApartments();
+    logger.debug(resp.toString());
+    if (resp.getResponseStatus().equals(ResultStatus.RESULT_OK)) {
+      return new ResponseEntity<Response<Apartment>>(resp, HttpStatus.OK);
+    }
+    return new ResponseEntity(HttpStatus.NO_CONTENT);
+  }
+  
+  @RequestMapping(value = "/vacantapartments", method = RequestMethod.GET,
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<Response<Apartment>> getVacantApartments() {
+
+    Response<Apartment> resp = adminService.getVacantApartment();
     logger.debug(resp.toString());
     if (resp.getResponseStatus().equals(ResultStatus.RESULT_OK)) {
       return new ResponseEntity<Response<Apartment>>(resp, HttpStatus.OK);
@@ -61,6 +91,25 @@ public class MstController {
     ResponseEntity<Response<Room>> responseEntity = new ResponseEntity<>(HttpStatus.NO_CONTENT);
     try {
       resp = adminService.getRooms(Integer.parseInt(aptid));
+      logger.debug(resp.toString());
+      if (resp.getResponseStatus().equals(ResultStatus.RESULT_OK)) {
+        responseEntity = new ResponseEntity<Response<Room>>(resp, HttpStatus.OK);
+      }
+    } catch (Exception e) {
+      responseEntity = new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
+    }
+    return responseEntity;
+  }
+  
+  @RequestMapping(value = "/vacantrooms/{aptid}", method = RequestMethod.GET,
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<Response<Room>> getVacantRoom(@PathVariable String aptid) {
+    logger.info(aptid);
+    logger.info(adminService.toString());
+    Response<Room> resp = null;
+    ResponseEntity<Response<Room>> responseEntity = new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    try {
+      resp = adminService.getVacantRoom(Integer.parseInt(aptid));
       logger.debug(resp.toString());
       if (resp.getResponseStatus().equals(ResultStatus.RESULT_OK)) {
         responseEntity = new ResponseEntity<Response<Room>>(resp, HttpStatus.OK);

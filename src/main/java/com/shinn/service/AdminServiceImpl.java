@@ -20,6 +20,7 @@ import com.shinn.dao.repos.RentalDao;
 import com.shinn.dao.repos.RenterDao;
 import com.shinn.dao.repos.RenterInfoDao;
 import com.shinn.dao.repos.RoomDao;
+import com.shinn.dao.repos.UserDao;
 import com.shinn.service.model.Apartment;
 import com.shinn.service.model.ElectricBill;
 import com.shinn.service.model.ElectricProvider;
@@ -29,9 +30,11 @@ import com.shinn.service.model.RenterInfo;
 import com.shinn.ui.model.Response;
 import com.shinn.util.DateUtil;
 import com.shinn.util.RentStatus;
+import com.shinn.util.StringUtil;
 import com.shinn.service.model.Room;
 import com.shinn.service.model.Tenant;
 import com.shinn.service.model.Transaction;
+import com.shinn.service.model.User;
 
 /**
  * administrative service for the system
@@ -58,6 +61,8 @@ public class AdminServiceImpl implements AdminService {
   ElectricBillDao electricBillDao;
   @Autowired
   ElectricProviderDao electricProviderDao;
+  @Autowired
+  UserDao userDao;
 
   /**
    * 
@@ -259,6 +264,54 @@ public class AdminServiceImpl implements AdminService {
     Response<ElectricProvider> resp = new Response<ElectricProvider>();
     try {
       resp.setModel(electricProviderDao.getProvider(provider));
+      resp.setResponseStatus(ResultStatus.RESULT_OK);
+    } catch (Exception e) {
+      resp.setErrorMsg(e.getMessage());
+      resp.setResponseStatus(ResultStatus.GENERAL_ERROR);
+    }
+    return resp;
+  }
+
+  @Override
+  public Response<User> login(String username, String password) {
+    Response<User> resp = new Response<User>();
+    try {
+      User user = userDao.findByUsername(username);
+      if (!StringUtil.isNullOrEmpty(user)) {
+        if(user.getPassword().equals(password)) {
+          
+        }
+      }
+      resp.setModel(user);
+      resp.setResponseStatus(ResultStatus.RESULT_OK);
+    } catch (Exception e) {
+      resp.setErrorMsg(e.getMessage());
+      resp.setResponseStatus(ResultStatus.GENERAL_ERROR);
+    }
+    return resp;
+
+  }
+
+  @Override
+  public Response<Apartment> getVacantApartment() {
+    Response<Apartment> resp = new Response<Apartment>();
+    try {
+      List<Apartment> apartments =  apartmentDao.getVacant();
+      resp.setResult(apartments);
+      resp.setResponseStatus(ResultStatus.RESULT_OK);
+    } catch (Exception e) {
+      resp.setErrorMsg(e.getMessage());
+      resp.setResponseStatus(ResultStatus.GENERAL_ERROR);
+    }
+    return resp;
+  }
+
+  @Override
+  public Response<Room> getVacantRoom(Integer id) throws Exception {
+    Response<Room> resp = new Response<Room>();
+    try {
+      List<Room> apartments =  roomDao.getVacantRoom(id);
+      resp.setResult(apartments);
       resp.setResponseStatus(ResultStatus.RESULT_OK);
     } catch (Exception e) {
       resp.setErrorMsg(e.getMessage());

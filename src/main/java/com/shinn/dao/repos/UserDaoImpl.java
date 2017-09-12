@@ -43,6 +43,10 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao{
     public User getById(Integer id) throws Exception {
         return getObject("get-users-by-id",id);
     }
+    
+    public User findByUsername(String username) {
+      return getObject("user-findby-username", username);
+    }
 
     public List<User> findAll() throws Exception {
         return getListResult("get-users");

@@ -40,7 +40,15 @@ public class BillingDaoImpl extends AbstractDaoImpl<Billing> implements BillingD
 
   @Override
   public Billing getLatestBilling(Integer aptId, Integer roomId) {
-    return getObject("billing-finby-latest");
+    return getObject("billing-get-latest", aptId, roomId);
+  }
+
+  /* (non-Javadoc)
+   * @see com.shinn.dao.repos.BillingDao#getBilling(java.lang.Integer, java.lang.Integer)
+   */
+  @Override
+  public Billing getLastHoursGenerated(Integer aptId, Integer roomId) {
+    return getObject("billing-get-hours");
   }
   
 }

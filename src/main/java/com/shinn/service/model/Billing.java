@@ -1,6 +1,7 @@
 package com.shinn.service.model;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 import lombok.Getter;
@@ -26,5 +27,6 @@ public class Billing implements Serializable {
   private String billType;
   private String billingNo;
   private String provider;
+  private Integer numberOfDays;
 
 }

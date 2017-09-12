@@ -208,6 +208,7 @@ public class TransactionServiceImpl implements TransactionService {
 	public Response<Renter> registration(Renter renter) {
 		Response<Renter> resp = new Response<Renter>();
 		try {
+		    renter.setStatus(RentStatus.ACTIVE);
 			renter.setId(renterDao.saveUpdate(renter));
 			resp.setModel(renter);
 			resp.setResponseStatus(ResultStatus.RESULT_OK);

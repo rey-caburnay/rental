@@ -35,6 +35,7 @@
 		    showAndRedirect: function (message, location) {
 		      //  options.templateUrl = "resources/ui/" + location +".html";
 		        options.title = message;
+		        options.type='success';
 //		        options.onClose = function () {
 //		            $location.path("/"+location);
 //		        }
@@ -45,7 +46,7 @@
 		        
 		    },
 		    show: function (message,func) {
-		        swal(message,func);
+		        swal(message).then(func);
 		    },
 		    showSuccess: function (message) {
                 swal(message,"", "success");

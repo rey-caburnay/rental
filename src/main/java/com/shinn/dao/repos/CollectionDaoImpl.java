@@ -27,6 +27,11 @@ public class CollectionDaoImpl extends AbstractDaoImpl<Collection> implements Co
        return executeSaveUpate("save-collection", model);
     }
 
+    @Override
+    public Collection getLastPayment(Integer aptId, Integer roomId) {
+      return getObject("collection-lastpayment", aptId, roomId);
+    }
+
   
 
 }

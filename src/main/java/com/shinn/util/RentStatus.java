@@ -7,6 +7,7 @@ public class RentStatus {
     public static final String PARTIAL = "partial";
     public static final String BALANCE = "balance";
     public static final String OCCUPIED = "occupied";
+    public static final String VACANT = "vacant";
     public static final String UNBILLED_MESSAGE = "Unpaid month:";
     public static final int NOTIFY_BEFORE_DUE = 3;
     public static final int NOTIFY_ON_DUE = 0;

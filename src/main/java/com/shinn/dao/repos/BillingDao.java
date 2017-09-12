@@ -16,5 +16,7 @@ public interface BillingDao extends GenericDao<Billing> {
   public Billing getBillingThisMonth(Date generatedDate);
   
   public Billing getLatestBilling(Integer aptId, Integer roomId);
+  
+  public Billing getLastHoursGenerated (Integer aptId, Integer roomId);
 
 }
