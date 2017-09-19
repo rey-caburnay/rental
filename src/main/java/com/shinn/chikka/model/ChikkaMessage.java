@@ -1,15 +1,36 @@
 package com.shinn.chikka.model;
 
+import java.io.Serializable;
 import java.util.UUID;
 
-public class ChikkaMessage {
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.shinn.util.StringUtil;
+
+import lombok.Getter;
+import lombok.Setter;
+
+@Setter
+@Getter
+public class ChikkaMessage implements Serializable{
+    @JsonProperty("message_type")
     private String messageType;
+    @JsonProperty("message_type")
     private String mobileNumber;
+    @JsonProperty("shortcode")
     private String shortcode;
+    @JsonProperty("message_id")
     private String messageId;
+    @JsonProperty("message")
     private String message;
+    @JsonIgnore
     private String requestId;
+    @JsonIgnore
     private String timestamp;
+    @JsonProperty("client_id")
+    private String clientId;
+    @JsonProperty("secret_key")
+    private String secretKey;
     /* (non-Javadoc)
      * @see java.lang.Object#toString()
      */
@@ -19,93 +40,9 @@ public class ChikkaMessage {
                 + shortcode + ", messageId=" + messageId + ", message=" + message + ", requestId=" + requestId
                 + ", timestamp=" + timestamp + "]";
     }
-    /**
-     * @return the messageType
-     */
-    public String getMessageType() {
-        return messageType;
-    }
-    /**
-     * @param messageType the messageType to set
-     */
-    public void setMessageType(String messageType) {
-        this.messageType = messageType;
-    }
-    /**
-     * @return the mobileNumber
-     */
-    public String getMobileNumber() {
-        return mobileNumber;
-    }
-    /**
-     * @param mobileNumber the mobileNumber to set
-     */
-    public void setMobileNumber(String mobileNumber) {
-        this.mobileNumber = mobileNumber;
-    }
-    /**
-     * @return the shortcode
-     */
-    public String getShortcode() {
-        return shortcode;
-    }
-    /**
-     * @param shortcode the shortcode to set
-     */
-    public void setShortcode(String shortcode) {
-        this.shortcode = shortcode;
-    }
-    /**
-     * @return the messageId
-     */
-    public String getMessageId() {
-        return messageId;
-    }
-    /**
-     * @param messageId the messageId to set
-     */
-    public void setMessageId(String messageId) {
-        this.messageId = messageId;
-    }
-    /**
-     * @return the message
-     */
-    public String getMessage() {
-        return message;
-    }
-    /**
-     * @param message the message to set
-     */
-    public void setMessage(String message) {
-        this.message = message;
-    }
-    /**
-     * @return the requestId
-     */
-    public String getRequestId() {
-        return requestId;
-    }
-    /**
-     * @param requestId the requestId to set
-     */
-    public void setRequestId(String requestId) {
-        this.requestId = requestId;
-    }
-    /**
-     * @return the timestamp
-     */
-    public String getTimestamp() {
-        return timestamp;
-    }
-    /**
-     * @param timestamp the timestamp to set
-     */
-    public void setTimestamp(String timestamp) {
-        this.timestamp = timestamp;
-    }
-    
+     
     public String generateMessageId() {
-        UUID uid = UUID.randomUUID();
-        return String.valueOf(uid).substring(0, 32);
+       
+        return StringUtil.getSaltString();
     }
 }

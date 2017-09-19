@@ -7,8 +7,10 @@ public class ChikkaConstants {
     public static final String SMS_ACCEPTED = "Accepted";
     public static final String SMS_ERROR = "Error";
     public static final String SMS_REPLY = "REPLY";
+    public static final String SMS_SEND = "SEND";
     public static final String SMS_OUTGOING = "OUTGOING";
-    public static final String SECRET_KEY = "6db6a0b59c31928f5d4f387db095916b34ec6ad1f084a9a54fb51272517a2e81";
+    public static final String SHORTCODE = "29290332";
+    public static final String SECRET_KEY = "cb7c7fe57cbf202d4f6fa214016f3aa3cd56fb3d17e97c7ab8796166d6413158";
     public static final String CLIENT_ID = "9282657c81639d84ba8fc516ccadebb452827f315864459bbbf91844dc212a91";
     public static final int RESPONSE_ACCEPTED = 200;
     public static final int RESPONSE_BAD_REQUEST = 400;

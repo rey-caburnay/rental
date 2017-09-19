@@ -1,6 +1,9 @@
 package com.shinn.chikka;
 
+import java.io.IOException;
 import java.util.List;
+
+import org.apache.http.client.ClientProtocolException;
 
 import com.shinn.chikka.model.ChikkaMessage;
 import com.shinn.chikka.model.ChikkaResponse;
@@ -20,5 +23,8 @@ public interface Chikka {
      * @param message
      * @return
      */
-    public Response<ChikkaResponse> sendMessages(List<RenterInfo> tenants);
+    public Response<ChikkaResponse> sendBillingMessages(List<RenterInfo> tenants);
+    public Response<ChikkaResponse> sendElectricBillingMessage(List<RenterInfo> tenants);
+    
+    public void postRequest(ChikkaMessage message) throws ClientProtocolException, IOException;
 }

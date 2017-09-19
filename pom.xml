@@ -36,16 +36,11 @@
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
       <exclusions>
-           <exclusion>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter-tomcat</artifactId>
-            </exclusion>
-        </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-tomcat</artifactId>
-      <scope>provided</scope>
+        <exclusion>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-starter-tomcat</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
@@ -159,6 +154,17 @@
       <version>1.10.19</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>org.apache.httpcomponents</groupId>
+      <artifactId>httpclient</artifactId>
+      <version>4.5.3</version>
+    </dependency>
+    <dependency>
+      <groupId>com.google.code.gson</groupId>
+      <artifactId>gson</artifactId>
+      <version>2.8.1</version>
+    </dependency>
+
   </dependencies>
   <build>
     <resources>
@@ -232,62 +238,19 @@
       </build>
     </profile>
     <profile>
-      <id>test-env1</id>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.codehaus.cargo</groupId>
-            <artifactId>cargo-maven2-plugin</artifactId>
-            <version>1.5.0</version>
-            <configuration>
-              <!-- Container configuration -->
-              <container>
-                <containerId>tomcat8x</containerId>
-                <type>remote</type>
-              </container>
-              <configuration>
-                <type>runtime</type>
-                <properties>
-                  <cargo.remote.username>${deployer.tomcat.user}</cargo.remote.username>
-                  <cargo.remote.password>${deployer.tomcat.password}</cargo.remote.password>
-                  <cargo.tomcat.manager.url>http://${deployer.hostname}:8080/manager</cargo.tomcat.manager.url>
-                  <cargo.hostname>${deployer.hostname}</cargo.hostname>
-                </properties>
-              </configuration>
-              <!-- Deployables configuration -->
-              <deployables>
-                <deployable>
-                  <groupId>${project.groupId}</groupId>
-                  <artifactId>${project.artifactId}</artifactId>
-                  <type>war</type>
-                  <properties>
-                    <context>/resTablet</context>
-                  </properties>
-                  <pingURL>http://${deployer.hostname}:8080/resTablet/</pingURL>
-                </deployable>
-              </deployables>
-            </configuration>
-          </plugin>
-          <plugin>
-            <groupId>org.flywaydb</groupId>
-            <artifactId>flyway-maven-plugin</artifactId>
-            <version>4.0.3</version>
-            <configuration>
-              <!-- <url>jdbc:h2:file:./target/foobar</url> -->
-              <!-- <user>sa</user> -->
-            </configuration>
-            <dependencies>
-              <!-- <dependency> <groupId>com.h2database</groupId> <artifactId>h2</artifactId> 
-                <version>1.4.191</version> </dependency> -->
-              <dependency>
-                <groupId>mysql</groupId>
-                <artifactId>mysql-connector-java</artifactId>
-                <version>5.1.9</version>
-              </dependency>
-            </dependencies>
-          </plugin>
-        </plugins>
-      </build>
+      <id>prod</id>
+      <dependencies>
+        <dependency>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-starter-web</artifactId>
+          <exclusions>
+            <exclusion>
+              <groupId>org.springframework.boot</groupId>
+              <artifactId>spring-boot-starter-tomcat</artifactId>
+            </exclusion>
+          </exclusions>
+        </dependency>
+      </dependencies>
     </profile>
   </profiles>
 </project>

@@ -110,6 +110,7 @@ public class TxController {
         if(resp.getResponseStatus().equals(ResultStatus.RESULT_OK)){
           ChikkaMessage sms = new ChikkaMessage();
           sms.setMessage(RentStatus.RECEIPT_RENT_MESSAGE);
+          sms.setMessageId(sms.generateMessageId());
           chikkaService.sendMessage(sms);
           
           //Send Email if there is an email Address
