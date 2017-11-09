@@ -1,6 +1,7 @@
 package com.shinn.service.model;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -32,5 +33,9 @@ public class Room implements Serializable{
 	private Double rate;
 	
 	private String status;
+	
+	private Date lastPayment;
+	
+	private Integer unpaidMonths;
 
 }

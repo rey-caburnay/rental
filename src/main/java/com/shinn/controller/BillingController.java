@@ -22,16 +22,17 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.shinn.dao.factory.ResultStatus;
-import com.shinn.dao.repos.BillingDao;
 import com.shinn.service.AdminService;
 import com.shinn.service.BillingService;
+import com.shinn.service.SmsService;
 import com.shinn.service.model.Billing;
 import com.shinn.service.model.ElectricBill;
 import com.shinn.service.model.ElectricProvider;
-import com.shinn.service.model.RenterInfo;
+import com.shinn.service.model.Transaction;
 import com.shinn.ui.model.BillingForm;
 import com.shinn.ui.model.Response;
 import com.shinn.util.DateUtil;
+import com.shinn.util.RentStatus;
 
 @RestController
 @RequestMapping(value = "/bill")
@@ -43,6 +44,9 @@ public class BillingController {
   AdminService adminService;
   @Autowired
   BillingService billingService;
+  @Autowired
+  SmsService smsService;
+
 
   /**
    * get the tenants base on room id
@@ -58,7 +62,7 @@ public class BillingController {
     if (resp.getResponseStatus().equals(ResultStatus.RESULT_OK)) {
       return new ResponseEntity<Response<ElectricBill>>(resp, HttpStatus.OK);
     }
-    return new ResponseEntity(HttpStatus.NO_CONTENT);
+    return new ResponseEntity<Response<ElectricBill>>(HttpStatus.NO_CONTENT);
   }
 
   /**
@@ -72,12 +76,42 @@ public class BillingController {
   public ResponseEntity<Response<Billing>> getBilling(@PathVariable Integer aptId,
       @PathVariable Integer roomId) {
     logger.info("getBilling:" + aptId + "," + roomId);
-    Response<Billing> resp = billingService.getBilling(aptId, roomId);
+    Response<Billing> resp = billingService.getBilling(aptId, roomId, RentStatus.BILL_ELECTRIC);
     logger.debug(resp.toString());
     if (resp.getResponseStatus().equals(ResultStatus.RESULT_OK)) {
       return new ResponseEntity<Response<Billing>>(resp, HttpStatus.OK);
     }
-    return new ResponseEntity(HttpStatus.NO_CONTENT);
+    return new ResponseEntity<Response<Billing>>(HttpStatus.NO_CONTENT);
+  }
+
+  /**
+   * get room billings
+   * 
+   * @param aptId
+   * @param roomId
+   * @return
+   */
+  @RequestMapping(value = "/room/{aptId}/{roomId}", method = RequestMethod.GET,
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<Response<Transaction>> getRoomBilling(@PathVariable String aptId, @PathVariable String roomId) {
+    logger.info("getRoomBilling:" + aptId + "roomId:" + roomId);
+    Integer id = null;
+    Integer rId = null;
+    try {
+      id = Integer.parseInt(aptId);
+    } catch (Exception e) {
+
+    }
+    try {
+      rId = Integer.parseInt(roomId);
+    }catch(Exception e) {
+      rId = null;
+    }
+    Response<Transaction> resp = billingService.getRoomBilling(id, rId);
+    if (resp.getResponseStatus().equals(ResultStatus.RESULT_OK)) {
+      return new ResponseEntity<Response<Transaction>>(resp, HttpStatus.OK);
+    }
+    return new ResponseEntity<Response<Transaction>>(HttpStatus.NO_CONTENT);
   }
 
   /**
@@ -95,7 +129,7 @@ public class BillingController {
     if (resp.getResponseStatus().equals(ResultStatus.RESULT_OK)) {
       return new ResponseEntity<Response<ElectricProvider>>(resp, HttpStatus.OK);
     }
-    return new ResponseEntity(HttpStatus.NO_CONTENT);
+    return new ResponseEntity<Response<ElectricProvider>>(HttpStatus.NO_CONTENT);
   }
 
   /**
@@ -112,60 +146,54 @@ public class BillingController {
     Response<BillingForm> resp = new Response<BillingForm>();
     try {
       resp = billingService.generateBillings(billingForm);
-//      String pdfLocation = billingService.createPdf(resp.getModel());
-      resp.setResponseStatus(ResultStatus.RESULT_OK);
-      // if (resp.getResponseStatus().equals(ResultStatus.RESULT_OK)) {
+
+      if (resp.getResponseStatus().equals(ResultStatus.RESULT_OK)) {
+        smsService.sendBillingMessages(billingForm);
+      }
+ 
       return new ResponseEntity<Response<BillingForm>>(resp, HttpStatus.OK);
-      // }
     } catch (Exception e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
       resp.setResponseStatus(ResultStatus.GENERAL_ERROR);
-      return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+      return new ResponseEntity<Response<BillingForm>>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
-  
-   @RequestMapping(value = "/pdf", method = RequestMethod.POST)
-   public ResponseEntity<byte[]> showPdf(@RequestBody BillingForm billingForm) {
-//   createPdf(domain, model);
-   String pdfLocation = billingService.createPdf(billingForm);
-   Path path = Paths.get(pdfLocation);
-   byte[] pdfContents = null;
-   try {
-   pdfContents = Files.readAllBytes(path);
-   } catch (IOException e) {
-   e.printStackTrace();
-   }
-//   HttpServletResponse.setHeader("Content-Disposition", "inline");
-   HttpHeaders headers = new HttpHeaders();
-   headers.setContentType(MediaType.parseMediaType("application/pdf"));
-   String filename = "billing-" + DateUtil.getCurrentDate() + ".pdf";
-//   headers.add("content-disposition", "attachment; filename=" + filename);
-   headers.setContentDispositionFormData(filename, filename);
-   headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
-   ResponseEntity<byte[]> response = new ResponseEntity<byte[]>(
-   pdfContents, headers, HttpStatus.OK);
-   File file = new File(pdfLocation);
-   file.delete();
-   return response;
-   
-//   httpServletResponse.setHeader("Content-Disposition", "inline");
-//   HttpHeaders headers = new HttpHeaders();
-//   headers.add("content-disposition", "attachment; filename=" + fileName)
-//   ResponseEntity<byte[]> response = new ResponseEntity<byte[]>(
-//   pdfContents, headers, HttpStatus.OK);
-   }
-   
-   protected void streamReport(HttpServletResponse response, byte[] data, String name)
-       throws IOException {
 
-   response.setContentType("application/pdf");
-   response.setHeader("Content-disposition", "attachment; filename=" + name);
-   response.setContentLength(data.length);
+  @RequestMapping(value = "/pdf", method = RequestMethod.POST)
+  public ResponseEntity<byte[]> showPdf(@RequestBody BillingForm billingForm) {
+    // createPdf(domain, model);
+    String pdfLocation = billingService.createPdf(billingForm);
+    Path path = Paths.get(pdfLocation);
+    byte[] pdfContents = null;
+    try {
+      pdfContents = Files.readAllBytes(path);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(MediaType.parseMediaType("application/pdf"));
+    String filename = "billing-" + DateUtil.getCurrentDate() + ".pdf";
+    headers.setContentDispositionFormData(filename, filename);
+    headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
+    ResponseEntity<byte[]> response =
+        new ResponseEntity<byte[]>(pdfContents, headers, HttpStatus.OK);
+    File file = new File(pdfLocation);
+    file.delete();
+    return response;
 
-   response.getOutputStream().write(data);
-   response.getOutputStream().flush();
-}
+  }
+
+  protected void streamReport(HttpServletResponse response, byte[] data, String name)
+      throws IOException {
+
+    response.setContentType("application/pdf");
+    response.setHeader("Content-disposition", "attachment; filename=" + name);
+    response.setContentLength(data.length);
+
+    response.getOutputStream().write(data);
+    response.getOutputStream().flush();
+  }
 
 
 }

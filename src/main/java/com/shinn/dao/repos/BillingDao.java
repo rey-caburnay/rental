@@ -1,9 +1,11 @@
 package com.shinn.dao.repos;
 
 import java.util.Date;
+import java.util.List;
 
 import com.shinn.dao.factory.GenericDao;
 import com.shinn.service.model.Billing;
+import com.shinn.service.model.Transaction;
 
 public interface BillingDao extends GenericDao<Billing> {
   
@@ -13,10 +15,10 @@ public interface BillingDao extends GenericDao<Billing> {
    * @param generatedDate
    * @return
    */
-  public Billing getBillingThisMonth(Date generatedDate);
+  public Billing getBillingThisMonth(Date generatedDate, String billType);
   
-  public Billing getLatestBilling(Integer aptId, Integer roomId);
+  public Billing getLatestBilling(Integer aptId, Integer roomId, String billType);
   
-  public Billing getLastHoursGenerated (Integer aptId, Integer roomId);
-
+  public Billing getLastHoursGenerated (Integer aptId, Integer roomId, String billType);
+  
 }

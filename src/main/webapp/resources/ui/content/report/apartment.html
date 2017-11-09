@@ -1,5 +1,5 @@
 
-<div id="tenant">
+<div id="apartment">
    <form action="#" id="simple-form" class="simple-form"
     name="rentalForm">
     <fieldset>
@@ -15,17 +15,20 @@
           </select>
           </label>
         </section>
+        
        </div>
+
       <section>
-        <table class="table">
+        <table datatable="ng" class="table row-border hover">
           <thead>
             <tr>
               <th>Room #</th>
               <th>Room Name</th>
               <th>Room Type</th>
               <th>Rate</th>
-              <th>Room</th>
               <th>Status</th>
+              <th>Last Payment</th>
+              <th>Unpaid Bill</th>
             </tr>
           </thead>
           <tbody>
@@ -35,6 +38,8 @@
               <td data-ng-bind-html="room.roomType"></td>
               <td data-ng-bind-html="room.rate"></td>
               <td data-ng-bind-html="room.status"></td>
+              <td data-ng-bind-html="room.lastPayment"></td>
+              <td data-ng-bind-html="room.unpaidMonths"></td>
             </tr>
           </tbody>
         </table>

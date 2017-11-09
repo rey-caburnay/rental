@@ -1,0 +1,66 @@
+<div id="apartment">
+   <form action="#" id="simple-form" class="simple-form"
+    name="rentalForm">
+    <fieldset>
+      <div class="row" data-ng-class="{'': !vm.showRoomInput}">
+        <section class="col col-6">
+          <label class="select" for="rentFor"> <select
+            id="selectbasic" name="rentFor"
+            data-ng-model="vm.apartment"
+            data-ng-options="apt as apt.name for apt in vm.apartments track by apt.id"
+            class="form-control"
+            data-ng-change="vm.getBillings(vm.apartment)" required>
+              <option value="">-- all apartment --</option>
+          </select>
+          </label>
+        </section>
+        <section class="col col-6">
+          <label class="input" for="address"> <input
+          data-ng-model="vm.address" placeholder="address"
+          disabled
+          />
+          </label>
+        </section>        
+       </div>
+
+      <section>
+        <table datatable="ng" class="table row-border hover">
+          <thead>
+            <tr>
+              <th>Tenant</th>
+              <th>Mobile No </th>
+              <th>Room #</th>
+              <th>Room Name</th>
+              <th>Room Type</th>
+              <th>Rate</th>
+              <th>Last Payment</th>
+              <th>Due Date</th>
+              <th>Unpaid Bill</th>
+              <th>Payable</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr data-ng-repeat="room in vm.rooms">
+              <td data-ng-bind-html="room.renter.firstName"></td>
+              <td data-ng-bind-html="room.renter.mobileNo"></td>
+              <td data-ng-bind-html="room.room.roomNo"></td>
+              <td data-ng-bind-html="room.room.roomDesc"></td>
+              <td data-ng-bind-html="room.room.roomType"></td>
+              <td data-ng-bind-html="room.room.rate"></td>
+              <td data-ng-bind-html="room.updatedDate | MMddYYYY"></td>
+              <td data-ng-bind-html="room.dueDate | MMddYYYY"></td>
+              <td data-ng-bind-html="room.unpaidBill"></td>
+              <td data-ng-bind-html="room.amountPayable"</td>
+              <td> <button type="button" class="btn-u" data-ng-click="vm.generateBilling('property', room)">Generate</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+    </fieldset>
+     <footer>
+      <button type="button" class="btn-u" data-ng-click="vm.generateBilling('property', vm.rooms)">All</button>
+    </footer>
+  </form>
+  <!-- sky form end -->
+</div>

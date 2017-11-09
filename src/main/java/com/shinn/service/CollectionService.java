@@ -6,4 +6,6 @@ import com.shinn.ui.model.Response;
 public interface CollectionService {
 
   Response<ElectricCollectionForm> saveElectricCollection(ElectricCollectionForm electricCollectionForm) throws Exception;
+  
+  
 }

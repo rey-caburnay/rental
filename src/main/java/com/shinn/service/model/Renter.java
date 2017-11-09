@@ -48,6 +48,14 @@ public class Renter implements Serializable {
     private Date lastPaymentDate;
     
     private List<Transaction> transactions;
+    
+    public String getFullName() {
+      String fullname = this.firstName;
+      if (this.lastName != null) {
+        fullname = fullname + " " + this.lastName;
+      }
+      return lastName;
+    }
 
  
 }

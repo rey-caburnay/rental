@@ -499,7 +499,7 @@ public abstract class AbstractDaoImpl<T extends Serializable> {
             } else {
                 namedParameterStmnt = NamedParameterPreparedStatement.prepare(connection, sqlStatement.getProperty(sqlStmnt));
             }
-            
+            logger.info(namedParameterStmnt.toString());
             for (PropertyDescriptor pd : Introspector.getBeanInfo(type.getClass()).getPropertyDescriptors()) {
                 if (pd.getReadMethod() != null && !"class".equals(pd.getName()))
                     if (indexMap.containsKey(pd.getName())) {

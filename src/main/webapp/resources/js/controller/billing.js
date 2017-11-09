@@ -5,11 +5,14 @@
       'adminService', 'dateFactory', 'modalService', '$location' ];
   var MECO_PROVIDER = 'meco';
   var VECO_PROVIDER = 'veco';
+  var PROPERTY = 'property',
+    ELECTRIC = "electric",
+    WATER = "water";
   var BillingController = function($scope, $filter, transactionService,
       adminService, dateFactory, modalService, pdfService, $location) {
     var vm = this, collection = {}, // model to map to services
     paymentTypes = [ "cash", "check", "online" ], COLLECTION_DAYS = 30;
-    
+    vm.navbarCollapsed = true;
     vm.popup = modalService;
     vm._selected;
     vm.model = {}; // model for ui;
@@ -19,6 +22,7 @@
     vm.electricProvider = {};
     vm.model.paymentType = paymentTypes[0];
     vm.pdf = "";
+    vm.tx = {};
     vm.label = {
       deposit : "Expenses",
       total : "Total"
@@ -33,7 +37,8 @@
       visa : false,
       master : false
     };
-    vm.billingTitle = "Electric Billing";
+    vm.billingTitle = "Property Billing";
+    vm.currentPage = "property";
     vm.showRoomInput = false;
     // vm.apartments = getApartments();
     getApartments();
@@ -42,7 +47,8 @@
       currentReading : false
     };
     // set the default active tab
-    vm.isElectricBilling = true;
+    vm.isElectricBilling = false;
+    vm.isPropertyBilling = true;
     
     /** set the tab pages ** */
     vm.setActivePage = function(tab) {
@@ -50,14 +56,27 @@
       vm.isElectricBilling = false;
       vm.isWaterBilling = false;
       switch (tab) {
-      case 'property':
+      case PROPERTY:
         vm.isPropertyBilling = true;
+        if(vm.currentPage != 'property') {
+          vm.currentPage = 'property';
+        }
+        vm.billingTitle = "Billing"
         break;
-      case 'water':
+      case WATER:
         vm.isWaterBilling = true;
+        if(vm.currentPage != 'water') {
+          vm.currentPage = 'water';
+        }
+        vm.billingTile = "Water Billing";
         break;
-      default:
+      case ELECTRIC:
         vm.isElectricBilling = true;
+        if(vm.currentPage != 'electric') {
+          vm.currentPage = 'electric';
+        }
+        vm.billingTile = "Electric Billing";
+        
         break;
       
       }
@@ -65,8 +84,9 @@
     
     /** retrieve the billings of the apartment * */
     vm.getBillings = function(apt) {
-      var type = 'electric';
+      var type = vm.currentPage;
       vm.meterNo = apt.electricAccount;
+      vm.address = apt.address1;
       getBillings(apt.id, type);
     };
     
@@ -78,6 +98,14 @@
       getterSetter : true
     };
     
+    vm.populate = function (result) {
+      switch(vm.currentPage) {
+      case 'property':
+        getBillings(null,null,vm.currentPage);
+        break;
+      }
+    }
+    
     vm.removeItem = function(index) {
       if (vm.rooms && vm.rooms.length > 0) {
         if (index > -1) {
@@ -86,7 +114,23 @@
       }
     };
     
+    vm.generateBilling = function (type, room) {
+      console.log(room);
+      switch(type) {
+      case PROPERTY:
+        if(room) {
+          console.log('instance of object');
+          generatePropertyBilling(room);
+        } 
+        
+        break;
+      }
+    };
+    
     vm.computeBilling = function() {
+      if (vm.currentPage !== 'electric') {
+        return;
+      }
       if (vm.rooms && vm.rooms.length > 0) {
         vm.totalOverdue = 0;
         vm.bill.currentBill = 0;
@@ -159,7 +203,10 @@
           room.amount = vm.bill.currentAmount;
           room.grossAmount = parseFloat(vm.bill.grossAmount.toFixed(2));
           room.bill = vm.bill;
+          room.readingDate = vm.readingDate;
+          room.totalAmount = room.grossAmount;
           vm.rooms[i] = room;
+          
           vm.totalAmount += vm.bill.grossAmount;
           
         }
@@ -213,7 +260,13 @@
      * get rooms by apartment ID
      */
     function getBillings(aptId, type) {
-      return adminService.getBillings(aptId, type).then(function(response) {
+      return adminService.getBillings(aptId, null, type).then(function(response) {
+        processResponse(response);
+      });
+    }
+    
+    function getRoomBilling(aptId){
+      return adminService.getRoomBilling(aptId).then(function(response) {
         processResponse(response);
       });
     }
@@ -253,6 +306,27 @@
       }
       return hasError;
     }
+    
+    /** generate billing for property **/
+    function generatePropertyBilling(room) {
+      
+      var rooms =[];
+      if (room instanceof Array) {
+        rooms = room; 
+      } else {
+        rooms.push(room);
+      }
+      vm.tx = {
+          userId : 1,
+          aptId : room.aptId,
+          bills: rooms,
+          billingType:PROPERTY
+        }
+
+      transactionService.generateBillings(vm.tx).then(function(response){
+        processResponse(response);
+      });
+    }
     /**
      * submit the form
      */
@@ -265,7 +339,7 @@
         return;
       }
       
-      var tx = {
+      vm.tx = {
         userId : 1,
         aptId : vm.model.apartment.id,
         rooms : vm.rooms,
@@ -276,7 +350,7 @@
         electricProvider : vm.electricProvider
       }
       transactionService
-          .generateBillings(tx)
+          .generateBillings(vm.tx)
           .then(
               function(response) {
                 console.log("status return :" + response);
@@ -290,14 +364,32 @@
                     text : "Transaction successfully processed",
                     type : "success",
                   }
-                  tx.billingNo = response.data.model.billingNo;
+                  vm.tx.billingNo = response.data.model.billingNo;
                   vm.popup.show(options, function() {
                     // $location.path('/home');
-                    getPdf(tx);
+                    getPdf(vm.tx);
                   });
                 }
                 
               });
+    }
+    
+    function postSubmit(response) {
+      if (response.responseStatus === "ERROR") {
+        vm.popup
+            .showError("There is something wrong in processing your request: "
+                + response.errorMsg);
+      } else {
+        var options = {
+          title : "Thank You",
+          text : "Transaction successfully processed",
+          type : "success",
+        }
+        vm.popup.show(options, function() {
+          // $location.path('/home');
+          getPdf(response.data.model);
+        });
+      }
     }
     
     function getPdf(form) {
@@ -344,6 +436,7 @@
         break;
       case 'getApartments':
         vm.apartments = data.result;
+        vm.populate(data.result);
         break;
       case 'getPdf':
         saveByteArray(data, 'sample.pdf');
@@ -354,6 +447,12 @@
         // vm.pdf = file;
         // var fileURL = URL.createObjectURL(file);
         // window.open(fileURL);
+        break;
+      case 'getBillingsproperty':
+        vm.rooms = data.result;
+        break;
+      case 'generateBillings':
+        postSubmit(response);
         break;
       }
       

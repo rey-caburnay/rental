@@ -1,5 +1,6 @@
 package com.shinn.dao.repos;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Repository;
@@ -44,6 +45,18 @@ public class ElectricBillDaoImpl extends AbstractDaoImpl<ElectricBill> implement
   @Override
   public ElectricBill getByAptRoom(Integer aptId, Integer roomId) {
     return getObject("electricbill-findby-apt-room", aptId, roomId);
+  }
+
+  @Override
+  public List<ElectricBill> getElectricReport(Integer aptId) {
+    List<ElectricBill> list = new ArrayList<>();
+   System.out.println(aptId);
+    if(aptId == null) {
+      list = getListResult("electric-report");
+    } else {
+      list = getListResult("electric-report-by-apt", aptId);
+    }
+    return list;
   }
 
 }

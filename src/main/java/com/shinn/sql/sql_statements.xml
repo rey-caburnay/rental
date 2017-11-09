@@ -15,6 +15,7 @@
   <entry key="user-findby-username">
     SELECT * FROM mst_user WHERE email=?
   </entry>
+
   <entry key="get-renter-by-id">
     Select id, lastname, firstname, initial, email,
     mobileno, telno, address1 as address, status
@@ -52,11 +53,11 @@
     (:firstName,
     :lastName,
     :initial,
-    :address,
-    :idPresented,
+    :email,
     :mobileNo,
     :telno,
-    :email,
+    :address,
+    :idPresented,
     :emergencyContact,
     :status,
     :aptId,
@@ -96,6 +97,7 @@
     `status`,
     `userId`,
     `updatedDate`,
+    `billingNo`,
     `updtCnt`)
     VALUES
     (:id,
@@ -113,7 +115,8 @@
     :amount,
     :status,
     :userId,
-    :updateDate,
+    :updatedDate,
+    :billingNo,
     :updtCnt);
   </entry>
   <entry key="update-transaction">
@@ -133,24 +136,52 @@
     `amount` = :amount,
     `status` = :status,
     `userId` = :userId,
-    `updatedDate` = :updateDate,
+    `updatedDate` = :updatedDate,
+    `billingNo` = :billingNo,
     `updtCnt` = :updtCnt
     WHERE
     `id`= :id AND `aptId` = :aptId AND `roomId` = :roomId;
   </entry>
   <entry key="get-rental">
-    SELECT id, aptId, roomId, dueDate,txDate, startDate, endDate, deposit,
-    renterId, balance, txType, provider, amount, status, userId,
+    SELECT id, aptId, roomId, dueDate,txDate, startDate,
+    endDate, deposit,
+    renterId, balance, txType, provider, amount,
+    status, userId,
     updatedDate, updtCnt
     FROM tx_rental WHERE id = ?
   </entry>
 
+  <entry key="rental-all">
+    SELECT r.*, a.name as aptName
+    FROM tx_rental r 
+    left join mst_apartment a 
+    on r.aptId = a.id 
+  </entry>
+  
+  <entry key="rental-by-apt">
+    SELECT r.*, a.name as aptName
+    FROM tx_rental r 
+    left join mst_apartment a 
+    on r.aptId = a.id 
+    where r.aptId = ?;
+  </entry>
+      
+  <entry key="rental-by-aptroom">
+    SELECT r.*, a.name as aptName
+    FROM tx_rental r 
+    left join mst_apartment a 
+    on r.aptId = a.id  
+    where aptId = ? and roomId = ?;
+  </entry>
+  
   <entry key="get-apartments">
     SELECT * FROM mst_apartment;
   </entry>
   <entry key="get-apartments-vacant">
-    SELECT distinct a.* FROM mst_apartment a LEFT JOIN mst_room r on a.id = r.aptId where
-    r.id not in (SELECT roomId FROM mst_renter where roomId IS NOT NULL)
+    SELECT distinct a.* FROM mst_apartment a LEFT JOIN
+    mst_room r on a.id = r.aptId where
+    r.id not in (SELECT roomId FROM
+    mst_renter where roomId IS NOT NULL)
   </entry>
   <entry key="get-apartment">
     SELECT * FROM mst_apartment WHERE id = ?;
@@ -162,9 +193,13 @@
   <entry key="rooms-findall">
     select * from mst_room;
   </entry>
+  <entry key="room-by-apt-room">
+    select * from mst_room where aptId = ? and id = ?;
+  </entry>
   <entry key="get-rooms-vacant">
-   select * from mst_room r where r.id not in (select roomId from mst_renter
-    where roomId is not null) and r.aptId = ?;  </entry>
+    select * from mst_room r where r.id not in (select roomId from mst_renter
+    where roomId is not null) and r.aptId = ?;
+  </entry>
   <entry key="get-room-by-id">
     SELECT
     id,
@@ -185,23 +220,27 @@
     SELECT
     renter.*,
     a.name as apartmentName,
-    r.roomDesc as roomName
+    r.roomDesc as
+    roomName
     FROM mst_renter as renter
-    left join mst_apartment a on renter.aptId = a.id
+    left join mst_apartment a on
+    renter.aptId = a.id
     left join mst_room r on renter.roomId = r.id
     WHERE renter.status = 'active';
   </entry>
   <entry key="renter-apt-room">
-   SELECT * FROM mst_renter where
-   aptId = ? and roomId = ?
+    SELECT * FROM mst_renter where
+    aptId = ? and roomId = ?
   </entry>
   <entry key="renters-by-apt">
     SELECT
-    renter.*
+    renter.*,
     a.name as apartmentName,
-    r.roomDesc as roomName
+    r.roomDesc as
+    roomName
     FROM mst_renter as renter
-    left join mst_apartment a on renter.aptId = a.id
+    left join mst_apartment a on
+    renter.aptId = a.id
     left join mst_room r on renter.roomId = r.id
     WHERE a.id = ? and renter.status = 'active';
   </entry>
@@ -309,21 +348,11 @@
     AND rental.status = ?
   </entry>
   <entry key="get-transaction-by-apt-room">
-    SELECT
-    rental.id,
-    rental.aptId,
-    rental.roomId,
-    rental.dueDate,
-    rental.txDate,
-    rental.startDate,
-    rental.endDate,
-    rental.renterId,
-    rental.balance,
-    rental.txType,
-    rental.status,
-    rental.amount
-    FROM tx_rental rental
-    WHERE rental.aptId = ? AND rental.roomId = ? AND rental.status = 'active'
+    SELECT r.*, a.name as aptName
+    FROM tx_rental r 
+    left join mst_apartment a 
+    on r.aptId = a.id 
+    where r.aptId = ? and r.roomId = ?;
   </entry>
   <entry key="get-transaction-by-apt-room-renter">
     SELECT
@@ -340,7 +369,8 @@
     rental.status,
     rental.amount
     FROM tx_rental rental
-    WHERE rental.aptId = ? AND rental.roomId = ? AND rental.renterId = ? AND
+    WHERE rental.aptId = ? AND
+    rental.roomId = ? AND rental.renterId = ? AND
     rental.status = 'active'
   </entry>
   <entry key="get-renter-by-apt-room">
@@ -355,7 +385,8 @@
     b.mobileno as mobileNumber,
     b.email,
     a.id as txId,
-    a.duedate as dueDate,
+    a.duedate as
+    dueDate,
     a.startDate,
     a.duedate as endDate,
     a.deposit,
@@ -363,7 +394,8 @@
     a.amount,
     a.status,
     a.paymentStatus
-    FROM tx_rental a left join mst_renter b on a.renterId = b.id
+    FROM tx_rental a left join
+    mst_renter b on a.renterId = b.id
     WHERE a.aptId = ? AND a.roomId = ?
   </entry>
   <entry key="save-collection">
@@ -420,7 +452,13 @@
   </entry>
   <entry key="collection-lastpayment">
     SELECT * FROM tx_collections
-    WHERE aptId = ? and roomId = ? order by txDate desc limit 1;
+    WHERE aptId = ? and
+    roomId = ? order by txDate desc limit 1;
+  </entry>
+  <entry key="collection-by-renter-lastpayment">
+    SELECT * FROM tx_collections
+    WHERE renterId = ? and
+    aptId = ? and roomId = ? order by txDate desc limit 1;
   </entry>
   <entry key="save-room">
     INSERT INTO mst_room
@@ -435,7 +473,8 @@
     `rate`,
     `status`)
     VALUES
-    (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+    (?, ?, ?,
+    ?, ?, ?, ?, ?, ?, ?);
   </entry>
   <entry key="update-room">
     SET @id = ?,
@@ -447,7 +486,8 @@
     @occupied = ?,
     @telNo = ?,
     @rate = ?,
-    @status = ?;
+    @status =
+    ?;
 
     UPDATE mst_room SET
     `id` = @id
@@ -456,23 +496,27 @@
     `roomNo` = @roomNo,
     `roomType` = @roomType,
     `size` = @size,
-    `occupied` = @occupied,
+    `occupied`
+    = @occupied,
     `telNo` = @telNo,
     `rate` = @rate,
     `status` = @status
-    WHERE id = @id
+    WHERE
+    id = @id
   </entry>
   <entry key="get-sms-by-id">
     SELECT id, message, sender, recipient, sendDate,
     receivedDate,
-    messageType, requestId, shortcode, timestamp, status, deleted
+    messageType, requestId, shortcode, timestamp, status,
+    deleted
     FROM tx_sms WHERE id
     = ?
   </entry>
   <entry key="get-all-sms">
     SELECT id, message, sender, recipient, sendDate,
     receivedDate,
-    messageType, requestId, shortcode, timestamp, status, deleted
+    messageType, requestId, shortcode, timestamp, status,
+    deleted
     FROM tx_sms
   </entry>
   <entry key="update-sms">
@@ -521,17 +565,32 @@
     timestamp,
     status,
     deleted)
-    VALUES
-    (?, ?, ?, ?, ?, ?, ?, ?, ?,
-    ?, ?, ?);
+     VALUES
+    (:id,
+    :message,
+    :sender,
+    :recipient,
+    :sendDate,
+    :receivedDate,
+    :messageType,
+    :requestId,
+    :shortcode,
+    :timestamp,
+    :status,
+    :deleted);
+
   </entry>
   <entry key="electric-findby-apt">
     SELECT el.id, el.aptId, el.roomId, el.currentReading,
     el.previousReading, provider, accountNo,
-    diffReading, amount, overdue, el.status, readingDate, dueDate,
-    billingNo, generationDate,payment, rm.roomNo as roomNumber,
-    ap.name as apartmentName, meterNo, lastBillNo as billingNo, totalAmount
-    FROM mst_electric el LEFT JOIN mst_room rm on
+    diffReading, amount,
+    overdue, el.status, readingDate, dueDate,
+    billingNo,
+    generationDate,payment, rm.roomNo as roomNumber,
+    ap.name as
+    apartmentName, meterNo, lastBillNo as billingNo, totalAmount
+    FROM
+    mst_electric el LEFT JOIN mst_room rm on
     el.roomId = rm.id
     LEFT JOIN
     mst_apartment ap on
@@ -556,7 +615,11 @@
     `dueDate`,
     `generationDate`,
     `billingNo`,
-    `billType`)
+    `billType`,
+    `deposit`,
+    `status`,
+    `renterId`,
+    `txDate`)
     VALUES
     (:id,
     :aptId,
@@ -571,7 +634,11 @@
     :dueDate,
     :generationDate,
     :billingNo,
-    :billType);
+    :billType,
+    :deposit,
+    :status,
+    :renterId,
+    :txDate);
   </entry>
   <entry key="save-electricbill">
     INSERT INTO `tx_billing`
@@ -614,12 +681,15 @@
     `aptId` = :aptId,
     `roomId` = :roomId,
     `accountNo` = :accountNo,
-    `currentReading` = :currentReading,
+    `currentReading` =
+    :currentReading,
     `previousReading` = :previousReading,
-    `provider` = :provider,
+    `provider` =
+    :provider,
     `amount` = :amount,
     `status` = :status,
-    `overdue` = :overdue,
+    `overdue` =
+    :overdue,
     `readingDate` = :readingDate,
     `dueDate` = :dueDate,
     `diffReading` =
@@ -628,22 +698,23 @@
     `generationDate` =
     :generationDate,
     `payment` = :payment,
-    `meterNo` = :meterNo,
+    `meterNo` =
+    :meterNo,
     `lastBillNo` = :lastBillNo,
     `totalAmount` = :totalAmount
     WHERE `id` =
     :id;
   </entry>
   <entry key="billing-findby-generatedDate">
-    SELECT * FROM tx_billing;
+    SELECT * FROM tx_billing where billType = ?;
   </entry>
   <entry key="billing-get-hours">
     SELECT *, (TIMESTAMPDIFF(HOUR,generationDate,now())
-    /24 ) numberOfDays from tx_billing where aptId = ?;
+    /24 ) numberOfDays from tx_billing where aptId = ? and billType = ?;
   </entry>
   <entry key="billing-get-latest">
     SELECT * from tx_billing where aptId = ? and roomId =
-    ? order by generationDate desc limit 1;
+    ? and billType = ? order by generationDate desc limit 1;
   </entry>
   <entry key="save-electriccollection">
     INSERT INTO `tx_electrill_collection`
@@ -672,12 +743,21 @@
     `status` = :status,
     `overdue` = :overdue,
     `collectionDate` = :collectionDate,
-    `dueDate` = :dueDate
+    `dueDate` =
+    :dueDate
     WHERE `id` = ?;
   </entry>
   <entry key="electricbill-findby-apt-room">
     SELECT * from `mst_electric`
     WHERE aptId = ? and
     roomId = ?;
+  </entry>
+  <entry key="electric-report">
+    select e.*, r.roomNo as roomNumber, r.roomDesc from
+    mst_electric e left join mst_room r on e.roomId = r.id;
+  </entry>
+  <entry key="electric-report-by-apt">
+    select e.*, r.roomNo as roomNumber, r.roomDesc from mst_electric e left join
+    mst_room r on e.roomId = r.id where e.aptId = ?;
   </entry>
 </properties>

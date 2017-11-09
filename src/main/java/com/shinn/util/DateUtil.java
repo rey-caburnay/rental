@@ -72,6 +72,12 @@ public class DateUtil {
         }
     }
     
+    public static int getNumberOfMonths(Date from , Date to) {
+      int month = 0;
+      int days = daysBetween(from, to);
+      return days / THIRTYDAYS;
+    }
+    
     /**
      * 
      * @param num

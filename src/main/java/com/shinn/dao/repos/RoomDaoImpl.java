@@ -54,4 +54,9 @@ public class RoomDaoImpl extends AbstractDaoImpl<Room> implements RoomDao{
       }
       return rooms;
     }
+
+    @Override
+    public Room getRoom(Integer aptId, Integer roomId) {
+      return getObject("room-by-apt-room", aptId, roomId);
+    }
 }

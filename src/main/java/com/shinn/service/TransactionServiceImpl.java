@@ -1,14 +1,12 @@
 package com.shinn.service;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.shinn.dao.factory.AbstractDaoImpl;
 import com.shinn.dao.factory.ResultStatus;
@@ -19,8 +17,6 @@ import com.shinn.dao.repos.RenterDao;
 import com.shinn.dao.repos.RenterInfoDao;
 import com.shinn.dao.repos.RoomDao;
 import com.shinn.service.model.Collection;
-import com.shinn.service.model.CollectionDetails;
-import com.shinn.service.model.ElectricBill;
 import com.shinn.service.model.Renter;
 import com.shinn.service.model.RenterInfo;
 import com.shinn.service.model.Room;
@@ -28,7 +24,6 @@ import com.shinn.service.model.Transaction;
 import com.shinn.ui.model.CollectionForm;
 import com.shinn.ui.model.RegistrationForm;
 import com.shinn.ui.model.Response;
-import com.shinn.ui.model.TransactionDetails;
 import com.shinn.util.DateUtil;
 import com.shinn.util.RentStatus;
 import com.shinn.util.StringUtil;
@@ -168,7 +163,7 @@ public class TransactionServiceImpl implements TransactionService {
 				tx.setDeposit(deposit);
 				tx.setTxType(collectionForm.getPaymentType());
 				tx.setUserId(StringUtil.toInteger(collectionForm.getUserId()));
-				tx.setUpdateDate(new Date());
+				tx.setUpdatedDate(new Date());
 				tx.setTxDate(new Date());
 				tx.setUpdtCnt(updtCnt);
 				tx.setPaymentStatus(RentStatus.PAID);

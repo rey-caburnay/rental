@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.shinn.service.model.ElectricBill;
 import com.shinn.service.model.ElectricProvider;
+import com.shinn.service.model.Transaction;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -21,9 +22,11 @@ public class BillingForm implements Serializable {
   private Double totalAmount;
   private Double totalOverdue;
   private List<ElectricBill> rooms;
+  private List<Transaction> bills;
   private Date readingDate;
   private String accountNumber;
   private ElectricProvider electricProvider;
   private String billingNo;
   private byte[] pdf;
+  private String billingType;
 }

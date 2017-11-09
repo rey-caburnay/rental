@@ -34,6 +34,7 @@
       var url = 'bill/generate';
       return request(REQUEST_POST, url, model, 'generateBillings');
     }
+
     this.getPdf = function(form) {
       var url = 'bill/pdf';
       return $http.post(url, form, {responseType:'arraybuffer'}).then(function(response) {

@@ -18,16 +18,30 @@
         var url = 'mst/vacantapartments';
         return request(REQUEST_GET, url, null,'getVacantApartments');
       },
-      getRooms : function(aptId) {
+      getRooms : function(aptId, type) {
         var url = 'mst/rooms/' + aptId;
+        switch (type) {
+        case 'collection_property':
+          url = 'collection/rooms/' + aptId;
+        default:
+          
+        }
         return request(REQUEST_GET, url, null,'getRooms');
       },
+      
       getRoomsReport : function(aptId) {
         var url = 'report/rooms';
         if (aptId) {
           url = 'report/rooms/' + aptId;
         }
         return request(REQUEST_GET, url, null,'getRoomsReport');
+      },
+      getElectricReport : function (aptId) {
+        var url = 'report/electric/' + aptId;
+//        if (aptId) {
+//          url = 'report/electric/' + aptId;
+//        }
+        return request(REQUEST_GET, url, null,'getElectricReport');
       },
       getVacantRooms : function(aptId) {
         var url = 'mst/vacantrooms/' + aptId;
@@ -49,36 +63,33 @@
         var url = 'mst/tenants/' + aptId + '/' + roomId;
         return request(REQUEST_GET, url, null,'getTenants');
       },
-      getBillings : function(aptId, type) {
+      getBillings : function(aptId, roomId, type) {
         var url = 'bill/';
+        var roomParam = "";
+        var aptParam = "";
+        if (aptId) {
+          aptParam = aptId;
+        }
+        if(roomId) {
+          roomParam = "/" + roomId;
+        }
         switch (type) {
         case 'water':
-          url = 'bill/water/';
+          url = 'bill/water/' + aptParam + roomParam ;
           break;
         case 'property':
-          url = 'bill/property/';
+          url = 'bill/room/'  + aptParam + roomParam;
           break;
         default:
-          url = 'bill/electric/';
+          url = 'bill/electric/'  + aptParam + roomParam;
         }
-         return request(REQUEST_GET, url+aptId, null,'getBillings');
+         return request(REQUEST_GET, url, null,'getBillings' + type);
 
       },
-      getBilling : function (aptId, roomId, type) {
-        var url = 'bill/';
-        switch (type) {
-        case 'water':
-          url = 'bill/water/';
-          break;
-        case 'property':
-          url = 'bill/property/';
-          break;
-        default:
-          url = 'bill/electric/';
-        }
-        var params = aptId + "/" + roomId;
-         return request(REQUEST_GET, url + params, null,'getBilling');
 
+      getRoomBilling : function(aptId) {
+        var url = 'bill/room/';
+        return request(REQUEST_GET, url + params, null,'getBilling');
       }
     }; // end of return statement
     /**

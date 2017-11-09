@@ -53,7 +53,7 @@ public class NotificationController {
         chikkaRequest.setTimestamp(timestamp);
         chikkaRequest.setMessageId(messageId);
 
-        resp  = chikka.readMessage(chikkaRequest);
+//        resp  = chikka.readMessage(chikkaRequest);
         return new ResponseEntity(resp, HttpStatus.OK);
     }
     
@@ -84,7 +84,7 @@ public class NotificationController {
         chikkaRequest.setRequestId(request_id);
         chikkaRequest.setTimestamp(timestamp);
 
-        resp = chikka.readMessage(chikkaRequest);
+//        resp = chikka.readMessage(chikkaRequest);
         return new ResponseEntity(resp, HttpStatus.OK);
     }
 }

@@ -1,0 +1,58 @@
+
+<div id="electric">
+   <form action="#" id="simple-form" class="simple-form"
+    name="rentalForm">
+    <fieldset>
+      <div class="row" data-ng-class="{'': !vm.showRoomInput}">
+        <section class="col col-6">
+          <label class="select" for="rentFor"> <select
+            id="selectbasic" name="rentFor"
+            data-ng-model="vm.apartment"
+            data-ng-options="apt as apt.name for apt in vm.apartments track by apt.id"
+            class="form-control"
+            data-ng-change="vm.getRoomElectric(vm.apartment.id)" required>
+              <option value="">-- all apartment --</option>
+          </select>
+          </label>
+        </section>
+        
+       </div>
+      <section>
+        <table datatable="ng" class="table">
+          <thead>
+            <tr>
+              <th>Room #</th>
+              <th>Room Name</th>
+              <th>Previous Reading</th>
+              <th>Current Reading</th>
+              <th>Diff Reading</th>
+              <th>Reading Date</th>
+              <th>Generated Date</th>
+              <th>Amount</th>
+              <th>Overdue</th>
+              <th>Total Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr data-ng-repeat="bill in vm.electricBills">
+              <td data-ng-bind-html="bill.roomNumber"></td>
+              <td data-ng-bind-html="bill.roomDesc"></td>
+              <td data-ng-bind-html="bill.previousReading"></td>
+              <td data-ng-bind-html="bill.currentReading"></td>
+              <td data-ng-bind-html="bill.diffReading"></td>
+               <td data-ng-bind-html="bill.readingDate | MMddYYYY"></td>
+              <td data-ng-bind-html="bill.generationDate | MMddYYYY"></td>
+              <td data-ng-bind-html="bill.amount"></td>
+              <td data-ng-bind-html="bill.overdue"></td>
+              <td data-ng-bind-html="bill.totalAmount"></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+    </fieldset>
+     <footer>
+      <button type="button" class="btn-u" data-ng-click="vm.submit()">Print</button>
+    </footer>
+  </form>
+  <!-- sky form end -->
+</div>

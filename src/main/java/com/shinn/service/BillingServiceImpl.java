@@ -1,46 +1,46 @@
 package com.shinn.service;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.itextpdf.text.Anchor;
-import com.itextpdf.text.BadElementException;
-import com.itextpdf.text.BaseColor;
-import com.itextpdf.text.Chapter;
+import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Document;
-import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
 import com.itextpdf.text.Font;
-import com.itextpdf.text.List;
-import com.itextpdf.text.ListItem;
-import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.FontFactory;
 import com.itextpdf.text.Phrase;
 import com.itextpdf.text.Rectangle;
-import com.itextpdf.text.Section;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
-import com.itextpdf.text.pdf.PdfWriter;
+import com.itextpdf.text.pdf.draw.DottedLineSeparator;
 import com.shinn.dao.factory.ResultStatus;
 import com.shinn.dao.repos.BillingDao;
 import com.shinn.dao.repos.ElectricBillDao;
 import com.shinn.dao.repos.ElectricProviderDao;
+import com.shinn.dao.repos.RentalDao;
+import com.shinn.dao.repos.RenterDao;
+import com.shinn.dao.repos.RoomDao;
 import com.shinn.service.model.Billing;
 import com.shinn.service.model.ElectricBill;
 import com.shinn.service.model.ElectricProvider;
+import com.shinn.service.model.Renter;
+import com.shinn.service.model.Room;
+import com.shinn.service.model.Transaction;
 import com.shinn.ui.model.BillingForm;
 import com.shinn.ui.model.Response;
+import com.shinn.ui.model.Result;
 import com.shinn.util.DateUtil;
 import com.shinn.util.PdfUtil;
+import com.shinn.util.RentStatus;
 import com.shinn.util.StringUtil;
 
 @Service
@@ -48,7 +48,6 @@ public class BillingServiceImpl implements BillingService {
   private static final org.slf4j.Logger logger = LoggerFactory.getLogger(BillingServiceImpl.class);
   private static String PDF_PATH = "C:\\Users\\rbkshinn";
   private static Integer NUMBER_OF_ROWS = 3;
-  private static final String ELECTRIC_BILL = "electric";
   private static final Integer MINIMUM_DAYS_TO_GENERATE = 20;
   private static final Integer DAYS_FOR_SURCHARGE = 7;
 
@@ -58,14 +57,19 @@ public class BillingServiceImpl implements BillingService {
   ElectricProviderDao electricProviderDao;
   @Autowired
   BillingDao billingDao;
-
+  @Autowired
+  RentalDao rentalDao;
+  @Autowired
+  RoomDao roomDao;
+  @Autowired
+  RenterDao renterDao;
 
   /**
    * 
    */
-  public Response<Billing> getBilling(Integer aptId, Integer roomId) {
-    Response<Billing> resp = new Response();
-    Billing bill = billingDao.getLatestBilling(aptId, roomId);
+  public Response<Billing> getBilling(Integer aptId, Integer roomId, String billType) {
+    Response<Billing> resp = new Response<Billing>();
+    Billing bill = billingDao.getLatestBilling(aptId, roomId, billType);
     if (bill != null) {
       resp.setModel(bill);
       resp.setResponseStatus(ResultStatus.RESULT_OK);
@@ -80,56 +84,72 @@ public class BillingServiceImpl implements BillingService {
    * 
    */
   @Override
-  public Response<BillingForm> generateBillings(BillingForm billingForm) throws Exception {
-    Response<BillingForm> resp = new Response();
-
-    // TODO save bill;
-    // save billings
-    Billing billing = null;
-    String billingNo = null;
-    int numberOfDays = 0;
-    for (ElectricBill electricBill : billingForm.getRooms()) {
-      // create only 1 billing within a month
-      // billingDao.get
-      billing = billingDao.getLatestBilling(electricBill.getAptId(), electricBill.getRoomId());
-      if (billing != null) {
-        numberOfDays = DateUtil.daysBetween(billing.getGenerationDate(), DateUtil.getCurrentDate());
-      }
-
-      // if (billing == null || numberOfDays >= MINIMUM_DAYS_TO_GENERATE)
-
-      billing = new Billing();
-      billing.setAmount(electricBill.getAmount());
-      billing.setOverdue(electricBill.getOverdue());
-      billing.setAptId(electricBill.getAptId());
-      billing.setRoomId(electricBill.getRoomId());
-      billing.setBillType(ELECTRIC_BILL);
-      billing.setCurrentReading(electricBill.getCurrentReading());
-      billing.setPreviousReading(electricBill.getPreviousReading());
-      billing.setDueDate(electricBill.getDueDate());
-      billing.setGenerationDate(DateUtil.getCurrentDate());
-      billing.setReadingDate(billingForm.getReadingDate());
-      billing.setDiffReading(electricBill.getDiffReading());
-      Long dateTime = DateUtil.getCurrentDate().getTime();
-      billingNo = String.valueOf(dateTime) + String.valueOf(electricBill.getAptId())
-          + String.valueOf(electricBill.getRoomId());
-      billing.setBillingNo(billingNo);
-      billingDao.saveUpdate(billing);
-      electricBill.setReadingDate(billingForm.getReadingDate());
-      electricBill.setDueDate(DateUtil.addDays(DateUtil.getCurrentDate(), 5));
-      electricBill.setLastBillNo(billingNo);
-      electricBill.setBillingNo(billingNo);
-      electricBill.setPreviousReading(billing.getCurrentReading());
-      electricBill.setCurrentReading(0);
-      electricBill.setTotalAmount(billingForm.getTotalAmount());
-      electricBill.setDueDate(DateUtil.addDays(DateUtil.getCurrentDate(), DAYS_FOR_SURCHARGE));
-      electricBillDao.saveUpdate(electricBill);
-
+  public Response<BillingForm> generateBillings(BillingForm billingForm) {
+    Response<BillingForm> resp = new Response<BillingForm>();
+    switch (billingForm.getBillingType()) {
+      case RentStatus.BILL_ELECTRIC:
+        billingForm.setRooms(this.generateElectricBilling(billingForm.getRooms()));
+        break;
+      case RentStatus.BILL_RENT:
+        resp = this.createRoomBilling(billingForm);
+      default:
 
     }
-    billingDao.commit();
-    billingForm.setBillingNo(billingNo);
-    resp.setModel(billingForm);
+    if (billingForm.getRooms() != null && billingForm.getRooms().size() > 0) {
+      // this.generateElectricBilling(billingForm.getRooms());
+    }
+
+    // // TODO save bill;
+    // // save billings
+    // Billing billing = null;
+    // String billingNo = null;
+    // int numberOfDays = 0;
+    // try {
+    // for (ElectricBill electricBill : billingForm.getRooms()) {
+    // // create only 1 billing within a month
+    // // billingDao.get
+    // billing = billingDao.getLatestBilling(electricBill.getAptId(), electricBill.getRoomId());
+    // if (billing != null) {
+    // numberOfDays = DateUtil.daysBetween(billing.getGenerationDate(), DateUtil.getCurrentDate());
+    // }
+    //
+    // // if (billing == null || numberOfDays >= MINIMUM_DAYS_TO_GENERATE)
+    //
+    // billing = new Billing();
+    // billing.setAmount(electricBill.getAmount());
+    // billing.setOverdue(electricBill.getOverdue());
+    // billing.setAptId(electricBill.getAptId());
+    // billing.setRoomId(electricBill.getRoomId());
+    // billing.setBillType(ELECTRIC_BILL);
+    // billing.setCurrentReading(electricBill.getCurrentReading());
+    // billing.setPreviousReading(electricBill.getPreviousReading());
+    // billing.setDueDate(electricBill.getDueDate());
+    // billing.setGenerationDate(DateUtil.getCurrentDate());
+    // billing.setReadingDate(billingForm.getReadingDate());
+    // billing.setDiffReading(electricBill.getDiffReading());
+    // Long dateTime = DateUtil.getCurrentDate().getTime();
+    // billingNo = String.valueOf(dateTime) + String.valueOf(electricBill.getAptId())
+    // + String.valueOf(electricBill.getRoomId());
+    // billing.setBillingNo(billingNo);
+    // billingDao.saveUpdate(billing);
+    // electricBill.setReadingDate(billingForm.getReadingDate());
+    // electricBill.setDueDate(DateUtil.addDays(DateUtil.getCurrentDate(), 5));
+    // electricBill.setLastBillNo(billingNo);
+    // electricBill.setBillingNo(billingNo);
+    // electricBill.setPreviousReading(billing.getCurrentReading());
+    // electricBill.setCurrentReading(0);
+    // electricBill.setTotalAmount(billingForm.getTotalAmount());
+    // electricBill.setDueDate(DateUtil.addDays(DateUtil.getCurrentDate(), DAYS_FOR_SURCHARGE));
+    // electricBillDao.saveUpdate(electricBill);
+    // }
+    // billingDao.commit();
+    // billingForm.setBillingNo(billingNo);
+    // resp.setModel(billingForm);
+    // }catch (Exception e) {
+    // logger.error("generateBilling:", e);
+    // resp.setErrorMsg(e.getMessage());
+    // resp.setResponseStatus(ResultStatus.GENERAL_ERROR);
+    // }
     return resp;
   }
 
@@ -141,11 +161,33 @@ public class BillingServiceImpl implements BillingService {
     try {
 
       Document document = PdfUtil.createDocument(generatedFile);
-      for (ElectricBill electricBill : billingForm.getRooms()) {
-        PdfPTable billTable = createElectricBill(electricBill, billingForm.getElectricProvider());
-        document.add(billTable);
-        document.newPage();
+      switch (billingForm.getBillingType()) {
+        case RentStatus.BILL_ELECTRIC:
+          for (ElectricBill electricBill : billingForm.getRooms()) {
+            PdfPTable billTable =
+                createElectricBill(electricBill, billingForm.getElectricProvider());
+            document.add(billTable);
+            document.newPage();
+          }
+          break;
+        case RentStatus.BILL_RENT:
+          for (Transaction tx : billingForm.getBills()) {
+            PdfPTable billTable = createRentReceipt(tx);
+            document.add(billTable);
+            DottedLineSeparator separator = new DottedLineSeparator();
+            separator.setPercentage(59500f / 523f);
+            Chunk linebreak = new Chunk(separator);
+            document.add(linebreak);
+          }
+          break;
+        default:
+          // water
       }
+      // for (ElectricBill electricBill : billingForm.getRooms()) {
+      // PdfPTable billTable = createElectricBill(electricBill, billingForm.getElectricProvider());
+      // document.add(billTable);
+      // document.newPage();
+      // }
       document.close();
     } catch (Exception e) {
       // TODO Auto-generated catch block
@@ -354,6 +396,261 @@ public class BillingServiceImpl implements BillingService {
     return pdfContents;
   }
 
+  private List<ElectricBill> generateElectricBilling(List<ElectricBill> billings) {
+    // TODO save bill;
+    // save billings
+    Billing billing = null;
+    String billingNo = null;
+    int numberOfDays = 0;
+    try {
+      for (ElectricBill electricBill : billings) {
+        // create only 1 billing within a month
+        billing = billingDao.getLatestBilling(electricBill.getAptId(), electricBill.getRoomId(),
+            RentStatus.BILL_ELECTRIC);
+        if (billing != null) {
+          numberOfDays =
+              DateUtil.daysBetween(billing.getGenerationDate(), DateUtil.getCurrentDate());
+        }
 
+        // if (billing == null || numberOfDays >= MINIMUM_DAYS_TO_GENERATE)
+
+        billing = new Billing();
+        billing.setAmount(electricBill.getAmount());
+        billing.setOverdue(electricBill.getOverdue());
+        billing.setAptId(electricBill.getAptId());
+        billing.setRoomId(electricBill.getRoomId());
+        billing.setBillType(RentStatus.BILL_ELECTRIC);
+        billing.setCurrentReading(electricBill.getCurrentReading());
+        billing.setPreviousReading(electricBill.getPreviousReading());
+        billing.setDueDate(electricBill.getDueDate());
+        billing.setGenerationDate(DateUtil.getCurrentDate());
+        billing.setReadingDate(electricBill.getReadingDate());
+        billing.setDiffReading(electricBill.getDiffReading());
+        Long dateTime = DateUtil.getCurrentDate().getTime();
+        billingNo = String.valueOf(dateTime) + String.valueOf(electricBill.getAptId())
+            + String.valueOf(electricBill.getRoomId());
+        billing.setBillingNo(billingNo);
+        billingDao.saveUpdate(billing);
+        electricBill.setDueDate(DateUtil.addDays(DateUtil.getCurrentDate(), 5));
+        electricBill.setLastBillNo(billingNo);
+        electricBill.setBillingNo(billingNo);
+        electricBill.setPreviousReading(billing.getCurrentReading());
+        electricBill.setCurrentReading(0);
+        electricBill.setTotalAmount(electricBill.getTotalAmount());
+        electricBill.setDueDate(DateUtil.addDays(DateUtil.getCurrentDate(), DAYS_FOR_SURCHARGE));
+        electricBillDao.saveUpdate(electricBill);
+      }
+      billingDao.commit();
+
+    } catch (Exception e) {
+      logger.error("generateElectricBilling:", e);
+
+    }
+    return billings;
+  }
+
+  @Override
+  public Response<Transaction> getRoomBilling(Integer aptId, Integer roomId) {
+    Response<Transaction> response = new Response<>();
+    List<Transaction> rentals = rentalDao.getTransactionByApt(aptId, roomId);
+    try {
+      for (Transaction transaction : rentals) {
+        Room room = roomDao.getRoom(transaction.getAptId(), transaction.getRoomId());
+
+        Renter renter = renterDao.getById(transaction.getRenterId());
+        transaction.setRenter(renter);
+
+        Date txDate = transaction.getUpdatedDate();
+        if (txDate == null) {
+          txDate = transaction.getTxDate();
+        }
+        int unpaidBill = DateUtil.daysBetween(txDate, DateUtil.getCurrentDate());
+        unpaidBill = unpaidBill / DateUtil.THIRTYDAYS;
+        if (unpaidBill < 1) {
+          unpaidBill = 1;
+        }
+        transaction.setUnpaidBill(unpaidBill);
+
+        Double amount = room.getRate() * unpaidBill;
+        if (transaction.getAmount() != null) {
+          amount = amount + transaction.getAmount();
+        }
+        transaction.setAmount(amount);
+        transaction.setAmountPayable(amount + transaction.getBalance());
+
+        logger.info("room:" + room);
+        transaction.setRoom(room);
+      }
+      response.setResult(rentals);
+      response.setResponseStatus(ResultStatus.RESULT_OK);
+    } catch (Exception e) {
+      response.setResponseStatus(ResultStatus.GENERAL_ERROR);
+      response.setErrorMsg(e.getMessage());
+    }
+
+    return response;
+  }
+
+  private Response<BillingForm> createRoomBilling(BillingForm form) {
+    Response<BillingForm> resp = new Response<>();
+    try {
+      for (Transaction tx : form.getBills()) {
+        Billing bill = new Billing();
+        Date dueDate = DateUtil.addDays(DateUtil.getCurrentDate(), DateUtil.THIRTYDAYS);
+        String billingNo = StringUtil.generateBillingNo(tx.getAptId(), tx.getRoomId());
+        bill.setAmount(tx.getAmount());
+        bill.setAptId(tx.getAptId());
+        bill.setBillingNo(billingNo);
+        bill.setDeposit(tx.getDeposit());
+        bill.setOverdue(tx.getBalance());
+        bill.setRenterId(tx.getRenterId());
+        bill.setRoomId(tx.getRoomId());
+        bill.setStatus(RentStatus.ACTIVE);
+        bill.setTxDate(DateUtil.getCurrentDate());
+        bill.setBillType(RentStatus.BILL_RENT);
+        bill.setDueDate(dueDate);
+        bill.setGenerationDate(DateUtil.getCurrentDate());
+
+        // update the transaction data
+        tx.setDueDate(dueDate);
+        tx.setTxDate(DateUtil.getCurrentDate());
+        tx.setUpdatedDate(DateUtil.getCurrentDate());
+        tx.setPaymentStatus(RentStatus.ACTIVE);
+        tx.setUserId(1);
+        tx.setPaymentStatus(RentStatus.UNPAID);
+        tx.setUpdtCnt(tx.getUpdtCnt() + 1);
+        tx.setBillingNo(billingNo);
+
+        billingDao.saveUpdate(bill);
+        rentalDao.saveUpdate(tx);
+      }
+
+      rentalDao.commit();
+      billingDao.commit();
+      resp.setModel(form);
+      resp.setResponseStatus(ResultStatus.RESULT_OK);
+    } catch (Exception e) {
+      logger.error("createNewBilling:" + e.getMessage(), e);
+      resp.setErrorMsg(e.getLocalizedMessage());
+      resp.setResponseStatus(ResultStatus.GENERAL_ERROR);
+    }
+
+    return resp;
+  }
+
+  @Override
+  public Response<Transaction> createNewBilling(Renter renter) {
+    Response<Transaction> response = new Response<Transaction>();
+    // Billing bill = new Billing();
+    try {
+      // String billingNo = StringUtil.generateBillingNo(renter.getAptId(), renter.getRoomId());
+      // bill.setAmount(0d);
+      // bill.setAptId(renter.getAptId());
+      // bill.setBillingNo(billingNo);
+      // bill.setDeposit(0d);
+      // bill.setOverdue(0d);
+      // bill.setRenterId(renter.getId());
+      // bill.setRoomId(renter.getRoomId());
+      // bill.setStatus(RentStatus.ACTIVE);
+      // bill.setTxDate(DateUtil.getCurrentDate());
+      // bill.setBillType(RentStatus.BILL_RENT);
+      Transaction tx = rentalDao.getTransactionByAptRoomRenter(renter.getAptId(),
+          renter.getRoomId(), renter.getId());
+      if (tx == null) {
+        tx = new Transaction();
+        tx.setAptId(renter.getAptId());
+        tx.setRoomId(renter.getRoomId());
+        tx.setRenterId(renter.getId());
+        tx.setRoomId(renter.getRoomId());
+        // tx.setUserId();
+        tx.setDueDate(DateUtil.addDays(DateUtil.getCurrentDate(), DateUtil.THIRTYDAYS));
+        tx.setStartDate(DateUtil.getCurrentDate());
+        tx.setBalance(0d);
+        tx.setDeposit(0d);
+        tx.setTxType("cash");
+        tx.setTxDate(DateUtil.getCurrentDate());
+        tx.setPaymentStatus(RentStatus.ACTIVE);
+        tx.setUserId(1);
+        tx.setPaymentStatus(RentStatus.UNPAID);
+        tx.setUpdtCnt(0);
+      } else {
+        tx.setDueDate(DateUtil.addDays(DateUtil.getCurrentDate(), DateUtil.THIRTYDAYS));
+        tx.setStartDate(DateUtil.getCurrentDate());
+        tx.setStatus(RentStatus.ACTIVE);
+        tx.setBalance(0d);
+        tx.setDeposit(0d);
+        tx.setTxDate(DateUtil.getCurrentDate());
+      }
+      response.setResponseStatus(ResultStatus.RESULT_OK);
+      // billingDao.saveUpdate(bill);
+      rentalDao.saveUpdate(tx);
+      rentalDao.commit();
+      billingDao.commit();
+    } catch (Exception e) {
+      logger.error("createNewBilling:" + e.getMessage(), e);
+      response.setErrorMsg(e.getMessage());
+      response.setResponseStatus(ResultStatus.GENERAL_ERROR);
+    }
+
+    return response;
+  }
+
+  private PdfPTable createRentReceipt(Transaction tx) {
+    PdfPTable table = new PdfPTable(2);
+    // table.getDefaultCell().setBorder(Rectangle.BOX);
+
+    Phrase p = new Phrase("Caburnay Apartmentz");
+    Font f = new Font();
+    f.setFamily("Helvicta");
+    f.setSize(20f);
+    f.setStyle(Font.BOLD);
+    p.setFont(FontFactory.getFont(FontFactory.HELVETICA));
+    PdfPCell cell = new PdfPCell(p);
+
+    cell.setBorder(Rectangle.NO_BORDER);
+    cell.setFixedHeight(30f);
+    cell.setColspan(2);
+    cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+
+    // cell.addElement(new PdfPCell());;
+    table.addCell(cell);
+    table.getDefaultCell().setFixedHeight(30);
+    table.addCell(
+        PdfUtil.createCell("Ref #: " + tx.getBillingNo(), Element.ALIGN_LEFT, Rectangle.NO_BORDER));
+    table.addCell(PdfUtil.createCell(
+        "Date : " + DateUtil.formatDate(DateUtil.getCurrentDate(), DateUtil.YYYYMMDD_DASH),
+        Element.ALIGN_LEFT, Rectangle.NO_BORDER));
+
+    // table.getDefaultCell().setFixedHeight(20);
+    table.addCell(PdfUtil.createCell("Customer Name:", Element.ALIGN_LEFT, Rectangle.NO_BORDER));
+    table.addCell(
+        PdfUtil.createCell(tx.getRenter().getFullName(), Element.ALIGN_LEFT, Rectangle.NO_BORDER));
+    table.addCell(PdfUtil.createCell("Apartment Name:", Element.ALIGN_LEFT, Rectangle.NO_BORDER));
+    table.addCell(PdfUtil.createCell(tx.getAptName(), Element.ALIGN_LEFT, Rectangle.NO_BORDER));
+
+    table.addCell(PdfUtil.createCell("Room # / Name :", Element.ALIGN_LEFT, Rectangle.NO_BORDER));
+    table.addCell(PdfUtil.createCell(tx.getRoom().getRoomNo() + " / " + tx.getRoom().getRoomDesc(),
+        Element.ALIGN_LEFT, Rectangle.NO_BORDER));
+
+
+    table.addCell(PdfUtil.createCell("Amount Due:", Element.ALIGN_LEFT, Rectangle.NO_BORDER));
+    table.addCell(PdfUtil.createCell(String.valueOf(tx.getAmount()), Element.ALIGN_LEFT,
+        Rectangle.NO_BORDER));
+
+    table.addCell(PdfUtil.createCell("Over Due:", Element.ALIGN_LEFT, Rectangle.NO_BORDER));
+    table.addCell(PdfUtil.createCell(String.valueOf(tx.getBalance()), Element.ALIGN_LEFT,
+        Rectangle.NO_BORDER));
+    Font boldFont = new Font(Font.FontFamily.TIMES_ROMAN, 18, Font.BOLD);
+    table.addCell(
+        PdfUtil.createCell("Total:", Element.ALIGN_LEFT, Rectangle.BOX, 1, boldFont));
+    table.addCell(PdfUtil.createCell(String.valueOf(tx.getAmountPayable()), Element.ALIGN_LEFT,
+        Rectangle.BOX));
+    PdfPCell spacer = new PdfPCell();
+    spacer.setFixedHeight(30f);
+    spacer.setColspan(2);
+    spacer.setBorder(Rectangle.NO_BORDER);
+    table.addCell(spacer);
+    return table;
+  }
 
 }

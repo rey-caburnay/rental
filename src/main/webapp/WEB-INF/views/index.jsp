@@ -15,6 +15,7 @@
      <link href="<c:url value='/resources/css/custom-simple-form.css' />" rel="stylesheet"></link>
      <link href="<c:url value='/resources/css/responstable.css' />" rel="stylesheet"></link>
      <link href="<c:url value='/resources/css/font-awesome.min.css' />" rel="stylesheet"></link>
+     <link href="<c:url value='/resources/css/angular-datatables.min.css' />" rel="stylesheet"></link>
 
   </head>
   <body  class="ng-cloak">
@@ -48,7 +49,8 @@
 	</div>
 
     <!-- Vendor: Javascripts -->
-     <script src="<c:url value='/resources/js/external/jquery.js'/>"></script>
+    <script src="<c:url value='/resources/js/external/jquery.js'/>"></script>
+    <script src="<c:url value='/resources/js/external/jquery.dataTables.js'/>"></script>
     <script src="<c:url value='/resources/js/external/bootstrap.min.js'/>"></script>
 
 
@@ -64,6 +66,8 @@
     <script src="<c:url value='/resources/js/external/ui-bootstrap-1.3.3.min.js'/>"></script>
     <script src="<c:url value='/resources/js/external/sweetalert.min.js'/>"></script>
     <script src="<c:url value='/resources/js/external/angular-pdfjs-viewer.js'/>"></script>
+
+    <script src="<c:url value='/resources/js/external/angular-datatables.min.js'/>"></script>
    	 <script src="<c:url value='/resources/js/app.js' />"></script>
     <!-- utils -->
     <script src="<c:url value='/resources/js/util/dateUtil.js' />"></script>
@@ -80,6 +84,7 @@
     <!--  service model -->
     <script src="<c:url value='/resources/js/service/model/transaction.js' />"></script>
     <!-- controllers -->
+    <script src="<c:url value='/resources/js/controller/navbar.js' />"></script>
     <script src="<c:url value='/resources/js/controller/user_controller.js' />"></script>
     <script src="<c:url value='/resources/js/controller/transaction.js' />"></script>
     <script src="<c:url value='/resources/js/controller/registration.js' />"></script>

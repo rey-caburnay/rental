@@ -2,15 +2,18 @@
   'use strict';
   
   var injectParams = [ '$scope', '$filter', 'transactionService',
-      'adminService', 'dateFactory', 'modalService', '$location' ];
+      'adminService', 'dateFactory', 'modalService', '$location', 'DTOptionsBuilder' ];
   var MECO_PROVIDER = 'meco';
   var VECO_PROVIDER = 'veco';
   
   var ReportController = function($scope, $filter, transactionService,
-      adminService, dateFactory, modalService, $location) {
+      adminService, dateFactory, modalService, $location, DTOptionsBuilder) {
     var vm = this, collection = {}, // model to map to services
     paymentTypes = [ "cash", "check", "online" ], COLLECTION_DAYS = 30;
-    
+    vm.dtOptions = DTOptionsBuilder.newOptions();
+//    .withOptions('autoWidth', fnThatReturnsAPromise);
+
+
     vm.popup = modalService;
     vm._selected;
     vm.renters = []; // model for ui;
@@ -29,14 +32,29 @@
       vm.isElectric= false;
       vm.isWater = false;
       vm.isTenant = false;
+      console.log(tab);
       switch (tab) {
       case 'tenant':
         vm.isTenant = true;
+        if(vm.currentPage != "tenant") {
+          m.currentPage = "tenant"
+        };
 //        getApartments();
 //        getRenters();
       case 'property':
-        vm.isPropertyCollection = true;
+        vm.isApartment= true;
+        if(vm.currentPage != 'property') {
+          vm.currentPage = "property";
+          vm.getRooms(null);
+        }
+     
         break;
+      case 'electric':
+        vm.isElectric = true;
+        if(vm.currentPage != 'electric') {
+          vm.currentPage = "electric";
+          vm.getRoomElectric(null);
+        }
       case 'water':
         vm.isWaterCollection = true;
         break;
@@ -67,8 +85,13 @@
     
     vm.getRooms = function (aptId) {
       getRooms(aptId);
-    }
-    
+    };
+    vm.getRenters = function (aptId) {
+      getRenters(aptId);
+    };
+    vm.getRoomElectric = function (aptId) {
+      getRoomsElectric(aptId);
+    };
     vm.submit = function() {
       submit();
     };
@@ -98,6 +121,18 @@
       });
     }
     
+    function getRoomsElectric(aptId) {
+      adminService.getElectricReport(aptId).then(function (result) {
+        processResponse(result);
+      });
+    }
+    
+    function fnThatReturnsAPromise() {
+      var defer = $q.defer();
+      defer.resolve(false);
+      return defer.promise;
+  }
+    
     /** test centralize response function * */
     function processResponse(response) {
       if(!response) {
@@ -114,7 +149,15 @@
         break;
       case 'getApartments':
         vm.apartments = data.result;
+        if(!vm.apartments) {
+          getApartments();
+        }
         break;
+      case 'getRoomsReport':
+        vm.rooms = data.result;
+        break;
+      case 'getElectricReport':
+        vm.electricBills = data.result;
       default:
       }
       

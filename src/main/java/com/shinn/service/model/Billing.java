@@ -8,7 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-@ToString
+@SuppressWarnings("serial")
 @Getter
 @Setter
 public class Billing implements Serializable {
@@ -28,5 +28,11 @@ public class Billing implements Serializable {
   private String billingNo;
   private String provider;
   private Integer numberOfDays;
+  
+  // for room
+  private Date txDate;
+  private Integer renterId;
+  private Double deposit;
+  private String status;
 
 }

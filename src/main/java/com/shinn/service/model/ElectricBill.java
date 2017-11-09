@@ -20,6 +20,7 @@ public class ElectricBill implements Serializable {
   private Integer aptId;
   private Integer roomId;
   private String roomNumber;
+  private String roomDesc;
   private String apartmentName;
   private String accountNo;
   private Integer previousReading;

@@ -1,22 +1,22 @@
 <div class="" id="billing">
   <h3>{{vm.billingTitle}}</h3>
   <ul class="nav nav-pills nav-justified">
-    <li><a data-toggle="tab" href="#properties" target="_self">Properties</a></li>
-    <li class="active"><a data-toggle="tab" href="#electric" target="_self">Electric</a></li>
-    <li><a data-toggle="tab" href="#water" target="_self">Water</a></li>
+    <li class ="active"><a data-toggle="tab" href="#properties" target="_self"
+    data-ng-click="vm.setActivePage('property')">Properties</a></li>
+    <li><a data-toggle="tab" href="#electric" target="_self" 
+      data-ng-click="vm.setActivePage('electric')">Electric</a></li>
+    <li><a data-toggle="tab" href="#water" target="_self"
+     data-ng-click="vm.setActivePage('water')">Water</a></li>
   </ul>
 
   <div class="tab-content clearfix">
-    <div id="properties" class="tab-pane fade in"  data-ng-class="{'active': vm.isPropertyBilling}"
-      data-ng-click="vm.setActivePage('property')">
+    <div id="properties" class="tab-pane fade in"  data-ng-class="{'active': vm.isPropertyBilling}">
       <div data-ng-include="'resources/ui/content/billing/properties.html'"></div>
     </div>
-    <div id="electric" class="tab-pane fade in" data-ng-class="{'active': vm.isElectricBilling}"
-    data-ng-click="vm.setActivePage('electric')">
+    <div id="electric" class="tab-pane fade in" data-ng-class="{'active': vm.isElectricBilling}">
       <div data-ng-include="'resources/ui/content/billing/electric.html'"></div>
     </div>
-    <div id="water" class="tab-pane fade" data-ng-class="{'active': vm.isWaterBilling}"
-     data-ng-click="vm.setActivePage('water')">
+    <div id="water" class="tab-pane fade" data-ng-class="{'active': vm.isWaterBilling}">
       <div data-ng-include="electric.html"></div>
     </div>
   </div>

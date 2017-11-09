@@ -30,25 +30,27 @@ public class BillingDaoImpl extends AbstractDaoImpl<Billing> implements BillingD
 
   @Override
   public int saveUpdate(Billing model) throws Exception {
-   return executeSaveUpate("save-billing", model);
+    return executeSaveUpate("save-billing", model);
   }
 
   @Override
-  public Billing getBillingThisMonth(Date generatedDate) {
-    return getObject("billing-findby-generatedDate", generatedDate);
+  public Billing getBillingThisMonth(Date generatedDate, String billType) {
+    return getObject("billing-findby-generatedDate", generatedDate, billType);
   }
 
   @Override
-  public Billing getLatestBilling(Integer aptId, Integer roomId) {
-    return getObject("billing-get-latest", aptId, roomId);
+  public Billing getLatestBilling(Integer aptId, Integer roomId, String billType) {
+    return getObject("billing-get-latest", aptId, roomId, billType);
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see com.shinn.dao.repos.BillingDao#getBilling(java.lang.Integer, java.lang.Integer)
    */
   @Override
-  public Billing getLastHoursGenerated(Integer aptId, Integer roomId) {
-    return getObject("billing-get-hours");
+  public Billing getLastHoursGenerated(Integer aptId, Integer roomId, String billType) {
+    return getObject("billing-get-hours", billType);
   }
-  
+
 }

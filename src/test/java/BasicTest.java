@@ -26,7 +26,7 @@ public class BasicTest {
     public static void main(String args[]) {
         
         BasicTest test = new BasicTest();
-        test.getMethodTest();
+        test.dateTest();
     }
     
     public void getMethodTest() {

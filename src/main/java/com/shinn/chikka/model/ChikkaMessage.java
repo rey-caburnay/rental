@@ -31,15 +31,12 @@ public class ChikkaMessage implements Serializable{
     private String clientId;
     @JsonProperty("secret_key")
     private String secretKey;
-    /* (non-Javadoc)
-     * @see java.lang.Object#toString()
-     */
-    @Override
-    public String toString() {
-        return "ChikkaMessage [messageType=" + messageType + ", mobileNumber=" + mobileNumber + ", shortcode="
-                + shortcode + ", messageId=" + messageId + ", message=" + message + ", requestId=" + requestId
-                + ", timestamp=" + timestamp + "]";
-    }
+    @JsonIgnore
+    private String status;
+    @JsonIgnore 
+    private String responseMsg;
+    
+    
      
     public String generateMessageId() {
        

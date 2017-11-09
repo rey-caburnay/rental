@@ -1,7 +1,7 @@
 (function (){
 'use strict';
 
-angular.module('rental',['ngRoute','ui.bootstrap','ngSanitize','ngResource','pdfjsViewer']);
+angular.module('rental',['ngRoute','ui.bootstrap','ngSanitize','ngResource','pdfjsViewer', 'datatables']);
 
 
 /**
@@ -79,6 +79,7 @@ angular.module('rental').config(['$routeProvider','$httpProvider', function ($ro
 	  };
 //	  $httpProvider.defaults.transformRequest.push(spinnerFunction);
 	  $httpProvider.interceptors.push('customInterceptor');
+
 }]);
 
 
@@ -96,6 +97,14 @@ angular.module('rental').run(['$rootScope', '$location',
                 }
             }
         });
+        $rootScope.navbarCollapsed = true;
+        $rootScope.navbarToggle= function() {
+          console.log("trigger toggle");
+          $rootScope.navbarCollapsed = false;
+//          if(!$rootScope.navbarCollapsed){
+//            $rootScope.navbarCollapsed = true;
+//          } 
+        }
 
 }]);
 
