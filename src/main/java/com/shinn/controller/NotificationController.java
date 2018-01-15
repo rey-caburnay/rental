@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import com.shinn.chikka.Chikka;
+import com.shinn.chikka.ChikkaService;
 import com.shinn.chikka.model.ChikkaMessage;
 import com.shinn.service.model.Apartment;
 import com.shinn.service.model.Sms;
@@ -22,7 +22,7 @@ public class NotificationController {
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(NotificationController.class);
 
     @Autowired
-    Chikka chikka;
+    ChikkaService chikka;
     
     @RequestMapping(value = "/notification", method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)

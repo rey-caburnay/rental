@@ -1,5 +1,5 @@
 
-<div id="electric">
+<div id="property">
   <form action="#" id="simple-form" class="simple-form"
     name="rentalForm">
     <fieldset>
@@ -7,20 +7,20 @@
         <section class="col col-4">
           <label class="select" for="rentFor"> <select
             id="selectbasic" name="rentFor"
-            data-ng-model="vm.model.apartment"
+            data-ng-model="vm.apartment"
             data-ng-options="apt as apt.name for apt in vm.apartments track by apt.id"
             class="form-control"
-            data-ng-change="vm.getRooms(vm.model.apartment.id)" required>
+            data-ng-change="vm.getRooms(vm.apartment.id)" required>
               <option value="">-- choose apartment --</option>
           </select>
           </label>
         </section>
         <section class="col col-4">
           <label class="select"> <select id="selectbasic"
-            name="room" data-ng-model="vm.model.room"
+            name="room" data-ng-model="vm.room"
             data-ng-options="rm as rm.roomDesc for rm in vm.rooms track by rm.id"
             class="form-control"
-            data-ng-change="vm.getBilling(vm.model.room)"
+            data-ng-change="vm.getBilling(vm.room)"
             data-ng-required="true">
               <option value="" disabled>-- choose room --</option>
           </select>
@@ -43,7 +43,7 @@
               <th>Billing #</th>
               <th>Overdue</th>
               <th>Amount</th>
-              <th>Unpaid Month</th>
+<!--               <th>Unpaid Month</th> -->
 
             </tr>
           </thead>
@@ -65,7 +65,7 @@
               <td data-ng-bind-html="room.billingNo"></td>
               <td data-ng-bind-html="room.balance | cusCurrency"></td>
               <td data-ng-bind-html="room.amount | cusCurrency"></td>
-              <td data-ng-bind-html="room.unpaidBill"></td>
+<!--               <td data-ng-bind-html="room.unpaidBill"></td> -->
             </tr>
           </tbody>
         </table>
@@ -251,12 +251,12 @@
             class="icon-prepend fa fa-user"></i><input type="text"
             name="receivedBy" id="receivedBy"
             placeholder="Cash Received By"
-            data-ng-model="vm.model.receivedBy">
+            data-ng-model="vm.receivedBy">
           </label>
         </section>
         <section class="col col-8">
           <label class="input"> <input type="text" name="note"
-            id="note" placeholder="Note" data-ng-model="vm.model.note">
+            id="note" placeholder="Note" data-ng-model="vm.note">
           </label>
         </section>
       </div>

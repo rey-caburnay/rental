@@ -15,17 +15,17 @@ import lombok.Setter;
 public class ChikkaMessage implements Serializable{
     @JsonProperty("message_type")
     private String messageType;
-    @JsonProperty("message_type")
+    @JsonProperty("mobile_number")
     private String mobileNumber;
     @JsonProperty("shortcode")
     private String shortcode;
-    @JsonProperty("message_id")
+    @JsonProperty("request_id")
     private String messageId;
     @JsonProperty("message")
     private String message;
     @JsonIgnore
     private String requestId;
-    @JsonIgnore
+    @JsonProperty("timestamp")
     private String timestamp;
     @JsonProperty("client_id")
     private String clientId;

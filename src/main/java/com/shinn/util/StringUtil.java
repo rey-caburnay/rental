@@ -1,8 +1,10 @@
 package com.shinn.util;
 
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -13,6 +15,7 @@ import com.shinn.dao.factory.AbstractDaoImpl;
 
 public class StringUtil {
   private static final org.slf4j.Logger logger = LoggerFactory.getLogger(StringUtil.class);
+  private static final Locale ph = new Locale("ph", "PH");
 
   /**
    * 
@@ -123,9 +126,18 @@ public class StringUtil {
   }
 
   public static String generateBillingNo(Integer aptId, Integer roomId) {
-    String billNo =
-        String.valueOf(DateUtil.getCurrentDate().getTime()) + String.valueOf(aptId) + String.valueOf(roomId);
+    String billNo = String.valueOf(DateUtil.getCurrentDate().getTime()) + String.valueOf(aptId)
+        + String.valueOf(roomId);
     return billNo;
+  }
+
+  public static String toCurrency(Object o) {
+    NumberFormat numberFormat = NumberFormat.getCurrencyInstance(ph);
+    String formatted = "";
+    if (o != null) {
+      formatted = numberFormat.format(o);
+    } 
+    return formatted;
   }
 
 }

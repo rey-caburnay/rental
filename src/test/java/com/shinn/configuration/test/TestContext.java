@@ -26,7 +26,7 @@ import com.shinn.service.UserServiceImpl;
  * @author Petri Kainulainen
  */
 @Configuration
-@ComponentScan({ "com.shinn.dao", "com.shinn.service" })
+@ComponentScan({ "com.shinn.dao", "com.shinn.service", "com.shinn.chikka" })
 public class TestContext {
 
     private static final String MESSAGE_SOURCE_BASE_NAME = "i18n/messages";
@@ -46,11 +46,17 @@ public class TestContext {
     
     @Bean(name = "dataSource")
     public DataSource dataSource() {
+//      DriverManagerDataSource dataSource = new DriverManagerDataSource();
+//      dataSource.setDriverClassName(environment.getRequiredProperty("jdbc.driverClassName"));
+//      dataSource.setUrl(environment.getRequiredProperty("jdbc.url"));
+//      dataSource.setUsername(environment.getRequiredProperty("jdbc.username"));
+//      dataSource.setPassword(environment.getRequiredProperty("jdbc.password"));
+//      return dataSource;
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName("com.mysql.jdbc.Driver");
-        dataSource.setUrl("jdbc:mysql://localhost:3306/realmaster");
-        dataSource.setUsername("root");
-        dataSource.setPassword("");
+        dataSource.setUrl("jdbc:mysql://localhost:3306/caburnay_realmaster");
+        dataSource.setUsername("caburnay_aptz");
+        dataSource.setPassword("r3@lM@st3rZ");
         return dataSource;
     }
 //

@@ -36,4 +36,9 @@ public class CollectionDaoImpl extends AbstractDaoImpl<Collection> implements Co
     public Collection getLastPayment(Integer renterId, Integer aptId, Integer roomId) {
       return getObject("collection-by-renter-lastpayment", renterId, aptId, roomId);
     }
+
+    @Override
+    public Collection getByBillingNo(String billingNo) {
+      return getObject("collection-findby-billing", billingNo);
+    }
 }

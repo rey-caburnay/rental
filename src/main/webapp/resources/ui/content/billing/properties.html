@@ -31,11 +31,11 @@
               <th>Mobile No </th>
               <th>Room #</th>
               <th>Room Name</th>
-              <th>Room Type</th>
-              <th>Rate</th>
+<!--               <th>Room Type</th> -->
               <th>Last Payment</th>
               <th>Due Date</th>
-              <th>Unpaid Bill</th>
+              <th>Overdue</th>
+              <th>Rate</th>
               <th>Payable</th>
               <th></th>
             </tr>
@@ -46,12 +46,12 @@
               <td data-ng-bind-html="room.renter.mobileNo"></td>
               <td data-ng-bind-html="room.room.roomNo"></td>
               <td data-ng-bind-html="room.room.roomDesc"></td>
-              <td data-ng-bind-html="room.room.roomType"></td>
-              <td data-ng-bind-html="room.room.rate"></td>
+<!--               <td data-ng-bind-html="room.room.roomType"></td> -->
               <td data-ng-bind-html="room.updatedDate | MMddYYYY"></td>
               <td data-ng-bind-html="room.dueDate | MMddYYYY"></td>
-              <td data-ng-bind-html="room.unpaidBill"></td>
-              <td data-ng-bind-html="room.amountPayable"</td>
+              <td data-ng-bind-html="room.overdue | cusCurrency"></td>
+              <td data-ng-bind-html="room.room.rate | cusCurrency"></td>
+              <td data-ng-bind-html="room.amountPayable | cusCurrency"</td>
               <td> <button type="button" class="btn-u" data-ng-click="vm.generateBilling('property', room)">Generate</button></td>
             </tr>
           </tbody>

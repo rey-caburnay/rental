@@ -73,6 +73,7 @@
         if(roomId) {
           roomParam = "/" + roomId;
         }
+        console.log("get billing type :" + type);
         switch (type) {
         case 'water':
           url = 'bill/water/' + aptParam + roomParam ;
@@ -80,13 +81,19 @@
         case 'property':
           url = 'bill/room/'  + aptParam + roomParam;
           break;
+        case 'roomForCollection':
+          url = 'bill/forcollection/'  + aptParam + roomParam;
+          break;
+        case 'electricForCollection':
+          url = 'bill/electriccollection/'  + aptParam + roomParam;
+          break;
         default:
           url = 'bill/electric/'  + aptParam + roomParam;
         }
          return request(REQUEST_GET, url, null,'getBillings' + type);
 
       },
-
+  
       getRoomBilling : function(aptId) {
         var url = 'bill/room/';
         return request(REQUEST_GET, url + params, null,'getBilling');

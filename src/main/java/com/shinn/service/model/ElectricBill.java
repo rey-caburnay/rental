@@ -1,7 +1,6 @@
 package com.shinn.service.model;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.Date;
 
 import com.shinn.ui.model.Bill;
@@ -11,7 +10,6 @@ import lombok.Setter;
 import lombok.ToString;
 
 @SuppressWarnings("serial")
-@ToString
 @Getter
 @Setter
 public class ElectricBill implements Serializable {
@@ -38,6 +36,7 @@ public class ElectricBill implements Serializable {
   private Double surcharge;
   private Date readingDate;
   private Double totalAmount;
+  private String collectionNo;
   
   /** non db fields **/
   private Date generationDate;

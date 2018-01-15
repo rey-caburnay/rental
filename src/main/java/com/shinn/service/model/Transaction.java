@@ -44,5 +44,7 @@ public class Transaction implements Serializable{
 	private Double amountPayable;
 	private String billingNo;
 	private Renter renter;
+	private String collectionNo;
+	private Double overdue;
 	
 }

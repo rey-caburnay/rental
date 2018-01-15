@@ -14,7 +14,12 @@ public interface BillingService {
   public Response<BillingForm> generateBillings(BillingForm billingForm) throws Exception;
   public Response<Billing> getBilling(Integer aptId, Integer roomId, String billType);
   public Response<Transaction> getRoomBilling(Integer aptId, Integer roomId);
+  public Response<Transaction> getRoomBillingForCollection(Integer aptId, Integer roomId);
   public byte[] getPdfContent(String pdfLocation) throws Exception;
   public Response<Transaction> createNewBilling(Renter renter);
+  public Response<ElectricBill> getElectricForCollection(Integer aptId, Integer roomId);
+  
+  public Response<Transaction> sendBillingAlert();
+  public Response<ElectricBill> sendElectricBillingAlert();
 
 }

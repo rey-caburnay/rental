@@ -521,7 +521,7 @@ public abstract class AbstractDaoImpl<T extends Serializable> {
             }
            
         } catch (Exception e) {
-            logger.info(e.getMessage());
+            logger.error("Saveupdate:{}",e);
             generatedKey = 0;
             throw (SQLException) e.getCause();
             

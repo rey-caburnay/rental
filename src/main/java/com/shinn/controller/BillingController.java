@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.shinn.dao.factory.ResultStatus;
 import com.shinn.service.AdminService;
 import com.shinn.service.BillingService;
+import com.shinn.service.CollectionService;
 import com.shinn.service.SmsService;
 import com.shinn.service.model.Billing;
 import com.shinn.service.model.ElectricBill;
@@ -46,6 +47,8 @@ public class BillingController {
   BillingService billingService;
   @Autowired
   SmsService smsService;
+  @Autowired
+  CollectionService collectionService;
 
 
   /**
@@ -93,7 +96,8 @@ public class BillingController {
    */
   @RequestMapping(value = "/room/{aptId}/{roomId}", method = RequestMethod.GET,
       produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<Response<Transaction>> getRoomBilling(@PathVariable String aptId, @PathVariable String roomId) {
+  public ResponseEntity<Response<Transaction>> getRoomBilling(@PathVariable String aptId,
+      @PathVariable String roomId) {
     logger.info("getRoomBilling:" + aptId + "roomId:" + roomId);
     Integer id = null;
     Integer rId = null;
@@ -104,7 +108,7 @@ public class BillingController {
     }
     try {
       rId = Integer.parseInt(roomId);
-    }catch(Exception e) {
+    } catch (Exception e) {
       rId = null;
     }
     Response<Transaction> resp = billingService.getRoomBilling(id, rId);
@@ -113,6 +117,84 @@ public class BillingController {
     }
     return new ResponseEntity<Response<Transaction>>(HttpStatus.NO_CONTENT);
   }
+
+  @RequestMapping(value = "/room", method = RequestMethod.GET,
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<Response<Transaction>> getRoomBillings() {
+
+    Integer id = null;
+    Integer rId = null;
+    Response<Transaction> resp = billingService.getRoomBilling(id, rId);
+    if (resp.getResponseStatus().equals(ResultStatus.RESULT_OK)) {
+      return new ResponseEntity<Response<Transaction>>(resp, HttpStatus.OK);
+    }
+    return new ResponseEntity<Response<Transaction>>(HttpStatus.NO_CONTENT);
+  }
+
+  @RequestMapping(value = "/room/{aptId}", method = RequestMethod.GET,
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<Response<Transaction>> getRoomByApartment(@PathVariable String aptId) {
+
+    Integer id = null;
+    Integer rId = null;
+    try {
+      id = Integer.parseInt(aptId);
+    } catch (Exception e) {
+
+    }
+    Response<Transaction> resp = billingService.getRoomBilling(id, rId);
+    if (resp.getResponseStatus().equals(ResultStatus.RESULT_OK)) {
+      return new ResponseEntity<Response<Transaction>>(resp, HttpStatus.OK);
+    }
+    return new ResponseEntity<Response<Transaction>>(HttpStatus.NO_CONTENT);
+  }
+
+  /**
+   * get room billings
+   * 
+   * @param aptId
+   * @param roomId
+   * @return
+   */
+  @RequestMapping(value = "/forcollection/{aptId}/{roomId}", method = RequestMethod.GET,
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<Response<Transaction>> getBillForCollection(@PathVariable String aptId,
+      @PathVariable String roomId) {
+    logger.info("getRoomBilling:" + aptId + "roomId:" + roomId);
+    Integer id = null;
+    Integer rId = null;
+    id = Integer.parseInt(aptId);
+    rId = Integer.parseInt(roomId);
+    Response<Transaction> resp = billingService.getRoomBillingForCollection(id, rId);
+    if (resp.getResponseStatus().equals(ResultStatus.RESULT_OK)) {
+      return new ResponseEntity<Response<Transaction>>(resp, HttpStatus.OK);
+    }
+    return new ResponseEntity<Response<Transaction>>(HttpStatus.NO_CONTENT);
+  }
+  
+  /**
+   * get the electric billings for collection
+   * @param aptId
+   * @param roomId
+   * @return
+   */
+  @RequestMapping(value = "/electriccollection/{aptId}/{roomId}", method = RequestMethod.GET,
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<Response<ElectricBill>> getElectricForCollection(@PathVariable String aptId,
+      @PathVariable String roomId) {
+    logger.info("getElectricForCollection:" + aptId + "roomId:" + roomId);
+    Integer id = null;
+    Integer rId = null;
+    id = Integer.parseInt(aptId);
+    rId = Integer.parseInt(roomId);
+    Response<ElectricBill> resp = billingService.getElectricForCollection(id, rId);
+    if (resp.getResponseStatus().equals(ResultStatus.RESULT_OK)) {
+      return new ResponseEntity<Response<ElectricBill>>(resp, HttpStatus.OK);
+    }
+    return new ResponseEntity<Response<ElectricBill>>(HttpStatus.NO_CONTENT);
+  }
+
+
 
   /**
    * get the tenants base on room id
@@ -150,10 +232,9 @@ public class BillingController {
       if (resp.getResponseStatus().equals(ResultStatus.RESULT_OK)) {
         smsService.sendBillingMessages(billingForm);
       }
- 
+
       return new ResponseEntity<Response<BillingForm>>(resp, HttpStatus.OK);
     } catch (Exception e) {
-      // TODO Auto-generated catch block
       e.printStackTrace();
       resp.setResponseStatus(ResultStatus.GENERAL_ERROR);
       return new ResponseEntity<Response<BillingForm>>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -163,7 +244,14 @@ public class BillingController {
   @RequestMapping(value = "/pdf", method = RequestMethod.POST)
   public ResponseEntity<byte[]> showPdf(@RequestBody BillingForm billingForm) {
     // createPdf(domain, model);
-    String pdfLocation = billingService.createPdf(billingForm);
+    String pdfLocation = "";
+    
+    if (billingForm.getReceiptType().equals("collection")) {
+      pdfLocation = collectionService.createPdf(billingForm);
+    } else {
+      pdfLocation = billingService.createPdf(billingForm);
+    }
+
     Path path = Paths.get(pdfLocation);
     byte[] pdfContents = null;
     try {

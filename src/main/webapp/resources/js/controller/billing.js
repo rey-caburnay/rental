@@ -85,9 +85,10 @@
     /** retrieve the billings of the apartment * */
     vm.getBillings = function(apt) {
       var type = vm.currentPage;
+      console.log ("current Page:" + type);
       vm.meterNo = apt.electricAccount;
       vm.address = apt.address1;
-      getBillings(apt.id, type);
+      getBillings(apt.id, apt.roomId, type);
     };
     
     vm.modelOptions = {
@@ -202,8 +203,9 @@
           vm.totalOverdue += room.overdue;
           room.amount = vm.bill.currentAmount;
           room.grossAmount = parseFloat(vm.bill.grossAmount.toFixed(2));
+//          room.lastReading = room.readingDate;
           room.bill = vm.bill;
-          room.readingDate = vm.readingDate;
+//          room.readingDate = vm.readingDate;
           room.totalAmount = room.grossAmount;
           vm.rooms[i] = room;
           
@@ -250,6 +252,12 @@
     vm.submit = function() {
       submit();
     }
+    
+    vm.init = function () {
+      vm.rooms = [];
+      vm.totalOverdue = 0;
+      vm.totalAmount = 0;
+    }
 
     /**
      * ************************* functions that need to interact with services
@@ -259,8 +267,8 @@
     /**
      * get rooms by apartment ID
      */
-    function getBillings(aptId, type) {
-      return adminService.getBillings(aptId, null, type).then(function(response) {
+    function getBillings(aptId, roomId, type) {
+      return adminService.getBillings(aptId, roomId, type).then(function(response) {
         processResponse(response);
       });
     }
@@ -347,7 +355,9 @@
         totalOverdue : 0,
         readingDate : vm.readingDate,
         accountNumber : vm.meterNo,
-        electricProvider : vm.electricProvider
+        electricProvider : vm.electricProvider,
+        receiptType: 'billing',
+        billingType: ELECTRIC
       }
       transactionService
           .generateBillings(vm.tx)
@@ -364,10 +374,12 @@
                     text : "Transaction successfully processed",
                     type : "success",
                   }
-                  vm.tx.billingNo = response.data.model.billingNo;
+//                  vm.tx.billingNo = response.data.model.billingNo;
+                  vm.tx = response.data.model;
                   vm.popup.show(options, function() {
                     // $location.path('/home');
                     getPdf(vm.tx);
+                    vm.rooms = [];
                   });
                 }
                 
@@ -393,6 +405,7 @@
     }
     
     function getPdf(form) {
+      form.receiptType = 'billing';
       transactionService.getPdf(form).then(function(response) {
         processResponse(response);
       });
@@ -414,10 +427,12 @@
     
     /** test centralize response function * */
     function processResponse(response) {
+      if(!response)
+        return;
       console.log(response);
       var data = response.data;
       switch (response.method) {
-      case 'getBillings':
+      case 'getBillingselectric':
         vm.rooms = [];
         vm.rooms = data.result;
         vm.computeBilling();
@@ -440,13 +455,6 @@
         break;
       case 'getPdf':
         saveByteArray(data, 'sample.pdf');
-        // PDF.js
-        // var data = {data:result};
-        // pdfService.view(data);
-        // var file = new Blob([data], {type: 'application/pdf'});
-        // vm.pdf = file;
-        // var fileURL = URL.createObjectURL(file);
-        // window.open(fileURL);
         break;
       case 'getBillingsproperty':
         vm.rooms = data.result;

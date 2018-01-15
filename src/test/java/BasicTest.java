@@ -2,15 +2,19 @@ import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 
+import org.assertj.core.util.Lists;
 import org.slf4j.LoggerFactory;
 
 import com.shinn.dao.factory.AbstractDaoImpl;
@@ -26,9 +30,62 @@ public class BasicTest {
     public static void main(String args[]) {
         
         BasicTest test = new BasicTest();
-        test.dateTest();
+        test.testNumberFormat();
+        test.testDecimalFormat();
+        test.continueExample();
+//        test.dateTest();
+        test.testMath();
     }
     
+    public void testMath() {
+      Double balance = 1000d;
+      Double deposit = 5000d;
+      Double total = 0d;
+      
+      
+      total = balance - deposit + 3000d;
+      System.out.println(total);
+    }
+    
+    public void continueExample() {
+      List<String> strings = Lists.newArrayList();
+      strings.add("1");
+      strings.add("2");
+      strings.add("3");
+      strings.add("4");
+      strings.add("5");
+      strings.add("6");
+      strings.add("1");
+      strings.add("2");
+      strings.add("3");
+      strings.add("4");
+      strings.add("5");
+      strings.add("6");
+      
+      
+      for (String s : strings) {
+        if (s.equals("1")) {
+          continue;
+        }
+        System.out.println(s);
+      }
+      
+    }
+    
+    public void testNumberFormat() {
+      
+      Locale swedish = new Locale("ph", "PH");
+      NumberFormat formatter = NumberFormat.getCurrencyInstance(swedish);
+      double money = 50000.10d;
+      System.out.println(formatter.format(money));
+    }
+    
+    public void testDecimalFormat() {
+      DecimalFormat myFormatter = new DecimalFormat("###,###.###");
+      double money = 50000.00d;
+      String output = myFormatter.format(money);
+      System.out.println(output);
+    }
     public void getMethodTest() {
         Map<String, List<Integer>> indexMap = new HashMap<>();
         

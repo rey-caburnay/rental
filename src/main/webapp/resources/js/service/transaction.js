@@ -27,8 +27,12 @@
       return request(REQUEST_POST, url, model, 'saveCollection');
     }
     this.electricCollection = function(model) {
-      var url = 'collection/electric';
+      var url = 'collection/generate';
       return request(REQUEST_POST, url, model, 'electricCollection');
+    }
+    this.propertyCollection = function(model) {
+      var url = "collection/generate";
+      return request(REQUEST_POST, url, model, 'propertyCollection');
     }
     this.generateBillings = function(model) {
       var url = 'bill/generate';

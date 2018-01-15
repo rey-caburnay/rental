@@ -12,16 +12,18 @@ public class RentStatus {
     public static final String UNBILLED_MESSAGE = "Unpaid month:";
     public static final int NOTIFY_BEFORE_DUE = 3;
     public static final int NOTIFY_ON_DUE = 0;
-    public static String DUE_DATE_MESSAGE = "Please pay your rent for the month of {month} amounting:{amount} to avoid neccessary actions. from-Caburany Apartmentz";
-    public static String BEFORE_DUE_MESSAGE = "This is to inform you that your rental fee(s) will due on {duedate} with total amount of {amount}"
-            + " Please pay on before due date. from -Caburany Apartmentz";
-    public static String RECEIPT_RENT_MESSAGE = "Thank you for paying your rent with the amount of {amount}. Reference # {reference} from Caburnay Apartmentz";
-    public static String RECEIPT_GENERIC_PAYMENT_MESSAGE = "Thank you for paying your rent. This will also serve as your receipt. from Caburnay Apartmentz";
-
-    public static String ELECTRIC_BILL_MESSAGE = "Please pay your electric bill for the month of {month} amount: {amount} to avoid disconnection. from Caburnay Apartmentz.";
+    public static final String DUE_DATE_MESSAGE = "DUE DATE";
+    public static final String  BEFORE_DUE_MESSAGE = "BEFORE DUE";
+    public static final String RECEIPT_RENT_MESSAGE = "RENT RECEIPT";
+    public static final String ELECTRIC_BILL_MESSAGE = "ELECTRIC BILL";
+    public static final String WELCOME_MESSAGE = "WELCOME";
+    public static final String RENT_ALERT_MESSAGE = "RENT ALERT"; 
     
     public static final String BILL_RENT = "property";
     public static final String BILL_ELECTRIC = "electric";
+    
+    public static final String SMS_FAILED = "failed";
+    public static final String SMS_SUCCESS = "success";
     
     public static enum BillingType {
       PROPERTY("property"),

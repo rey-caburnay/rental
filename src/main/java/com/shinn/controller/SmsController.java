@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.shinn.chikka.Chikka;
+import com.shinn.chikka.ChikkaService;
 import com.shinn.chikka.ChikkaConstants;
 import com.shinn.chikka.model.ChikkaMessage;
 import com.shinn.chikka.model.ChikkaResponse;
@@ -27,7 +27,7 @@ public class SmsController {
   private static final org.slf4j.Logger logger = LoggerFactory.getLogger(SmsController.class);
 
   @Autowired
-  Chikka chikka;
+  ChikkaService chikka;
 
   @RequestMapping(value = "/test", method = RequestMethod.GET,
       produces = MediaType.APPLICATION_JSON_VALUE)

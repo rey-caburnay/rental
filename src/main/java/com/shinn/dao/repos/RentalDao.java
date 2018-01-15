@@ -39,4 +39,7 @@ public interface RentalDao extends GenericDao<Transaction> {
    */
   public Transaction getTransactionByAptRoomRenter(Integer aptId, Integer roomId, Integer renterId);
 
+  public List<Transaction> findByStatus(String status);
+  
+  
 }

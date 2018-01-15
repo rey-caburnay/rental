@@ -19,6 +19,9 @@ public interface SmsService {
    */
   public Response<Sms> sendBillingMessages(List<RenterInfo> tenants);
   public Response<Sms> sendBillingMessages(BillingForm billingForm);
+  
+  public Response<Sms> sendCollectionMessage(BillingForm billingForm);
+  
   public Response<Sms> sendElectricBillingMessage(String messageType, ElectricBill bill);
 
   public Response<Sms> sendElectricBillingMessage(BillingForm billing);

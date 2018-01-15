@@ -21,4 +21,7 @@ public interface BillingDao extends GenericDao<Billing> {
   
   public Billing getLastHoursGenerated (Integer aptId, Integer roomId, String billType);
   
+  public Billing getByBillingNo(String billingNo);
+  
+  public int getUnpaidBills(Integer aptId, Integer roomId);
 }

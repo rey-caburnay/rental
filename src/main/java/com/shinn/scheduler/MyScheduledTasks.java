@@ -2,11 +2,21 @@ package com.shinn.scheduler;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import com.fasterxml.jackson.databind.ser.std.CollectionSerializer;
+import com.shinn.service.BillingService;
+import com.shinn.service.CollectionService;
+
 @Component
 public class MyScheduledTasks {
+  @Autowired
+  BillingService billingService;
+  @Autowired
+  CollectionService collectionService;
     private static final SimpleDateFormat dateFormat = 
             new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
         
@@ -19,10 +29,14 @@ public class MyScheduledTasks {
      * "0 0 0 25 12 ?" = every Christmas Day at midnight
      * 
      */
-        @Scheduled(cron = "0 0 10 * * *")
+//        @Scheduled(cron = "0 0 10 * * *")
+        @Scheduled(cron = "*\\/10 * * * * *")
         public void run() {
 
             System.out.println("sendMailToCustomers Job ran at " 
                 + dateFormat.format(new Date()));
         }
+        
+        
+        
 }

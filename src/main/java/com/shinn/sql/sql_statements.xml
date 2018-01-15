@@ -137,10 +137,12 @@
     `status` = :status,
     `userId` = :userId,
     `updatedDate` = :updatedDate,
-    `billingNo` = :billingNo,
+    `billingNo` =
+    :billingNo,
     `updtCnt` = :updtCnt
     WHERE
-    `id`= :id AND `aptId` = :aptId AND `roomId` = :roomId;
+    `id`= :id AND `aptId` = :aptId
+    AND `roomId` = :roomId;
   </entry>
   <entry key="get-rental">
     SELECT id, aptId, roomId, dueDate,txDate, startDate,
@@ -153,27 +155,30 @@
 
   <entry key="rental-all">
     SELECT r.*, a.name as aptName
-    FROM tx_rental r 
-    left join mst_apartment a 
-    on r.aptId = a.id 
+    FROM tx_rental r
+    left
+    join mst_apartment a
+    on r.aptId = a.id
   </entry>
-  
+
   <entry key="rental-by-apt">
     SELECT r.*, a.name as aptName
-    FROM tx_rental r 
-    left join mst_apartment a 
-    on r.aptId = a.id 
+    FROM tx_rental r
+    left
+    join mst_apartment a
+    on r.aptId = a.id
     where r.aptId = ?;
   </entry>
-      
+
   <entry key="rental-by-aptroom">
     SELECT r.*, a.name as aptName
-    FROM tx_rental r 
-    left join mst_apartment a 
-    on r.aptId = a.id  
+    FROM tx_rental r
+    left
+    join mst_apartment a
+    on r.aptId = a.id
     where aptId = ? and roomId = ?;
   </entry>
-  
+
   <entry key="get-apartments">
     SELECT * FROM mst_apartment;
   </entry>
@@ -197,7 +202,8 @@
     select * from mst_room where aptId = ? and id = ?;
   </entry>
   <entry key="get-rooms-vacant">
-    select * from mst_room r where r.id not in (select roomId from mst_renter
+    select * from mst_room r where r.id not in (select
+    roomId from mst_renter
     where roomId is not null) and r.aptId = ?;
   </entry>
   <entry key="get-room-by-id">
@@ -230,7 +236,8 @@
   </entry>
   <entry key="renter-apt-room">
     SELECT * FROM mst_renter where
-    aptId = ? and roomId = ?
+    aptId = ? and roomId =
+    ?
   </entry>
   <entry key="renters-by-apt">
     SELECT
@@ -349,10 +356,12 @@
   </entry>
   <entry key="get-transaction-by-apt-room">
     SELECT r.*, a.name as aptName
-    FROM tx_rental r 
-    left join mst_apartment a 
-    on r.aptId = a.id 
-    where r.aptId = ? and r.roomId = ?;
+    FROM tx_rental r
+    left
+    join mst_apartment a
+    on r.aptId = a.id
+    where r.aptId = ? and r.roomId
+    = ?;
   </entry>
   <entry key="get-transaction-by-apt-room-renter">
     SELECT
@@ -371,7 +380,8 @@
     FROM tx_rental rental
     WHERE rental.aptId = ? AND
     rental.roomId = ? AND rental.renterId = ? AND
-    rental.status = 'active'
+    rental.status =
+    'active'
   </entry>
   <entry key="get-renter-by-apt-room">
     SELECT
@@ -412,7 +422,8 @@
     `cashReceived`,
     `txDate`,
     `userId`,
-    `status`)
+    `status`,
+    `collectionNo`)
     VALUES
     (:renterId,
     :txId,
@@ -426,7 +437,8 @@
     :cashReceived,
     :txDate,
     :userId,
-    :status);
+    :status,
+    :collectionNo);
   </entry>
   <entry key="save-collection-details">
     INSERT INTO tx_collections_details
@@ -455,10 +467,16 @@
     WHERE aptId = ? and
     roomId = ? order by txDate desc limit 1;
   </entry>
+  <entry key="collection-findby-billing">
+    select * from tx_collections where billingNo = ?
+  </entry>
   <entry key="collection-by-renter-lastpayment">
     SELECT * FROM tx_collections
     WHERE renterId = ? and
     aptId = ? and roomId = ? order by txDate desc limit 1;
+  </entry>
+  <entry key="transaction-findby-status">
+    select * from tx_rental where status = ?
   </entry>
   <entry key="save-room">
     INSERT INTO mst_room
@@ -565,7 +583,7 @@
     timestamp,
     status,
     deleted)
-     VALUES
+    VALUES
     (:id,
     :message,
     :sender,
@@ -674,6 +692,16 @@
     :lastBillNo,
     :billType);
   </entry>
+
+  <entry key="billing-findby-billingNo">
+    select * from tx_billing where billingNo = ?;
+  </entry>
+
+  <entry key="billing-count-unpaid">
+   select * from tx_billing where billingNo not in 
+   (select billingNo from tx_collections where aptId = ? and roomId = ?) 
+   and aptId = ? and roomId = ?;
+  </entry>
   <entry key="update-electricbill">
     UPDATE `mst_electric`
     SET
@@ -757,7 +785,14 @@
     mst_electric e left join mst_room r on e.roomId = r.id;
   </entry>
   <entry key="electric-report-by-apt">
-    select e.*, r.roomNo as roomNumber, r.roomDesc from mst_electric e left join
-    mst_room r on e.roomId = r.id where e.aptId = ?;
+    select e.*, r.roomNo as roomNumber, r.roomDesc from
+    mst_electric e left join
+    mst_room r on e.roomId = r.id where e.aptId
+    = ?;
   </entry>
+
+  <entry key = "message-findby-key">
+    select * from prm_message where key = ?;
+  </entry>
+
 </properties>

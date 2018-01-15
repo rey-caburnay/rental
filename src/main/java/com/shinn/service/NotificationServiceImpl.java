@@ -9,8 +9,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.shinn.chikka.Chikka;
 import com.shinn.chikka.ChikkaService;
+import com.shinn.chikka.ChikkaServiceImpl;
 import com.shinn.chikka.model.ChikkaMessage;
 import com.shinn.dao.repos.RentalDao;
 import com.shinn.dao.repos.RenterInfoDao;
@@ -25,7 +25,7 @@ import com.shinn.util.RentStatus;
 public class NotificationServiceImpl implements NotificationService{
 
 
-    Chikka chikka = new ChikkaService();
+    ChikkaService chikka = new ChikkaServiceImpl();
     
     @Autowired
     SmsDao smsDao;

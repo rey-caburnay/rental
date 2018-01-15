@@ -4,7 +4,10 @@
   var injectParams = [ '$scope', '$filter', 'transactionService',
       'adminService', 'dateFactory', 'modalService', '$location' ];
   var MECO_PROVIDER = 'meco';
-  var VECO_PROVIDER = 'veco', PROPERTY = 'property', ELECTRIC = 'electric', WATER = 'water';
+  var VECO_PROVIDER = 'veco', 
+  PROPERTY = 'property', 
+  ELECTRIC = 'electric', 
+  WATER = 'water';
   
   var CollectionController = function($scope, $filter, transactionService,
       adminService, dateFactory, modalService, $location) {
@@ -54,17 +57,18 @@
       vm.isElectricCollection = false;
       vm.isWaterCollection = false;
       switch (tab) {
-      case PROPERTY:
-        vm.isPropertyCollection = true;
-        vm.collectionType = PROPERTY;
+      case ELECTRIC:
+        vm.isElectricCollection = true;
+        vm.collectionType = ELECTRIC;
         break;
       case WATER:
         vm.isWaterCollection = true;
         vm.collectionType = WATER;
         break;
       default:
-        vm.isElectricCollection = true;
-        vm.collectionType = ELECTRIC;
+        vm.isPropertyCollection = true;
+        vm.collectionType = PROPERTY;
+       
         break;
       
       }
@@ -79,11 +83,22 @@
     };
     
     vm.getRooms = function(apt) {
+//      vm.apartment = apt;
       getRooms(apt);
     };
     
     vm.getBilling = function(room) {
-      getBilling(room.aptId, room.id, vm.collectionType);
+      vm.room = room;
+      var billType = "roomForCollection";
+      if (vm.isElectricCollection) {
+        billType = "electricForCollection";
+      } 
+      getBilling(room.aptId, room.id, billType);
+    }
+    
+    vm.init = function () {
+      vm.billing = [];
+      vm.total = 0;
     }
 
     vm.submit = function() {
@@ -186,6 +201,7 @@
       }
       switch(vm.collectionType) {
       case PROPERTY:
+        submitPropertyCollection();
         break;
       case ELECTRIC:
         submitElectricCollection();
@@ -193,16 +209,43 @@
       }
       
     }
+    
+    /**
+     * submit property collection data
+     */
+    function submitPropertyCollection() {
+      var tx = {
+          userId : 1,
+          aptId : vm.apartment.id,
+          roomId : vm.room.roomId,
+          cash : vm.cash,
+          totalOverdue: 0,
+          bills:vm.billing,
+          collectionType: vm.collectionType,
+          billingType: vm.collectionType,
+          receiptType: 'collection'
+      };
+      transactionService.propertyCollection(tx).then(function(response) {
+        processSubmitResponse(response);
+      });
+          
+    }
+    
     /**
      * submit electric collection data
      */
     function submitElectricCollection() {
+      var rooms = [vm.billing];
       var tx = {
         userId : 1,
         aptId : vm.model.apartment.id,
         roomId : vm.model.room.roomId,
         cash : vm.cash,
-        billing : vm.billing,
+//        billing : vm.billing,
+        rooms: rooms,
+        billingType: vm.collectionType,
+        billingNo: vm.billing.billingNo,
+        receiptType: 'collection'
       
       }
       transactionService
@@ -221,12 +264,54 @@
                     type : "success",
                   }
                   vm.popup.show(options, function() {
-                    $location.path('/home');
+//                    $location.path('/home');
+                    getPdf(response.data.model);
                   });
                 }
                 
               });
     }
+    
+    function processSubmitResponse(response) {
+      console.log("status return :" + JSON.stringify(response));
+      if (response.responseStatus === "ERROR") {
+        vm.popup
+            .showError("There is something wrong in processing your request: "
+                + response.errorMsg);
+      } else {
+        var options = {
+          title : "Thank You",
+          text : "Transaction successfully processed",
+          type : "success",
+        }
+        vm.popup.show(options, function() {
+//          $location.path('/home');
+          response.data.model.billingType = vm.collectionType;
+          getPdf(response.data.model);
+        });
+      }
+    }
+    
+    function getPdf(form) {
+      form.receiptType = 'collection';
+      transactionService.getPdf(form).then(function(response) {
+        processResponse(response);
+      });
+    }
+    var saveByteArray = (function() {
+      var a = document.createElement("a");
+      document.body.appendChild(a);
+      a.style = "display: none";
+      return function(data, name) {
+        var blob = new Blob([ data ], {
+          type : 'application/pdf'
+        }), url = window.URL.createObjectURL(blob);
+        a.href = url;
+        a.download = name;
+        a.click();
+        window.URL.revokeObjectURL(url);
+      };
+    }());
     
     /** test centralize response function * */
     function processResponse(response) {
@@ -236,7 +321,7 @@
       case 'getBillings':
         vm.rooms = [];
         vm.rooms = data.result;
-        
+        break;
       case 'getApartments':
         vm.apartments = data.result;
         break;
@@ -244,6 +329,7 @@
         vm.rooms = data.result;
         break;
       case 'getBilling':
+      case 'getBillingselectricForCollection':
         vm.billing = data.model;
         if (data.model) {
           // vm.billing = data.model;
@@ -252,12 +338,21 @@
         break;
       case 'getBillingsproperty':
       case 'getBillingelectric':
+      case 'getBillingsroomForCollection':
         vm.billing = data.result;
         vm.total = 0;
         for ( var k in vm.billing) {
           vm.total = vm.total + vm.billing[k].balance + vm.billing[k].amount;
         }
         break;
+      case 'getPdf':
+        saveByteArray(data, 'sample.pdf');
+        vm.apartment = null;
+        vm.room = null;
+        vm.billing = [];
+        vm.total = 0;
+        break;
+      default:
       }
       
     }

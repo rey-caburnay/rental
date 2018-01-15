@@ -29,4 +29,6 @@ public class BillingForm implements Serializable {
   private String billingNo;
   private byte[] pdf;
   private String billingType;
+  private Cash cash;
+  private String receiptType;
 }

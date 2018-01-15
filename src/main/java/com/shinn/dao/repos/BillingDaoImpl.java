@@ -53,4 +53,26 @@ public class BillingDaoImpl extends AbstractDaoImpl<Billing> implements BillingD
     return getObject("billing-get-hours", billType);
   }
 
+  @Override
+  public Billing getByBillingNo(String billingNo) {
+    return getObject("billing-findby-billingNo", billingNo);
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.shinn.dao.repos.BillingDao#getUnpaidBills(java.lang.Integer, java.lang.Integer)
+   */
+  @Override
+  public int getUnpaidBills(Integer aptId, Integer roomId) {
+    List<Billing> billings = getListResult("billing-count-unpaid", aptId, roomId, aptId, roomId);
+     if(billings.isEmpty()) {
+       return 0;
+     } else  {
+       return billings.size();
+     }
+    
+
+  }
+
 }

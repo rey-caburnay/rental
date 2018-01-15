@@ -5,17 +5,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.shinn.chikka.ChikkaService;
-import com.shinn.chikka.model.ChikkaMessage;
 import com.shinn.dao.factory.ResultStatus;
 import com.shinn.mail.MailService;
 import com.shinn.service.BillingService;
+import com.shinn.service.SmsService;
 import com.shinn.service.TransactionService;
 import com.shinn.service.model.Renter;
 import com.shinn.service.model.RenterInfo;
@@ -24,6 +24,8 @@ import com.shinn.ui.model.CollectionForm;
 import com.shinn.ui.model.RegistrationForm;
 import com.shinn.ui.model.Response;
 import com.shinn.util.RentStatus;
+
+import ch.qos.logback.classic.Logger;
 
 @RestController
 @RequestMapping(value="/tx")
@@ -37,6 +39,9 @@ public class TxController {
     @Autowired
     BillingService billingService;
  
+    @Autowired
+    SmsService smsService;
+    
     /**
      * 
      * @param renter
@@ -47,9 +52,15 @@ public class TxController {
     public ResponseEntity<Response<Renter>> registration(@RequestBody Renter renter) {
         logger.debug(renter.toString());
         Response<Renter> resp = transactionService.registration(renter);
-        billingService.createNewBilling(renter);
+        Response<Transaction> resp2 =  billingService.createNewBilling(renter);
+        logger.info("mobile number:{}", renter.getMobileNo());
+        if (!StringUtils.isEmpty(renter.getMobileNo())){
+//          smsService.sendMessage(RentStatus.WELCOME_MESSAGE, renter.getMobileNo());
+        }
+        
         logger.debug(resp.toString());
-        if(resp.getResponseStatus().equals(ResultStatus.RESULT_OK)){
+        if(resp.getResponseStatus().equals(ResultStatus.RESULT_OK) &&
+            resp2.getResponseStatus().equals(ResultStatus.RESULT_OK)){
             return new ResponseEntity<Response<Renter>>(resp, HttpStatus.OK);
         }
         return new ResponseEntity<Response<Renter>>(resp, HttpStatus.BAD_REQUEST);

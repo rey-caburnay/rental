@@ -68,4 +68,14 @@ public class RentalDaoImpl extends AbstractDaoImpl<Transaction> implements Renta
     return getObject("get-transaction-by-apt-room-renter", aptId, roomId, renterId);
   }
 
+  /* (non-Javadoc)
+   * @see com.shinn.dao.repos.RentalDao#getActiveTransactions()
+   */
+  @Override
+  public List<Transaction> findByStatus(String status) {
+    return getListResult("transaction-findby-status", status);
+  }
+  
+  
+
 }

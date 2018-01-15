@@ -14,5 +14,7 @@ public class ResultStatus {
     public static final  String SAVE_FAILED = "Saving Failed";
     
     public static final  String GENERAL_ERROR = "ERROR";
+    
+    public static final String SMS_FAILED = "SMS Failed";
 
 }

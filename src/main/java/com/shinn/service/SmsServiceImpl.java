@@ -1,16 +1,19 @@
 package com.shinn.service;
 
+import java.text.NumberFormat;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.shinn.chikka.Chikka;
+import com.shinn.chikka.ChikkaService;
 import com.shinn.chikka.model.ChikkaMessage;
 import com.shinn.chikka.model.ChikkaResponse;
+import com.shinn.dao.repos.RentMessageDao;
 import com.shinn.dao.repos.RenterDao;
 import com.shinn.dao.repos.SmsDao;
 import com.shinn.service.model.ElectricBill;
@@ -30,18 +33,23 @@ public class SmsServiceImpl implements SmsService {
   public static final String BILLING_BEFORE_DUE_DATE_MESSAGE = "billingBeforeDueDate";
   public static final String BILLING_MESSAGE = "billingDueDate";
   public static final String ELECTRIC_BILLING_MESSAGE = "electricBilling";
-
+  public static final String COLLECTION_MESSAGE_PROPERTY = "collection_property";
+  public static final String COLLECTION_MESSAGE_ELECTRIC = "colletion_electric";
+  private static final Locale ph = new Locale("ph","PH");
+  
   @Autowired
-  Chikka chikka;
+  ChikkaService chikkaService;
   @Autowired
   SmsDao smsDao;
   @Autowired
   RenterDao renterDao;
+  @Autowired
+  RentMessageDao rentMessageDao;
 
   @Override
   public Response<Sms> sendMessage(String message, String mobile) {
     Response<Sms> response = new Response<Sms>();
-    ChikkaMessage chikkaMsg = chikka.sendMessage(message, mobile);
+    ChikkaMessage chikkaMsg = chikkaService.sendMessage(message, mobile);
     Sms sms = createSmsLog(chikkaMsg);
     response.setModel(sms);
     response.setResponseStatus(sms.getStatus());
@@ -79,7 +87,7 @@ public class SmsServiceImpl implements SmsService {
       if (bill.getDueDate() != null) {
         dueDate = bill.getDueDate();
       }
-      String msg = generateMessage(type, bill.getTotalAmount(), dueDate.getMonth());
+      String msg = generateMessage(type, bill.getTotalAmount(), dueDate.getMonth(), null);
       response = sendMessage(msg, renter.getMobileNo());
     }
     return response;
@@ -94,6 +102,7 @@ public class SmsServiceImpl implements SmsService {
       sms.setRecipient(chikkaMessage.getMobileNumber());
       sms.setShortcode(chikkaMessage.getShortcode());
       sms.setStatus(chikkaMessage.getStatus());
+      sms.setRequestId(chikkaMessage.getMessageId());
       sms.setTimestamp(DateUtil.getCurrentDate().getTime()+"");
       int id = smsDao.saveUpdate(sms);
       sms.setId(id);
@@ -104,24 +113,29 @@ public class SmsServiceImpl implements SmsService {
     return sms;
   }
 
-  private String generateMessage(String messageType, Double amount, int month) {
+  private String generateMessage(String messageType, Double amount, int month, String ref) {
     String message = RentStatus.RECEIPT_RENT_MESSAGE;
+    NumberFormat formatter = NumberFormat.getCurrencyInstance(ph);
     switch (messageType) {
       case BILLING_BEFORE_DUE_DATE_MESSAGE:
         message = RentStatus.BEFORE_DUE_MESSAGE;
-        message = message.replaceAll("\\{amount\\}", String.valueOf(amount));
+        message = message.replaceAll("\\{amount\\}", formatter.format(amount));
         message = message.replace("{duedate}", DateUtil.getNameOfMonth(month));
         break;
       case BILLING_MESSAGE:
         message = RentStatus.DUE_DATE_MESSAGE;
-        message = message.replaceAll("\\{amount\\}", String.valueOf(amount));
+        message = message.replaceAll("\\{amount\\}", formatter.format(amount));
         message = message.replace("{month}", DateUtil.getNameOfMonth(month));
         break;
       case ELECTRIC_BILLING_MESSAGE:
         message = RentStatus.ELECTRIC_BILL_MESSAGE;
-        message = message.replaceAll("\\{amount\\}", String.valueOf(amount));
+        message = message.replaceAll("\\{amount\\}", formatter.format(amount));
         message = message.replace("{month}", DateUtil.getNameOfMonth(month));
         break;
+      case COLLECTION_MESSAGE_PROPERTY:
+        message = RentStatus.RECEIPT_RENT_MESSAGE;
+        message = message.replaceAll("\\{amount\\}", formatter.format(amount));
+        message = message.replace("{reference}", ref);
     }
     return message;
   }
@@ -147,7 +161,7 @@ public class SmsServiceImpl implements SmsService {
           Renter renter = renterDao.getOccupancy(bill.getAptId(), bill.getRoomId());
           if(renter != null && renter.getMobileNo() != null) {
             String message = this.generateMessage(ELECTRIC_BILLING_MESSAGE, bill.getGrossAmount(),
-                bill.getDueDate().getMonth());
+                bill.getDueDate().getMonth(), null);
             this.sendMessage(message, renter.getMobileNo());
           }
 
@@ -157,7 +171,38 @@ public class SmsServiceImpl implements SmsService {
         for (Transaction tx : billingForm.getBills()) {
           if (tx.getRenter() != null && tx.getRenter().getMobileNo() != null) {
             String message = this.generateMessage(BILLING_MESSAGE, tx.getAmountPayable(),
-                tx.getDueDate().getMonth());
+                tx.getDueDate().getMonth(), null);
+            this.sendMessage(message, tx.getRenter().getMobileNo());
+          }
+
+        }
+        break;
+    }
+    return resp;
+  }
+  
+  @Override
+  public Response<Sms> sendCollectionMessage(BillingForm billingForm) {
+    Response<Sms> resp = new Response<>();
+    switch (billingForm.getBillingType()) {
+      case RentStatus.BILL_ELECTRIC:
+        for (ElectricBill bill : billingForm.getRooms()) {
+          Renter renter = renterDao.getOccupancy(bill.getAptId(), bill.getRoomId());
+          if(renter != null && renter.getMobileNo() != null) {
+            String message = this.generateMessage(COLLECTION_MESSAGE_ELECTRIC, 
+                Double.valueOf(billingForm.getCash().getAmountPaid()),
+                bill.getDueDate().getMonth(), bill.getCollectionNo());
+            this.sendMessage(message, renter.getMobileNo());
+          }
+
+        }
+        break;
+      case RentStatus.BILL_RENT:
+        for (Transaction tx : billingForm.getBills()) {
+          if (tx.getRenter() != null && tx.getRenter().getMobileNo() != null) {
+            String message = this.generateMessage(COLLECTION_MESSAGE_PROPERTY, 
+                Double.valueOf(billingForm.getCash().getAmountPaid()),
+                tx.getDueDate().getMonth(), tx.getCollectionNo());
             this.sendMessage(message, tx.getRenter().getMobileNo());
           }
 

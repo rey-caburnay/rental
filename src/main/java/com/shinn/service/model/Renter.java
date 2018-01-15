@@ -54,7 +54,7 @@ public class Renter implements Serializable {
       if (this.lastName != null) {
         fullname = fullname + " " + this.lastName;
       }
-      return lastName;
+      return fullname;
     }
 
  
