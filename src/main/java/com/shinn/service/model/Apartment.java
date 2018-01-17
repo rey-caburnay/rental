@@ -12,6 +12,10 @@ import lombok.ToString;
 @Setter
 public class Apartment implements Serializable {
 
+  /**
+   * 
+   */
+  private static final long serialVersionUID = 5449566633273416248L;
   private Integer id;
   private String name;
   private String personInCharge;
@@ -26,4 +30,5 @@ public class Apartment implements Serializable {
   private String electricAccount;
   private String waterAccount;
   private String electricProvider;
+  private String mobileIncharge;
 }

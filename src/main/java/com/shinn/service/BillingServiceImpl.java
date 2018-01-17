@@ -32,7 +32,6 @@ import com.shinn.dao.repos.RentalDao;
 import com.shinn.dao.repos.RenterDao;
 import com.shinn.dao.repos.RoomDao;
 import com.shinn.service.model.Billing;
-import com.shinn.service.model.Collection;
 import com.shinn.service.model.ElectricBill;
 import com.shinn.service.model.ElectricProvider;
 import com.shinn.service.model.Renter;
@@ -49,10 +48,8 @@ import com.shinn.util.StringUtil;
 public class BillingServiceImpl implements BillingService {
   private static final org.slf4j.Logger logger = LoggerFactory.getLogger(BillingServiceImpl.class);
   private static String PDF_PATH = "C:\\Users\\rbkshinn";
-  private static Integer NUMBER_OF_ROWS = 3;
-  private static final Integer MINIMUM_DAYS_TO_GENERATE = 20;
-  private static final Integer DAYS_FOR_SURCHARGE = 7;
-  public static final Integer ALERT_PRIOR_DUE_DATE  = 3;
+  public static Integer NUMBER_OF_ROWS = 3;
+  public static final Integer DAYS_TO_GENERATE_BILLING = 20;
 
   @Autowired
   ElectricBillDao electricBillDao;
@@ -676,34 +673,6 @@ public class BillingServiceImpl implements BillingService {
 
   }
   
-  /* (non-Javadoc)
-   * @see com.shinn.service.BillingService#sendBillingAlert()
-   */
-  @Override
-  public Response<Transaction> sendBillingAlert() {
-    List<Transaction> transactions = rentalDao.findByStatus(RentStatus.ACTIVE);
-    for (Transaction transaction : transactions) {
-      Integer dayDifference = DateUtil.daysBetween(transaction.getDueDate(), DateUtil.getCurrentDate());
-      
-      if (dayDifference >= ALERT_PRIOR_DUE_DATE) {
-         
-      }
-      
-    }
-    return null;
-  }
-
-  /* (non-Javadoc)
-   * @see com.shinn.service.BillingService#sendElectricBillingAlert()
-   */
-  @Override
-  public Response<ElectricBill> sendElectricBillingAlert() {
-    // TODO Auto-generated method stub
-    Response<ElectricBill> resp = new Response<>();
-//    electricBillDao.
-    return resp;
-  }
-
   public boolean isDueDate(Date date) {
     if (DateUtil.getCurrentDate().getTime() > date.getTime()) {
       return true;

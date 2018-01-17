@@ -2,9 +2,12 @@ package com.shinn.dao.repos;
 
 import java.util.List;
 
+import org.springframework.stereotype.Repository;
+
 import com.shinn.dao.factory.AbstractDaoImpl;
 import com.shinn.service.model.RentMessage;
 
+@Repository
 public class RentMessageDaoImpl extends AbstractDaoImpl <RentMessage> implements RentMessageDao {
 
   public RentMessageDaoImpl() throws Exception {

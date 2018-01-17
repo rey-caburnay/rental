@@ -5,6 +5,7 @@ import java.util.List;
 import com.shinn.service.model.ElectricBill;
 import com.shinn.service.model.RenterInfo;
 import com.shinn.service.model.Sms;
+import com.shinn.service.model.Transaction;
 import com.shinn.ui.model.BillingForm;
 import com.shinn.ui.model.Response;
 
@@ -25,4 +26,7 @@ public interface SmsService {
   public Response<Sms> sendElectricBillingMessage(String messageType, ElectricBill bill);
 
   public Response<Sms> sendElectricBillingMessage(BillingForm billing);
+  
+  public Response<Transaction> sendBillingAlert();
+  public Response<ElectricBill> sendElectricBillingAlert();
 }
