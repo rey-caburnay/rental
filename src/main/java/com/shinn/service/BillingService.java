@@ -21,5 +21,6 @@ public interface BillingService {
   
   public Response<Transaction> sendBillingAlert();
   public Response<ElectricBill> sendElectricBillingAlert();
+  public void createAutomaticBilling(Transaction transaction);
 
 }
