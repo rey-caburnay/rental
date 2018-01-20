@@ -43,7 +43,7 @@ public class MailServiceImpl implements MailService {
     mail.setFrom(MailUtil.MAIL_SENDER);
     mail.setMailType(MailType.PLAIN_CONTENT);
     mail.setTo(recepients.toArray(new String[recepients.size()]));
-    mail.setContent(RentStatus.RECEIPT_GENERIC_PAYMENT_MESSAGE);
+//    mail.setContent(RentStatus.RECEIPT_GENERIC_PAYMENT_MESSAGE);
     SendEmailUtil.sendEmail(mail);
     
   }
