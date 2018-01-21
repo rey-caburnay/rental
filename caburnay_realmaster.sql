@@ -35,7 +35,7 @@ CREATE TABLE `mst_apartment` (
   `electricAccount` varchar(45) DEFAULT NULL,
   `waterAccount` varchar(45) DEFAULT NULL,
   `electricProvider` varchar(45) DEFAULT NULL,
-  `mobile_incharge` varchar(45) DEFAULT NULL,
+  `mobileIncharge` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `Id_UNIQUE` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
@@ -397,7 +397,7 @@ CREATE TABLE `prm_message` (
   `ctime` datetime DEFAULT NULL,
   `mtime` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -406,7 +406,7 @@ CREATE TABLE `prm_message` (
 
 LOCK TABLES `prm_message` WRITE;
 /*!40000 ALTER TABLE `prm_message` DISABLE KEYS */;
-INSERT INTO `prm_message` VALUES (1,'DUE DATE','Please pay your rent for the month of {month} amounting:{amount} to avoid neccessary actions. from-Caburany Apartmentz','2018-01-14 00:00:00',NULL),(2,'BEFORE DUE','This is to inform you that your rental fee(s) will due on {duedate} with total amount of {amount}. Please pay on before due date. from -Caburany Apartmentz','2018-01-14 00:00:00',NULL),(3,'RENT RECEIPT','Thank you for paying your rent with the amount of {amount}. Reference # {reference} from Caburnay Apartmentz','2018-01-14 00:00:00',NULL),(4,'ELECTRIC BILL','Please pay your electric bill for the month of {month} amount: {amount} to avoid disconnection. from Caburnay Apartmentz.','2018-01-14 00:00:00',NULL),(5,'WELCOME','You are now officialy registered as a tenant in caburnay apartmentz. Thank you.','2018-01-14 00:00:00',NULL),(6,'RENT ALERT','Your advise to collect the payment of {apartment} {room} {amount} for this month ({month}).  ','2018-01-14 00:00:00',NULL);
+INSERT INTO `prm_message` VALUES (1,'DUE DATE','Please pay your rent for the month of {month} amounting:{amount} to avoid neccessary actions. from-Caburany Apartmentz','2018-01-14 00:00:00',NULL),(2,'BEFORE DUE','This is to inform you that your rental fee(s) will due on {duedate} with total amount of {amount}. Please pay on before due date. from -Caburany Apartmentz','2018-01-14 00:00:00',NULL),(3,'RENT RECEIPT','Thank you for paying your rent with the amount of {amount}. Reference # {reference} from Caburnay Apartmentz','2018-01-14 00:00:00',NULL),(4,'ELECTRIC BILL','Please pay your electric bill for the month of {month} amount: {amount} to avoid disconnection. from Caburnay Apartmentz.','2018-01-14 00:00:00',NULL),(5,'WELCOME','You are now officialy registered as a tenant in caburnay apartmentz. Thank you.','2018-01-14 00:00:00',NULL),(6,'RENT ALERT','Your advise to collect the payment of {apartment} {room} {amount} for this month ({month}).  ','2018-01-14 00:00:00',NULL),(7,'BEFORE DUE ELECTRIC','This is to inform you that your electric bill (s) will due on {duedate} with total amount of {amount}. Please pay on before due date. from -Caburany Apartmentz','2018-01-14 00:00:00',NULL);
 /*!40000 ALTER TABLE `prm_message` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -644,4 +644,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-01-16  6:20:39
+-- Dump completed on 2018-01-21 13:31:36
