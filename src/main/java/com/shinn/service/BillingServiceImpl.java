@@ -83,8 +83,8 @@ public class BillingServiceImpl implements BillingService {
   }
 
   /**
-   * 
-   */
+  * 
+  */
   @Override
   public Response<BillingForm> generateBillings(BillingForm billingForm) {
     Response<BillingForm> resp = new Response<BillingForm>();
@@ -102,7 +102,7 @@ public class BillingServiceImpl implements BillingService {
       // this.generateElectricBilling(billingForm.getRooms());
     }
 
-        return resp;
+    return resp;
   }
 
   /**
@@ -136,7 +136,8 @@ public class BillingServiceImpl implements BillingService {
           // water
       }
       // for (ElectricBill electricBill : billingForm.getRooms()) {
-      // PdfPTable billTable = createElectricBill(electricBill, billingForm.getElectricProvider());
+      // PdfPTable billTable = createElectricBill(electricBill,
+      // billingForm.getElectricProvider());
       // document.add(billTable);
       // document.newPage();
       // }
@@ -147,7 +148,6 @@ public class BillingServiceImpl implements BillingService {
     }
     return generatedFile;
   }
-
 
   /**
    * format a bill to a pdf table
@@ -383,7 +383,7 @@ public class BillingServiceImpl implements BillingService {
         billingNo = StringUtil.generateBillingNo(electricBill.getAptId(), electricBill.getRoomId());
         billing.setBillingNo(billingNo);
         billing.setTxDate(DateUtil.getCurrentDate());
-        
+
         billingDao.saveUpdate(billing);
         electricBill.setDueDate(DateUtil.addDays(electricBill.getDueDate(), 30));
         electricBill.setLastBillNo(billingNo);
@@ -481,7 +481,7 @@ public class BillingServiceImpl implements BillingService {
     try {
       for (Transaction tx : form.getBills()) {
         Billing bill = new Billing();
-        Date dueDate = DateUtil.addDays(DateUtil.getCurrentDate(), DateUtil.THIRTYDAYS);
+        Date dueDate = DateUtil.addDays(tx.getDueDate(), DateUtil.THIRTYDAYS);
         String billingNo = StringUtil.generateBillingNo(tx.getAptId(), tx.getRoomId());
         bill.setAmount(tx.getAmount());
         bill.setAptId(tx.getAptId());
@@ -623,7 +623,6 @@ public class BillingServiceImpl implements BillingService {
     table.addCell(PdfUtil.createCell(tx.getRoom().getRoomNo() + " / " + tx.getRoom().getRoomDesc(),
         Element.ALIGN_LEFT, Rectangle.NO_BORDER));
 
-
     table.addCell(PdfUtil.createCell("Amount Due:", Element.ALIGN_LEFT, Rectangle.NO_BORDER));
     table.addCell(PdfUtil.createCell(StringUtil.toCurrency(tx.getAmount()), Element.ALIGN_LEFT,
         Rectangle.NO_BORDER));
@@ -644,10 +643,9 @@ public class BillingServiceImpl implements BillingService {
   }
 
   /*
-   * get the list of electric bills for collection purpose
-   * (non-Javadoc)
+   * get the list of electric bills for collection purpose (non-Javadoc)
    * 
-   * @see com.shinn.service.BillingService#getElectricForCollection(java.lang.Integer,
+   * @see com.shinn.service.BillingService#getElectricForCollection(java.lang. Integer,
    * java.lang.Integer)
    */
   @Override
@@ -672,7 +670,8 @@ public class BillingServiceImpl implements BillingService {
     return resp;
 
   }
-  
+
+
   public boolean isDueDate(Date date) {
     if (DateUtil.getCurrentDate().getTime() > date.getTime()) {
       return true;
@@ -680,6 +679,52 @@ public class BillingServiceImpl implements BillingService {
       return false;
     }
 
+  }
+
+  public void createAutomaticBilling(Transaction transaction) {
+    try {
+      Room room = roomDao.getRoom(transaction.getAptId(), transaction.getRoomId());
+      Billing bill = new Billing();
+      Date dueDate = DateUtil.addDays(transaction.getDueDate(), DateUtil.THIRTYDAYS);
+      String billingNo =
+          StringUtil.generateBillingNo(transaction.getAptId(), transaction.getRoomId());
+      bill.setAptId(transaction.getAptId());
+      bill.setBillingNo(billingNo);
+      bill.setDeposit(transaction.getDeposit());
+      bill.setOverdue(transaction.getOverdue() + transaction.getAmount());
+      bill.setRenterId(transaction.getRenterId());
+      bill.setAmount(room.getRate());
+      bill.setRoomId(transaction.getRoomId());
+      bill.setStatus(RentStatus.ACTIVE);
+      bill.setTxDate(DateUtil.getCurrentDate());
+      bill.setBillType(RentStatus.BILL_RENT);
+      bill.setDueDate(dueDate);
+      bill.setGenerationDate(DateUtil.getCurrentDate());
+
+      // update the transaction data
+
+      transaction.setOverdue(transaction.getOverdue() + transaction.getAmount());
+      transaction.setAmount(room.getRate());
+      transaction.setDueDate(dueDate);
+      transaction.setTxDate(DateUtil.getCurrentDate());
+      transaction.setUpdatedDate(DateUtil.getCurrentDate());
+      transaction.setPaymentStatus(RentStatus.ACTIVE);
+      transaction.setUserId(1);
+      transaction.setPaymentStatus(RentStatus.UNPAID);
+      transaction.setUpdtCnt(transaction.getUpdtCnt() + 1);
+      transaction.setBillingNo(billingNo);
+
+      billingDao.saveUpdate(bill);
+      rentalDao.saveUpdate(transaction);
+
+      rentalDao.commit();
+      billingDao.commit();
+
+    } catch (Exception e) {
+      logger.error("createAutomaticBilling:{} apartment ID {} room ID {}", e.getMessage(),
+          transaction.getAptId(), transaction.getRoomId());
+
+    }
   }
 
 }

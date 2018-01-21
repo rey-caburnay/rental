@@ -10,12 +10,14 @@ public class RentStatus {
     public static final String OCCUPIED = "occupied";
     public static final String VACANT = "vacant";
     public static final String UNBILLED_MESSAGE = "Unpaid month:";
-    public static final int NOTIFY_BEFORE_DUE = 3;
+    public static final int NOTIFY_BEFORE_DUE = -3;
     public static final int NOTIFY_ON_DUE = 0;
+    public static final int DAYS_TO_GENERATE_BILL = 20;
     public static final String DUE_DATE_MESSAGE = "DUE DATE";
     public static final String  BEFORE_DUE_MESSAGE = "BEFORE DUE";
     public static final String RECEIPT_RENT_MESSAGE = "RENT RECEIPT";
     public static final String ELECTRIC_BILL_MESSAGE = "ELECTRIC BILL";
+    public static final String BEFORE_DUE_ELECTRIC_MESSAGE = "BEFORE DUE ELECTRIC";
     public static final String WELCOME_MESSAGE = "WELCOME";
     public static final String RENT_ALERT_MESSAGE = "RENT ALERT"; 
     

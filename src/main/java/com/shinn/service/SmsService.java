@@ -27,6 +27,8 @@ public interface SmsService {
 
   public Response<Sms> sendElectricBillingMessage(BillingForm billing);
   
-  public Response<Transaction> sendBillingAlert();
-  public Response<ElectricBill> sendElectricBillingAlert();
+//  public Response<Transaction> sendBillingAlert();
+  public void sendAlertToIncharge(Transaction transaction);
+  public void sendAlert(Transaction transaction, String messageType);
+  public void sendElectricBillingAlert(ElectricBill electric);
 }

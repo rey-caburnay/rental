@@ -219,35 +219,35 @@ public class SmsServiceImpl implements SmsService {
   /**
    * send billing alert to tenant and person incharge of the apartment.
    */
-  @Override
-  public Response<Transaction> sendBillingAlert() {
-    List<Transaction> transactions = rentalDao.findByStatus(RentStatus.ACTIVE);
-    try {
-      for (Transaction transaction : transactions) {
-        int dayDifference = DateUtil.daysDiff(transaction.getDueDate(), DateUtil.getCurrentDate());
+//  @Override
+//  public Response<Transaction> sendBillingAlert() {
+//    List<Transaction> transactions = rentalDao.findByStatus(RentStatus.ACTIVE);
+//    try {
+//      for (Transaction transaction : transactions) {
+//        int dayDifference = DateUtil.daysDiff(transaction.getDueDate(), DateUtil.getCurrentDate());
+//
+//        if (dayDifference >= ALERT_PRIOR_DUE_DATE && dayDifference < 1) {
+//          this.sendAlert(transaction, RentStatus.BEFORE_DUE_MESSAGE);
+//
+//        }
+//
+//        if (dayDifference >= 0 && dayDifference <= Math.abs(ALERT_PRIOR_DUE_DATE)) {
+//          this.sendAlert(transaction, RentStatus.DUE_DATE_MESSAGE);
+//          this.sendAlertToIncharge(transaction);
+//        }
+//
+//        if (dayDifference == 20) {
+//          // automate generation of new bill;
+//        }
+//
+//      }
+//    } catch (Exception e) {
+//      logger.error("sendBillingAlert:{}", e.getMessage());
+//    }
+//    return null;
+//  }
 
-        if (dayDifference >= ALERT_PRIOR_DUE_DATE && dayDifference < 1) {
-          this.sendAlert(transaction, RentStatus.BEFORE_DUE_MESSAGE);
-
-        }
-
-        if (dayDifference >= 0 && dayDifference <= Math.abs(ALERT_PRIOR_DUE_DATE)) {
-          this.sendAlert(transaction, RentStatus.DUE_DATE_MESSAGE);
-          this.sendAlertToIncharge(transaction);
-        }
-
-        if (dayDifference == 20) {
-          // automate generation of new bill;
-        }
-
-      }
-    } catch (Exception e) {
-      logger.error("sendBillingAlert:{}", e.getMessage());
-    }
-    return null;
-  }
-
-  private void sendAlertToIncharge(Transaction transaction) {
+  public void sendAlertToIncharge(Transaction transaction) {
     try {
       Double totalAmount = transaction.getAmount() + transaction.getOverdue();
       Apartment apt = apartmentDao.getById(transaction.getAptId());
@@ -261,7 +261,7 @@ public class SmsServiceImpl implements SmsService {
     }
   }
 
-  private void sendAlert(Transaction transaction, String messageType) {
+  public void sendAlert(Transaction transaction, String messageType) {
     try {
       Apartment apt = apartmentDao.getById(transaction.getAptId());
       Room room = roomDao.getById(transaction.getRoomId());
@@ -280,10 +280,9 @@ public class SmsServiceImpl implements SmsService {
   }
 
   @Override
-  public Response<ElectricBill> sendElectricBillingAlert() {
-    // TODO Auto-generated method stub
-    return null;
+  public void sendElectricBillingAlert(ElectricBill electric) {
+        
   }
 
-
+  
 }
