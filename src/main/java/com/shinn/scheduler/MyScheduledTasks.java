@@ -49,12 +49,12 @@ public class MyScheduledTasks {
    * 12 ?" = every Christmas Day at midnight
    * 
    */
-//  @Scheduled(cron = "0 0 10 * * *") // trigger every 10:00 am
-   @Scheduled(cron = "*\\/10 * * * * *") //triger every 10 seconds
+  @Scheduled(cron = "0 0 10 * * *") // trigger every 10:00 am
+  // @Scheduled(cron = "*\\/10 * * * * *") //triger every 10 seconds
   public void run() {
     this.processRoomDueDates();
   }
-  
+
   private void testSked() {
     logger.info("sendNotifications to Tenant Job ran at {}", dateFormat.format(new Date()));
 
@@ -62,16 +62,19 @@ public class MyScheduledTasks {
 
   private void processRoomDueDates() {
     List<Transaction> transactions = rentalDao.findByStatus(RentStatus.ACTIVE);
+    logger.info("transactions count :{}", transactions.size());
     for (Transaction transaction : transactions) {
       Integer dayDifference =
           DateUtil.daysBetween(transaction.getDueDate(), DateUtil.getCurrentDate());
 
       Collection collection = collectionDao.getByBillingNo(transaction.getBillingNo());
 
+      logger.info("transaction to process:{}", transaction);
       if (dayDifference >= RentStatus.NOTIFY_BEFORE_DUE
           && dayDifference <= RentStatus.NOTIFY_ON_DUE) {
         // notify tenant for payment
         if (StringUtils.isEmpty(collection)) {
+          logger.info("sending {}", transaction);
           smsService.sendAlert(transaction, RentStatus.BEFORE_DUE_MESSAGE);
         }
       }
@@ -81,6 +84,7 @@ public class MyScheduledTasks {
         // notify tenant regarding payment for 2 days
         // notify person incharge to collect the payment
         if (StringUtils.isEmpty(collection)) {
+          logger.info("sending to in charge");
           smsService.sendAlert(transaction, RentStatus.DUE_DATE_MESSAGE);
           smsService.sendAlertToIncharge(transaction);
         }
@@ -102,6 +106,7 @@ public class MyScheduledTasks {
         if (dayDifference >= RentStatus.NOTIFY_BEFORE_DUE
             && dayDifference <= RentStatus.NOTIFY_ON_DUE) {
           if (StringUtils.isEmpty(collection)) {
+            logger.info("sending electric bill before due:{}", electricBill);
             smsService.sendAlert(transaction, RentStatus.BEFORE_DUE_ELECTRIC_MESSAGE);
           }
         }
@@ -112,6 +117,7 @@ public class MyScheduledTasks {
           // check if it has already paid
           if (StringUtils.isEmpty(collection)) {
             // send notification
+            logger.info("sending electric bill on due date:{}", electricBill);
             smsService.sendAlert(transaction, RentStatus.ELECTRIC_BILL_MESSAGE);
           }
         }
