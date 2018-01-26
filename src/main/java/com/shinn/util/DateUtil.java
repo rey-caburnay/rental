@@ -72,6 +72,33 @@ public class DateUtil {
         }
     }
     
+    public static int daysDiff(Date date1, Date date2) {
+      Calendar calendar1 = Calendar.getInstance();
+      Calendar calendar2 = Calendar.getInstance();
+      
+      calendar1.setTime(date1);
+      calendar2.setTime(date2);
+      if (calendar1.get(Calendar.YEAR) == calendar2.get(Calendar.YEAR)) {
+          return calendar1.get(Calendar.DAY_OF_YEAR) - calendar2.get(Calendar.DAY_OF_YEAR);
+      } else {
+//          if (calendar2.get(Calendar.YEAR) > calendar1.get(Calendar.YEAR)) {
+//              //swap them
+//              Calendar temp = calendar1;
+//              calendar1 = calendar2;
+//              calendar2 = temp;
+//          }
+          int extraDays = 0;
+          int dayOneOriginalYearDays = calendar1.get(Calendar.DAY_OF_YEAR);
+          while (calendar1.get(Calendar.YEAR) > calendar2.get(Calendar.YEAR)) {
+              calendar1.add(Calendar.YEAR, -1);
+              // getActualMaximum() important for leap years
+              extraDays += calendar1.getActualMaximum(Calendar.DAY_OF_YEAR);
+          }
+          return extraDays - calendar2.get(Calendar.DAY_OF_YEAR) + dayOneOriginalYearDays ;
+      }
+  }
+ 
+    
     public static int getNumberOfMonths(Date from , Date to) {
       int month = 0;
       int days = daysBetween(from, to);

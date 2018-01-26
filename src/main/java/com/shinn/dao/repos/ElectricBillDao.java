@@ -12,5 +12,5 @@ public interface ElectricBillDao extends GenericDao<ElectricBill> {
   public ElectricBill getByAptRoom(Integer aptId, Integer roomId);
   
   public List<ElectricBill> getElectricReport(Integer aptId);
-
+  
 }

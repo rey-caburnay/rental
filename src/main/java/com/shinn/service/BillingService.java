@@ -18,9 +18,6 @@ public interface BillingService {
   public byte[] getPdfContent(String pdfLocation) throws Exception;
   public Response<Transaction> createNewBilling(Renter renter);
   public Response<ElectricBill> getElectricForCollection(Integer aptId, Integer roomId);
-  
-  public Response<Transaction> sendBillingAlert();
-  public Response<ElectricBill> sendElectricBillingAlert();
   public void createAutomaticBilling(Transaction transaction);
 
 }

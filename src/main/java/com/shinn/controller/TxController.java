@@ -55,7 +55,7 @@ public class TxController {
         Response<Transaction> resp2 =  billingService.createNewBilling(renter);
         logger.info("mobile number:{}", renter.getMobileNo());
         if (!StringUtils.isEmpty(renter.getMobileNo())){
-//          smsService.sendMessage(RentStatus.WELCOME_MESSAGE, renter.getMobileNo());
+          smsService.sendMessage(RentStatus.WELCOME_MESSAGE, renter.getMobileNo());
         }
         
         logger.debug(resp.toString());

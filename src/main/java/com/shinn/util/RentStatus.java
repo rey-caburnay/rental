@@ -17,6 +17,7 @@ public class RentStatus {
     public static final String  BEFORE_DUE_MESSAGE = "BEFORE DUE";
     public static final String RECEIPT_RENT_MESSAGE = "RENT RECEIPT";
     public static final String ELECTRIC_BILL_MESSAGE = "ELECTRIC BILL";
+    public static final String BEFORE_DUE_ELECTRIC_MESSAGE = "BEFORE DUE ELECTRIC";
     public static final String WELCOME_MESSAGE = "WELCOME";
     public static final String RENT_ALERT_MESSAGE = "RENT ALERT"; 
     
