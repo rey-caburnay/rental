@@ -31,4 +31,5 @@ public interface SmsService {
   public void sendAlertToIncharge(Transaction transaction);
   public void sendAlert(Transaction transaction, String messageType);
   public void sendElectricBillingAlert(ElectricBill electric);
+  public void sendWelcomeAlert(String mobileNo);
 }

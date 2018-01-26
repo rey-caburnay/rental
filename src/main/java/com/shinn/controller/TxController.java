@@ -23,9 +23,6 @@ import com.shinn.service.model.Transaction;
 import com.shinn.ui.model.CollectionForm;
 import com.shinn.ui.model.RegistrationForm;
 import com.shinn.ui.model.Response;
-import com.shinn.util.RentStatus;
-
-import ch.qos.logback.classic.Logger;
 
 @RestController
 @RequestMapping(value="/tx")
@@ -55,7 +52,7 @@ public class TxController {
         Response<Transaction> resp2 =  billingService.createNewBilling(renter);
         logger.info("mobile number:{}", renter.getMobileNo());
         if (!StringUtils.isEmpty(renter.getMobileNo())){
-          smsService.sendMessage(RentStatus.WELCOME_MESSAGE, renter.getMobileNo());
+          smsService.sendWelcomeAlert(renter.getMobileNo());
         }
         
         logger.debug(resp.toString());

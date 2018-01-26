@@ -33,8 +33,8 @@ public class BasicTest {
 //        test.testNumberFormat();
 //        test.testDecimalFormat();
 //        test.continueExample();
-//        test.dateTest();
-        test.testMath();
+        test.dateTest();
+//        test.testMath();
     }
     
     public void testMath() {
@@ -132,7 +132,7 @@ public class BasicTest {
         SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
         String dateInString = "22-09-2016 10:20:56";
         
-        String smsmessage = RentStatus.BEFORE_DUE_MESSAGE;
+        String smsmessage = "Please pay your rent for the month of {month} amounting:{amount} to avoid neccessary actions. from-Caburany Apartmentz";
 //        if (smsmessage.indexOf("{amount}") > 0 ) {
 //            System.out.println("found using {}" + smsmessage.indexOf("{amount}"));
 //        }
@@ -140,7 +140,7 @@ public class BasicTest {
 //            System.out.println("found using \\{\\}" + smsmessage.indexOf("\\{amount\\}"));
 //        }
         smsmessage = smsmessage.replaceAll("\\{amount\\}", 500d +"");
-        smsmessage = smsmessage.replace("{duedate}", DateUtil.getNameOfMonth(d.getMonth()));
+        smsmessage = smsmessage.replace("{month}", DateUtil.getNameOfMonth(d.getMonth()));
         
         System.out.println(smsmessage);
         System.out.println("month: " + DateUtil.getNameOfMonth(d.getMonth()));

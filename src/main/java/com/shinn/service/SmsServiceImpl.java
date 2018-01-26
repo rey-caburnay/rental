@@ -1,7 +1,6 @@
 package com.shinn.service;
 
 import java.text.NumberFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -37,11 +36,6 @@ import com.shinn.util.StringUtil;
 @Service
 public class SmsServiceImpl implements SmsService {
   private static final org.slf4j.Logger logger = LoggerFactory.getLogger(SmsServiceImpl.class);
-  public static final String BILLING_BEFORE_DUE_DATE_MESSAGE = "billingBeforeDueDate";
-  public static final String BILLING_MESSAGE = "billingDueDate";
-  public static final String ELECTRIC_BILLING_MESSAGE = "electricBilling";
-  public static final String COLLECTION_MESSAGE_PROPERTY = "collection_property";
-  public static final String COLLECTION_MESSAGE_ELECTRIC = "colletion_electric";
   private static final Locale ph = new Locale("ph", "PH");
   public static final Integer ALERT_PRIOR_DUE_DATE = -3;
 
@@ -104,7 +98,7 @@ public class SmsServiceImpl implements SmsService {
         dueDate = bill.getDueDate();
       }
       String msg =
-          generateMessage(type, bill.getTotalAmount(), dueDate.getMonth(), null, null, null);
+          generateMessage(type, bill.getTotalAmount(), dueDate.getMonth(), "", "", "");
       response = sendMessage(msg, renter.getMobileNo());
     }
     return response;
@@ -145,12 +139,13 @@ public class SmsServiceImpl implements SmsService {
   }
 
   @Override
+  @Deprecated
   public Response<Sms> sendElectricBillingMessage(BillingForm billing) {
     Response<Sms> response = new Response<>();
     for (ElectricBill electricBill : billing.getRooms()) {
       Renter renter = renterDao.getOccupancy(electricBill.getAptId(), electricBill.getRoomId());
       if (renter != null && renter.getMobileNo() != null) {
-        response = sendMessage(ELECTRIC_BILLING_MESSAGE, renter.getMobileNo());
+        response = sendMessage(RentStatus.ELECTRIC_BILL_MESSAGE, renter.getMobileNo());
       }
     }
     return response;
@@ -164,8 +159,8 @@ public class SmsServiceImpl implements SmsService {
         for (ElectricBill bill : billingForm.getRooms()) {
           Renter renter = renterDao.getOccupancy(bill.getAptId(), bill.getRoomId());
           if (renter != null && renter.getMobileNo() != null) {
-            String message = this.generateMessage(ELECTRIC_BILLING_MESSAGE, bill.getGrossAmount(),
-                bill.getDueDate().getMonth(), null, null, null);
+            String message = this.generateMessage(RentStatus.ELECTRIC_BILL_MESSAGE, bill.getGrossAmount(),
+                bill.getDueDate().getMonth(), "", "", "");
             this.sendMessage(message, renter.getMobileNo());
           }
 
@@ -174,8 +169,8 @@ public class SmsServiceImpl implements SmsService {
       case RentStatus.BILL_RENT:
         for (Transaction tx : billingForm.getBills()) {
           if (tx.getRenter() != null && tx.getRenter().getMobileNo() != null) {
-            String message = this.generateMessage(BILLING_MESSAGE, tx.getAmountPayable(),
-                tx.getDueDate().getMonth(), null, null, null);
+            String message = this.generateMessage(RentStatus.DUE_DATE_MESSAGE, tx.getAmountPayable(),
+                tx.getDueDate().getMonth(), "", "", "");
             this.sendMessage(message, tx.getRenter().getMobileNo());
           }
 
@@ -193,9 +188,9 @@ public class SmsServiceImpl implements SmsService {
         for (ElectricBill bill : billingForm.getRooms()) {
           Renter renter = renterDao.getOccupancy(bill.getAptId(), bill.getRoomId());
           if (renter != null && renter.getMobileNo() != null) {
-            String message = this.generateMessage(COLLECTION_MESSAGE_ELECTRIC,
+            String message = this.generateMessage(RentStatus.RECEIPT_ELECTRIC_MESSAGE,
                 Double.valueOf(billingForm.getCash().getAmountPaid()), bill.getDueDate().getMonth(),
-                bill.getCollectionNo(), null, null);
+                bill.getCollectionNo(), "", "");
             this.sendMessage(message, renter.getMobileNo());
           }
 
@@ -204,9 +199,9 @@ public class SmsServiceImpl implements SmsService {
       case RentStatus.BILL_RENT:
         for (Transaction tx : billingForm.getBills()) {
           if (tx.getRenter() != null && tx.getRenter().getMobileNo() != null) {
-            String message = this.generateMessage(COLLECTION_MESSAGE_PROPERTY,
+            String message = this.generateMessage(RentStatus.RECEIPT_RENT_MESSAGE,
                 Double.valueOf(billingForm.getCash().getAmountPaid()), tx.getDueDate().getMonth(),
-                tx.getCollectionNo(), null, null);
+                tx.getCollectionNo(), "", "");
             this.sendMessage(message, tx.getRenter().getMobileNo());
           }
 
@@ -215,37 +210,6 @@ public class SmsServiceImpl implements SmsService {
     }
     return resp;
   }
-
-  /**
-   * send billing alert to tenant and person incharge of the apartment.
-   */
-//  @Override
-//  public Response<Transaction> sendBillingAlert() {
-//    List<Transaction> transactions = rentalDao.findByStatus(RentStatus.ACTIVE);
-//    try {
-//      for (Transaction transaction : transactions) {
-//        int dayDifference = DateUtil.daysDiff(transaction.getDueDate(), DateUtil.getCurrentDate());
-//
-//        if (dayDifference >= ALERT_PRIOR_DUE_DATE && dayDifference < 1) {
-//          this.sendAlert(transaction, RentStatus.BEFORE_DUE_MESSAGE);
-//
-//        }
-//
-//        if (dayDifference >= 0 && dayDifference <= Math.abs(ALERT_PRIOR_DUE_DATE)) {
-//          this.sendAlert(transaction, RentStatus.DUE_DATE_MESSAGE);
-//          this.sendAlertToIncharge(transaction);
-//        }
-//
-//        if (dayDifference == 20) {
-//          // automate generation of new bill;
-//        }
-//
-//      }
-//    } catch (Exception e) {
-//      logger.error("sendBillingAlert:{}", e.getMessage());
-//    }
-//    return null;
-//  }
 
   public void sendAlertToIncharge(Transaction transaction) {
     try {
@@ -281,8 +245,17 @@ public class SmsServiceImpl implements SmsService {
 
   @Override
   public void sendElectricBillingAlert(ElectricBill electric) {
-        
+
   }
 
-  
+  @Override
+  public void sendWelcomeAlert(String mobileNo) {
+
+    String message = this.generateMessage(RentStatus.WELCOME_MESSAGE, new Double(0),
+        DateUtil.getCurrentDate().getMonth(), "", "", "");
+    this.sendMessage(message, mobileNo);
+
+  }
+
+
 }

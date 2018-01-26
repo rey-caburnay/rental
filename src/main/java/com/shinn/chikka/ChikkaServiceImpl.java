@@ -55,7 +55,7 @@ import com.shinn.util.StringUtil;
 
 @Service
 public class ChikkaServiceImpl implements ChikkaService {
-  private static final org.slf4j.Logger logger = LoggerFactory.getLogger(ChikkaServiceImpl.class);
+  private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(ChikkaServiceImpl.class);
 
 
   @Autowired
@@ -93,24 +93,7 @@ public class ChikkaServiceImpl implements ChikkaService {
     ChikkaResponse chikaResponse = new ChikkaResponse();
     Date receivedDate = Calendar.getInstance().getTime();
     chikaResponse.setMessage(message.getMessage());
-    // chikaResponse.setStatus(message.);
-    // sms.setMessage(message.getMessage());
-    // sms.setShortcode(message.getShortcode());
-    // sms.setRequestId(message.getRequestId());
-    // sms.setMessageType(message.getMessageType());
-    // sms.setTimestamp(message.getTimestamp());
-    // sms.setSender(message.getMobileNumber());
-    // sms.setSendDate(receivedDate);
-    // sms.setReceivedDate(receivedDate);
-    // try {
-    // smsDao.saveUpdate(sms);
-    // resp.setModel(sms);
-    // resp.setResponseStatus(ChikkaConstants.SMS_ACCEPTED);
-    // } catch (Exception e) {
-    // logger.error(e.getMessage());
-    // resp.setResponseStatus(ResultStatus.GENERAL_ERROR);
-    // sms.setStatus(ChikkaConstants.SMS_ERROR);
-    // }
+
     resp.setModel(chikaResponse);
     return resp;
   }
@@ -164,10 +147,11 @@ public class ChikkaServiceImpl implements ChikkaService {
       resp.setModel(chikkaResponse);
       resp.setResponseStatus(String.valueOf(responseCode));
       resp.setResponseStatus(ResultStatus.RESULT_OK);
+      LOGGER.info("sending sms to :{}", message.getMobileNumber());
     } catch (IOException e) {
       resp.setErrorMsg(e.getMessage());
       resp.setResponseStatus(ResultStatus.SMS_FAILED);
-      e.printStackTrace();
+      LOGGER.error("sending sms failed :{}", e.getMessage());
     }
     return resp;
   }

@@ -792,7 +792,7 @@
   </entry>
 
   <entry key = "message-findby-key">
-    select * from prm_message where key = ?;
+    select * from `prm_message` where `key` = ?;
   </entry>
 
 </properties>

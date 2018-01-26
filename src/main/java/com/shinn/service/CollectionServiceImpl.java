@@ -216,7 +216,7 @@ public class CollectionServiceImpl implements CollectionService {
 
   @Override
   public String createPdf(BillingForm form) {
-    String generatedFile = form.getBillingNo() + ".pdf";
+    String generatedFile = BillingServiceImpl.PDF_PATH + form.getBillingNo() + ".pdf";
     File file = new File(generatedFile);
     try {
 

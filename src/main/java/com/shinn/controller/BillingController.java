@@ -251,7 +251,7 @@ public class BillingController {
     } else {
       pdfLocation = billingService.createPdf(billingForm);
     }
-
+    System.out.println("pdf path:" + pdfLocation);
     Path path = Paths.get(pdfLocation);
     byte[] pdfContents = null;
     try {

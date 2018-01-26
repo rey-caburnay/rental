@@ -47,7 +47,7 @@ import com.shinn.util.StringUtil;
 @Service
 public class BillingServiceImpl implements BillingService {
   private static final org.slf4j.Logger logger = LoggerFactory.getLogger(BillingServiceImpl.class);
-  private static String PDF_PATH = "C:\\Users\\rbkshinn";
+  public static String PDF_PATH = "/home/caburnay/logs/pdf/";
   public static Integer NUMBER_OF_ROWS = 3;
   public static final Integer DAYS_TO_GENERATE_BILLING = 20;
 
@@ -109,7 +109,7 @@ public class BillingServiceImpl implements BillingService {
    * return pdf file location;
    */
   public String createPdf(BillingForm billingForm) {
-    String generatedFile = PDF_PATH + "/" + billingForm.getBillingNo() + ".pdf";
+    String generatedFile = PDF_PATH + billingForm.getBillingNo() + ".pdf";
     try {
 
       Document document = PdfUtil.createDocument(generatedFile);
