@@ -1,5 +1,7 @@
 package com.shinn.configuration;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -11,12 +13,21 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.RememberMeServices;
 
+import com.shinn.security.UserDetailsService;
+
 public class ServerSecurityConfig extends WebSecurityConfigurerAdapter {
+  private static final Logger logger = LoggerFactory.getLogger(ServerSecurityConfig.class);
 
   public static final String REMEMBER_ME_KEY = "rememberme_key";
+
+  public ServerSecurityConfig() {
+      super();
+      logger.info("loading SecurityConfig ................................................ ");
+  }
   
-//  @Autowired
-//  private RestUnauthorizedEntryPoint restAuthenticationEntryPoint;
+  
+  @Autowired
+  private UserDetailsService userDetailService;
   
   @Autowired
   private AccessDeniedHandler restAccessDeniedHandler;

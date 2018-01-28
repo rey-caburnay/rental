@@ -794,5 +794,8 @@
   <entry key = "message-findby-key">
     select * from `prm_message` where `key` = ?;
   </entry>
+  <entry key = "authority-findby-userid">
+    select * from `prm_authority` where `userId` = ?;
+  </entry>
 
 </properties>

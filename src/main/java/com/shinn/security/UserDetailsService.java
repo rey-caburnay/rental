@@ -10,11 +10,16 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.shinn.dao.repos.AuthorityDao;
 import com.shinn.dao.repos.UserDao;
+import com.shinn.exception.UserNotEnabledException;
+import com.shinn.service.model.Authority;
 import com.shinn.service.model.User;
+import com.shinn.util.RentStatus;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * Authenticate a user from the database.
@@ -26,6 +31,8 @@ public class UserDetailsService implements org.springframework.security.core.use
 
     @Autowired
     private UserDao userDao;
+    @Autowired
+    private AuthorityDao authorityDao;
 
     @Override
     @Transactional
@@ -35,12 +42,12 @@ public class UserDetailsService implements org.springframework.security.core.use
         User user = userDao.findByUsername(login);
         if (user == null) {
             throw new UsernameNotFoundException("User " + login + " was not found in the database");
-        } else if (!user.getEnabled()) {
+        } else if (!user.getStatus().equals(RentStatus.ACTIVE)) {
             throw new UserNotEnabledException("User " + login + " was not enabled");
         }
-
+        List<Authority> authorities = authorityDao.findByUserId(user.getId()); 
         Collection<GrantedAuthority> grantedAuthorities = new ArrayList<GrantedAuthority>();
-        for (Authority authority : user.getAuthorities()) {
+        for (Authority authority : authorities) {
             GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(authority.getName());
             grantedAuthorities.add(grantedAuthority);
         }

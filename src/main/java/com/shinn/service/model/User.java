@@ -5,7 +5,12 @@ import java.io.Serializable;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.shinn.web.view.Views;
 
+import lombok.Getter;
+import lombok.Setter;
 
+
+@Setter
+@Getter
 public class User implements Serializable {
 
     Integer id;
@@ -17,6 +22,7 @@ public class User implements Serializable {
 	@JsonView(Views.Public.class)
 	String phone;
 	String address;
+	String status;
 
 	public User() {
 	}
