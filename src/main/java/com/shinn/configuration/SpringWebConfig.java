@@ -12,6 +12,7 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.core.task.SimpleAsyncTaskExecutor;
@@ -33,12 +34,11 @@ import org.springframework.scheduling.config.Task;
 @EnableAutoConfiguration(exclude={DataSourceAutoConfiguration.class})
 @EnableWebMvc
 @Configuration
+@Import(DataSourceConfig.class)
 @ComponentScan({ "com.shinn" })
 @PropertySource(value = { "classpath:application.properties" })
 public class SpringWebConfig extends WebMvcConfigurerAdapter {
 
-    @Autowired
-    private Environment environment;
 
     /**
      * load the web app resources file
@@ -58,22 +58,7 @@ public class SpringWebConfig extends WebMvcConfigurerAdapter {
         return viewResolver;
     }
 
-    @Bean(name = "dataSource")
-    public DataSource dataSource() {
-        DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName(environment.getRequiredProperty("jdbc.driverClassName"));
-        dataSource.setUrl(environment.getRequiredProperty("jdbc.url"));
-        dataSource.setUsername(environment.getRequiredProperty("jdbc.username"));
-        dataSource.setPassword(environment.getRequiredProperty("jdbc.password"));
-        return dataSource;
-    }
 
-    @Bean(name = "connection")
-    public Connection connection() throws SQLException {
-        Connection connection = dataSource().getConnection();
-        connection.setAutoCommit(false);
-        return connection;
-    }
     
     @Bean(name="jacksonMessageConverter")
     public MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter() {

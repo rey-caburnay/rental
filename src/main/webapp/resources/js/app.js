@@ -54,7 +54,7 @@ angular.module('rental').config(['$routeProvider','$httpProvider', function ($ro
     //.when("/blog", {templateUrl: "/blog", controller: "BlogCtrl"})
 //    .when("/blog/post", {templateUrl: "/content/blog_item", controller: "BlogCtrl"})
     // else 404
-    .otherwise({ redirectTo: '/home' });
+    .otherwise({ redirectTo: '/login' });
   var spinnerFunction = function spinnerFunction(data, headersGetter) {
 	  swal({
 		  title: 'Loading',
