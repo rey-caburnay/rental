@@ -49,9 +49,9 @@
 	</div>
 
     <!-- Vendor: Javascripts -->
-    <script src="<c:url value='/resources/js/external/jquery.js'/>"></script>
+    <script src="<c:url value='/resources/js/external/jquer-2.1.3.js'/>"></script>
     <script src="<c:url value='/resources/js/external/jquery.dataTables.js'/>"></script>
-    <script src="<c:url value='/resources/js/external/bootstrap.min.js'/>"></script>
+    <script src="<c:url value='/resources/js/external/bootstrap-3.3.1.js'/>"></script>
 
 
 <!--      <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script> -->
@@ -62,7 +62,8 @@
     <script src="<c:url value='/resources/js/external/angular.min.js' />"></script>
     <script src="<c:url value='/resources/js/external/angular-sanitize.js' />"></script>
     <script src="<c:url value='/resources/js/external/angular-route.js' />"></script>
-        <script src="<c:url value='/resources/js/external/angular-resource.min.js' />"></script>
+    <script src="<c:url value='/resources/js/external/angular-resource.min.js' />"></script>
+    <script src="<c:url value='/resources/js/external/angular-http-auth.js' />"></script>
     <script src="<c:url value='/resources/js/external/ui-bootstrap-1.3.3.min.js'/>"></script>
     <script src="<c:url value='/resources/js/external/sweetalert.min.js'/>"></script>
     <script src="<c:url value='/resources/js/external/angular-pdfjs-viewer.js'/>"></script>
@@ -75,12 +76,13 @@
     <!-- filters -->
     <script src="<c:url value='/resources/js/filter/filter.js' />"></script>
     <!-- services -->
-    <script src="<c:url value='/resources/js/service/authService.js' />"></script>
     <script src="<c:url value='/resources/js/service/transaction.js' />"></script>
      <script src="<c:url value='/resources/js/service/admin.js' />"></script>
      <script src="<c:url value='/resources/js/service/modalService.js' />"></script>
      <script src="<c:url value='/resources/js/service/interceptor.js' />"></script>
      <script src="<c:url value='/resources/js/service/pdfService.js' />"></script>
+     <script src="<c:url value='/resources/js/service/session.js' />"></script>
+     <script src="<c:url value='/resources/js/service/authSharedService.js' />"></script>     
     <!--  service model -->
     <script src="<c:url value='/resources/js/service/model/transaction.js' />"></script>
     <!-- controllers -->
@@ -92,6 +94,8 @@
     <script src="<c:url value='/resources/js/controller/collection.js' />"></script>
     <script src="<c:url value='/resources/js/controller/billing.js' />"></script>
     <script src="<c:url value='/resources/js/controller/report.js' />"></script>
-   
+    <script src="<c:url value='/resources/js/controller/login.js' />"></script>
+     <script src="<c:url value='/resources/js/controller/logout.js' />"></script>
   </body>
+  
 </html>

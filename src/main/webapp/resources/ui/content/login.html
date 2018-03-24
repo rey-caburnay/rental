@@ -7,7 +7,8 @@
           <label class="label col col-4">E-mail</label>
           <div class="col col-8">
             <label class="input"> <i
-              class="icon-prepend fa fa-user"></i> <input type="email" data-ng-model="vm.user.email">
+              class="icon-prepend fa fa-user"></i> <input type="email"
+              data-ng-model="vm.user.email">
             </label>
           </div>
         </div>
@@ -17,7 +18,8 @@
           <label class="label col col-4">Password</label>
           <div class="col col-8">
             <label class="input"> <i
-              class="icon-prepend fa fa-lock"></i> <input type="password" data-ng-model="vm.user.password">
+              class="icon-prepend fa fa-lock"></i> <input
+              type="password" data-ng-model="vm.user.password">
             </label>
             <div class="note">
               <a href="#/forgot">Forgot password?</a>
@@ -30,15 +32,17 @@
           <div class="col col-4"></div>
           <div class="col col-8">
             <label class="checkbox"><input type="checkbox"
-              name="checkbox-inline" checked=""><i></i>Keep me
+              name="checkbox-inline" checked=""
+              data-ng-model="vm.user.rememberMe"><i></i>Keep me
               logged in</label>
           </div>
         </div>
       </section>
     </fieldset>
     <footer>
-      <button type="submit" class="button">Log in</button>
-<!--       <a href="#" class="button button-secondary">Register</a> -->
+      <button class="btn btn-lg btn-primary btn-block"
+        ng-click="vm.login()">login</button>
+      <!--       <a href="#" class="button button-secondary">Register</a> -->
     </footer>
   </form>
 </div>

@@ -15,11 +15,11 @@
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse navbar-ex1-collapse" id="navlist">
             <ul class="nav navbar-nav navbar-right">
-             	<li data-ng-click="navbarToggle()"><a href="#/">Home</a>
+             	<li data-ng-click="navbarToggle()"><a href="#/home">Home</a>
                 </li>
                 <li data-ng-click="navbarToggle()"><a href="#/reg">Registration</a>
                 </li>
-                <li data-ng-click="navbarToggle()"><a href="#/bill">Billings</a>
+                <li data-ng-click="navbarToggle()"> <a href="#/bill">Billings</a>
                 </li>
                 <li data-ng-click="navbarToggle()"><a href="#/collection">Collections</a>
                 </li>
@@ -29,11 +29,13 @@
                 <li class="dropdown">
                     <a class="dropdown-toggle" data-toggle="dropdown">User <b class="caret"></b></a>
                     <ul class="dropdown-menu">
-                        <li><a href="#/blog">List of Posts</a>
+                        <li data-ng-click="navbarToggle()"><a href="#/blog">List of Posts</a>
                         </li>
-                        <li><a href="#/blog/post">View One Post</a>
+                        <li data-ng-click="navbarToggle()"><a href="#/blog/post">View One Post</a>
                         </li>
                     </ul>
+                </li>
+                <li data-ng-click="navbarToggle()"><a href="#/logout">Logout</a>
                 </li>
             </ul>
         </div>

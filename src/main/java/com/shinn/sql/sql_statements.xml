@@ -797,5 +797,23 @@
   <entry key = "authority-findby-userid">
     select * from `prm_authority` where `userId` = ?;
   </entry>
+  <entry key = "token-findby-series">
+    select * from `token` where `series` = ?;
+  </entry>
+  <entry key="token-save">
+    insert into `token` (
+    `series`, `value`, `date`, `ipAddress`, `userAgent`, `userLogin`)
+    values(
+    :series,
+    :value,
+    :date,
+    :ipAddress,
+    :userAgent,
+    :userLogin
+    );
+  </entry>
+  <entry key="token-delete">
+    delete from `token` where `series` = ?
+  </entry>
 
 </properties>

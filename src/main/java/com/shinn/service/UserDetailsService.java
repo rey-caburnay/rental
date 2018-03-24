@@ -1,4 +1,4 @@
-package com.shinn.security;
+package com.shinn.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +15,7 @@ import com.shinn.dao.repos.UserDao;
 import com.shinn.exception.UserNotEnabledException;
 import com.shinn.service.model.Authority;
 import com.shinn.service.model.User;
+import com.shinn.util.PasswordDigest;
 import com.shinn.util.RentStatus;
 
 import java.util.ArrayList;
@@ -51,7 +52,8 @@ public class UserDetailsService implements org.springframework.security.core.use
             GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(authority.getName());
             grantedAuthorities.add(grantedAuthority);
         }
-
+//        String password = PasswordDigest.digest(user, salt)  
+//        String password = PasswordDigest.digest(passwordToHash, salt);
         return new org.springframework.security.core.userdetails.User(login, user.getPassword(),
                 grantedAuthorities);
     }

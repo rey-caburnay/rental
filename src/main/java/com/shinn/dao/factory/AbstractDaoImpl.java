@@ -34,7 +34,6 @@ public abstract class AbstractDaoImpl<T extends Serializable> {
     @Autowired
     private DataSource dataSource;
 
-    private JdbcTemplate jdbcTemplate;
 
 
     Class<T> clzz;
@@ -356,23 +355,23 @@ public abstract class AbstractDaoImpl<T extends Serializable> {
      * @return
      * @throws Exception
      */
-//    public int executeSaveUpate(String sqlStmnt, Object... parameters) throws Exception {
-//        try {
-//            this.verifyConnection();
-//            pStmnt = connection.prepareStatement(sqlStatement.getProperty(sqlStmnt), PreparedStatement.RETURN_GENERATED_KEYS);
-//            this.setValues(pStmnt, parameters);
-//            pStmnt.executeUpdate();
-//            ResultSet rs = pStmnt.getGeneratedKeys();
-//            if(rs.next()) {
-//                return rs.getInt(1);
-//            }
-//        }catch (Exception e) {
-//            logger.debug(e.getMessage());
-//            throw new Exception ("Failed to saved: " + e.getMessage());
-//        }
-//        return 0; 
-//
-//    }
+    public int executeSaveUpate(String sqlStmnt, Object... parameters) throws Exception {
+        try {
+            this.verifyConnection();
+            pStmnt = connection.prepareStatement(sqlStatement.getProperty(sqlStmnt), PreparedStatement.RETURN_GENERATED_KEYS);
+            this.setValues(pStmnt, parameters);
+            pStmnt.executeUpdate();
+            ResultSet rs = pStmnt.getGeneratedKeys();
+            if(rs.next()) {
+                return rs.getInt(1);
+            }
+        }catch (Exception e) {
+            logger.debug(e.getMessage());
+            throw new Exception ("Failed to saved: " + e.getMessage());
+        }
+        return 0; 
+
+    }
     /**
      * 
      * @param sqlStmnt
