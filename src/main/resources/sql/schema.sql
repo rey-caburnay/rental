@@ -1,6 +1,7 @@
 CREATE TABLE `mst_user` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `username` varchar(50) DEFAULT NULL,
+  `password` varchar(255) NOT NULL,
   `name` varchar(45) DEFAULT NULL,
   `email` varchar(45) DEFAULT NULL,
   `mobile_no` varchar(45) DEFAULT NULL,
@@ -263,5 +264,16 @@ CREATE TABLE `mst_balance` (
   `amount` double(9,4) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/****************************** prm_authority**********************/
+CREATE TABLE `prm_authority` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `userId` int(11),
+  `name` varchar(100) DEFAULT NULL,
+  `ctime` datetime NULL,
+  `mtime` datetime DEFAULT NULL,
+   PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
 
 

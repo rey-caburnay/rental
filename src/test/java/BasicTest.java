@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.assertj.core.util.Lists;
+import org.junit.Test;
 import org.slf4j.LoggerFactory;
 
 import com.shinn.dao.factory.AbstractDaoImpl;
@@ -23,19 +24,21 @@ import com.shinn.service.model.Transaction;
 import com.shinn.util.DateUtil;
 import com.shinn.util.RentStatus;
 import com.shinn.util.StringUtil;
+import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 public class BasicTest {
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(BasicTest.class);
     
-    public static void main(String args[]) {
-        
-        BasicTest test = new BasicTest();
-//        test.testNumberFormat();
-//        test.testDecimalFormat();
-//        test.continueExample();
-        test.dateTest();
-//        test.testMath();
-    }
+//    public static void main(String args[]) {
+//
+//        BasicTest test = new BasicTest();
+////        test.testNumberFormat();
+////        test.testDecimalFormat();
+////        test.continueExample();
+//        test.dateTest();
+////        test.testMath();
+//    }
     
     public void testMath() {
       Double overdue = -6000d;
@@ -156,4 +159,17 @@ public class BasicTest {
             pe.printStackTrace();
         }
     }
+
+    @Test
+    public void generateBcrypt(){
+        String salt = BCrypt.gensalt();
+        System.out.println("salt:" + salt);
+        String pass = BCrypt.hashpw("test",salt);
+
+        if(BCrypt.checkpw("test", "$2a$10$d3sElSyglbTLh5fIVMy6F.sfBFZ9L5wL5RojZ8Lj7ioBwieh1CAIO")) {
+            System.out.println("equals");
+        }
+        System.out.println(pass);
+    }
+
 }

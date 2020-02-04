@@ -17,4 +17,6 @@ public class ResultStatus {
     
     public static final String SMS_FAILED = "SMS Failed";
 
+    public static final String INVALID_PASSWORD = "Invalid Password";
+
 }

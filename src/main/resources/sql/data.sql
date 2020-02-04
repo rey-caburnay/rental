@@ -1,7 +1,7 @@
 /****** mst_user **********/
 INSERT INTO `realmaster`.`mst_user`
-(`id`,`username`,`name`,`email`,`mobile_no`,`tel_no`,`address1`,`address2`,`status`)
-VALUES(1,'Rey','Rey','Rey@email.com','09954645794','2399970','cebu city','Lapulapu City','active');
+(`id`,`username`,`password`, `name`,`email`,`mobile_no`,`tel_no`,`address1`,`address2`,`status`)
+VALUES(1,'Rey','$2a$10$d3sElSyglbTLh5fIVMy6F.sfBFZ9L5wL5RojZ8Lj7ioBwieh1CAIO', 'Rey','Rey@email.com','09954645794','2399970','cebu city','Lapulapu City','active');
 /******* mst_apartment ***********/
 INSERT INTO `realmaster`.`mst_apartment` (`id`,`name`,`personIncharge`,`aptType`,`mobileNo`,`telNo`,`address1`,`address2`,`status`) VALUES('1','buhisan','paul','apartment','234234234','234234','labangon',null,'Active');
 INSERT INTO `realmaster`.`mst_apartment` (`id`, `name`, `personIncharge`, `aptType`, `status`) VALUES ('2', 'Lapulapu', 'Paul', 'apartment', 'Active');

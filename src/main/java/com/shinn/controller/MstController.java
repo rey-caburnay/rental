@@ -1,5 +1,6 @@
 package com.shinn.controller;
 
+import com.shinn.configuration.Encrypt;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +43,8 @@ public class MstController {
   @RequestMapping(value = "/login", method = RequestMethod.POST,
       produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Response<User>> login(@RequestBody User user) {
+
+
     Response<User> resp = adminService.login(user.getUsername(), user.getPassword());
     logger.debug(resp.toString());
     if (resp.getResponseStatus().equals(ResultStatus.RESULT_OK)) {

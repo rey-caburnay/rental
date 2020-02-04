@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import com.shinn.configuration.Encrypt;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -278,12 +279,16 @@ public class AdminServiceImpl implements AdminService {
     try {
       User user = userDao.findByUsername(username);
       if (!StringUtil.isNullOrEmpty(user)) {
-        if(user.getPassword().equals(password)) {
-          
-        }
+
+         if(Encrypt.checkPassword(password, user.getPassword())) {
+           resp.setModel(user);
+           resp.setResponseStatus(ResultStatus.RESULT_OK);
+         } else {
+           resp.setModel(user);
+           resp.setResponseStatus(ResultStatus.INVALID_PASSWORD);
+         }
       }
-      resp.setModel(user);
-      resp.setResponseStatus(ResultStatus.RESULT_OK);
+
     } catch (Exception e) {
       resp.setErrorMsg(e.getMessage());
       resp.setResponseStatus(ResultStatus.GENERAL_ERROR);
