@@ -75,6 +75,10 @@ public class RentalDaoImpl extends AbstractDaoImpl<Transaction> implements Renta
   public List<Transaction> findByStatus(String status) {
     return getListResult("transaction-findby-status", status);
   }
+
+  public List<Transaction> findByDueDateAndStatus(String date, String status) {
+    return getListResult("transaction-findby-duedateandstatus", date, status);
+  }
   
   
 

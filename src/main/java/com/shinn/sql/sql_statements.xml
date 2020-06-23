@@ -478,6 +478,16 @@
   <entry key="transaction-findby-status">
     select * from tx_rental where status = ?
   </entry>
+
+  <entry key="transaction-findby-duedateandstatus">
+    select * from (
+      select id, aptId, roomId, date_format(dueDate, '%Y-%m-%d') as dueDate,
+      txtDate, startDate, endDate, deposit, renterId, balance,  txType, provider,
+      amount, status, userId, updatedDate, updtCnt, paymentStatus, billingNo, collectionNo
+      from tx_rental)
+    as x  where x.dueDate = ? and x.status = ?
+  </entry>
+
   <entry key="save-room">
     INSERT INTO mst_room
     (`id`,

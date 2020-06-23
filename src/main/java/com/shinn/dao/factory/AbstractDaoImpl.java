@@ -301,7 +301,7 @@ public abstract class AbstractDaoImpl<T extends Serializable> {
             }
             closeConnectionObjects(connection, pStmnt);
         } catch (Exception e) {
-            logger.info(e.getMessage());
+//            logger.info(e.getMessage());
 //            closeConnectionObjects(connection, sqlStmnt)
             return null;
         }
@@ -324,18 +324,18 @@ public abstract class AbstractDaoImpl<T extends Serializable> {
                 Object value = null;
                 try {
                     columnName = f.getName();
-                    logger.info("column name:" + columnName);
+//                    logger.info("column name:" + columnName);
                     value = result.getObject(columnName);
                     if (value != null) {
                       PropertyDescriptor propertyDescriptor = new PropertyDescriptor(f.getName(), clzz);
                       Method method = propertyDescriptor.getWriteMethod();
-                      logger.info(method.toString());
-                      logger.info(instance.toString());
-                      logger.info(value.toString());
+//                      logger.info(method.toString());
+//                      logger.info(instance.toString());
+//                      logger.info(value.toString());
                       method.invoke(instance, value);
                   }
                 } catch (Exception e) {
-                    logger.info("No column name in RS:"+ columnName);
+//                    logger.info("No column name in RS:"+ columnName);
                 }
 
             }
@@ -343,7 +343,7 @@ public abstract class AbstractDaoImpl<T extends Serializable> {
 
         } catch (Exception e) {
           e.printStackTrace();
-            logger.info(e.getCause() +" " + columnName);
+//            logger.info(e.getCause() +" " + columnName);
             return null;
         }
     }

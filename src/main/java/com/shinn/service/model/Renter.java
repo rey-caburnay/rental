@@ -6,9 +6,11 @@ import java.util.List;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
+@ToString
 public class Renter implements Serializable {
     
     public static final String TABLE_NAME = "mst_renter";

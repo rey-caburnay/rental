@@ -11,7 +11,7 @@
 	</appender>
 	
 	<appender name="FILE" class="ch.qos.logback.core.FileAppender">
-      <file>rentlog-${byDay}.txt</file>
+      <file>/home/caburnay/logs/rentService/rentlog-${byDay}.txt</file>
       <append>true</append>
       <encoder>
          <pattern>%-4relative [%thread] %-5level %logger{35} - %msg%n</pattern>
@@ -19,7 +19,7 @@
    </appender>
 	
 
-	<logger name="org.springframework" level="debug" additivity="false">
+	<logger name="org.springframework" level="error" additivity="false">
 		<appender-ref ref="STDOUT" />
 	</logger>
 	
@@ -27,7 +27,7 @@
 		<appender-ref ref="STDOUT" />
 	</logger>
 	 
-	<root level="debug">
+	<root level="info">
 		<appender-ref ref="STDOUT" />
 <!-- 		<appender-ref ref="FILE" /> -->
 		

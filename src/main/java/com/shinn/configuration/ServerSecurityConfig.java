@@ -103,7 +103,7 @@ public class ServerSecurityConfig extends WebSecurityConfigurerAdapter {
         .hasAnyAuthority("admin").antMatchers("/user/**").hasAnyAuthority("admin")
         .antMatchers("/mst/**").hasAnyAuthority("admin").antMatchers("/notify/**")
         .hasAnyAuthority("admin").antMatchers("/report/**").hasAnyAuthority("admin")
-        .antMatchers("/tx/**").hasAnyAuthority("admin").antMatchers("/sms/**").authenticated()
+        .antMatchers("/tx/**").hasAnyAuthority("admin", "user").antMatchers("/sms/**").authenticated()
         .antMatchers("/mst/**").authenticated().antMatchers("/mst/**").authenticated().anyRequest()
         .authenticated().and().exceptionHandling()
         .authenticationEntryPoint(restUnauthorizedEntryPoint)

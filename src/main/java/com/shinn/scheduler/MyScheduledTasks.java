@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -22,7 +23,7 @@ import com.shinn.service.model.ElectricBill;
 import com.shinn.service.model.Transaction;
 import com.shinn.util.DateUtil;
 import com.shinn.util.RentStatus;
-
+@EnableScheduling
 @Component
 public class MyScheduledTasks {
   private static final org.slf4j.Logger logger = LoggerFactory.getLogger(MyScheduledTasks.class);
@@ -49,8 +50,8 @@ public class MyScheduledTasks {
    * 12 ?" = every Christmas Day at midnight
    * 
    */
-  @Scheduled(cron = "0 0 10 * * *") // trigger every 10:00 am
-  // @Scheduled(cron = "*\\/10 * * * * *") //triger every 10 seconds
+//  @Scheduled(cron = "0 0 10 * * *") // trigger every 10:00 am
+   @Scheduled(cron = "*\\/10 * * * * *") //triger every 10 seconds
   public void run() {
     this.processRoomDueDates();
   }
@@ -60,8 +61,38 @@ public class MyScheduledTasks {
 
   }
 
+  private void notifyBeforeDueDate() {
+     Date threeDaysBefore = DateUtil.addDays(DateUtil.getCurrentDate(), -3);
+     String date = DateUtil.formatDate(threeDaysBefore, DateUtil.YYYYMMDD_DASH);
+     List<Transaction> transactions = rentalDao.findByDueDateAndStatus(date, RentStatus.ACTIVE);
+     for(Transaction transaction : transactions) {
+       Collection collection = collectionDao.getByBillingNo(transaction.getBillingNo());
+       if (StringUtils.isEmpty(collection)) {
+         logger.info("sending {}", transaction);
+         smsService.sendAlert(transaction, RentStatus.BEFORE_DUE_MESSAGE);
+       }
+     }
+  }
+
+  private void notifyOnDueDate() {
+    String now =  DateUtil.formatDate(DateUtil.getCurrentDate(), DateUtil.YYYYMMDD_DASH);
+    logger.info("fetching transaction due date of:" + now);
+    List<Transaction> transactions = rentalDao.findByDueDateAndStatus(now, RentStatus.ACTIVE);
+    for(Transaction transaction : transactions) {
+      Collection collection = collectionDao.getByBillingNo(transaction.getBillingNo());
+      if (StringUtils.isEmpty(collection)) {
+        logger.info("sending to in charge");
+        smsService.sendAlert(transaction, RentStatus.DUE_DATE_MESSAGE);
+        smsService.sendAlertToIncharge(transaction);
+      }
+    }
+
+  }
+
   private void processRoomDueDates() {
-    List<Transaction> transactions = rentalDao.findByStatus(RentStatus.ACTIVE);
+    String now =  DateUtil.formatDate(DateUtil.getCurrentDate(), DateUtil.YYYYMMDD_DASH);
+    logger.info("fetching transaction due date of:" + now);
+    List<Transaction> transactions = rentalDao.findByDueDateAndStatus(now, RentStatus.ACTIVE);
     logger.info("transactions count :{}", transactions.size());
     for (Transaction transaction : transactions) {
       Integer dayDifference =

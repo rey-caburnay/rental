@@ -7,7 +7,7 @@ public class PasswordDigestTest {
 
   @Test
   public void testDigest() {
-    String password = "password";
+    String password = "test";
     String crypted = PasswordDigest.digest(password, PasswordDigest.DEFAULT_SALT);
     System.out.println(crypted);
   }

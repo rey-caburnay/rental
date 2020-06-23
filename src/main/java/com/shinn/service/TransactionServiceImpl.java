@@ -201,6 +201,7 @@ public class TransactionServiceImpl implements TransactionService {
 
 	@Override
 	public Response<Renter> registration(Renter renter) {
+		logger.info("tobesaved:" + renter.toString());
 		Response<Renter> resp = new Response<Renter>();
 		try {
 		    renter.setStatus(RentStatus.ACTIVE);

@@ -40,6 +40,14 @@ public interface RentalDao extends GenericDao<Transaction> {
   public Transaction getTransactionByAptRoomRenter(Integer aptId, Integer roomId, Integer renterId);
 
   public List<Transaction> findByStatus(String status);
+
+  /**
+   *
+   * @param date format "YYYY-mm-dd"
+   * @param status
+   * @return
+   */
+  public List<Transaction> findByDueDateAndStatus(String date, String status);
   
   
 }
